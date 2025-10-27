@@ -14,6 +14,7 @@ from .logging import setup_logging
 from .types import DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
 from . import interactive as ia
+from .pause import PauseController
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
 
@@ -61,6 +62,7 @@ def cmd_download(
     playlist: bool = typer.Option(False, "--playlist", help="Обработать плейлист целиком"),
     playlist_items: Optional[str] = typer.Option(None, "--playlist-items", help="Номера видео в плейлисте (например '1-3' или '1,3,5')"),
     interactive: bool = typer.Option(False, "--interactive", "-i", help="Диалоговый выбор качества перед загрузкой (для одного URL)"),
+    pause_between: bool = typer.Option(False, "--pause-between", help="Включить возможность паузы между видео в плейлисте (нажмите 'p' для паузы, 'r' для возобновления)", rich_help_panel="Дополнительно"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Подробные логи (DEBUG)"),
 ):
     """Скачать видео/аудио по указанному URL."""
@@ -115,13 +117,33 @@ def cmd_download(
         if urls_file:
             urls.extend(read_urls_from_file(urls_file))
         if not urls:
-            typer.secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
+            # Более дружелюбная диагностика для пустого файла со ссылками
+            if urls_file is not None:
+                typer.secho(f"Файл со ссылками пуст или не содержит валидных строк: {urls_file}", fg=typer.colors.YELLOW)
+            else:
+                typer.secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
             raise typer.Exit(code=2)
 
         # Запустить загрузку последовательно
         dl = Downloader(cfg, logger, verbose=verbose)
         total_files = 0
         failed = 0
+        
+        # Инициализировать контроллер пауз если включен режим паузы между видео
+        # (либо через CLI флаг, либо через конфиг)
+        pause_controller: Optional[PauseController] = None
+        use_pause = pause_between or cfg.pause_between_videos
+        if use_pause and (playlist or interactive):
+            pause_controller = PauseController(
+                pause_key=cfg.pause_key or "p",
+                resume_key=cfg.resume_key or "r"
+            )
+            pause_controller.enable()
+            typer.secho(
+                "⏸  Режим пауз включен: нажмите 'p' во время загрузки для паузы после текущего видео",
+                fg=typer.colors.CYAN
+            )
+        
         for one_url in urls:
             chosen_format: Optional[str] = None
             chosen_label: str = "Лучшее доступное качество"
@@ -285,6 +307,10 @@ def cmd_download(
                                         failed += 1
                                         logger.exception("Ошибка загрузки %s", entry_url)
                                         typer.secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                    
+                                    # Проверить, запрошена ли пауза после этого видео
+                                    if pause_controller and pause_controller.is_pause_requested():
+                                        pause_controller.wait_if_paused()
 
                                 # После завершения режима с едиными настройками мы уже скачали все элементы
                                 # этого плейлиста по одному. Сбросим потенциально протекший префикс и
@@ -417,6 +443,69 @@ def cmd_download(
                 # Пользователь задал полное имя - используем его как есть
                 final_name_template = custom_name
             
+            # Если включен режим пауз и это плейлист (не интерактивный) — загружаем поштучно
+            if pause_controller and playlist and not interactive:
+                # Получить информацию о плейлисте
+                try:
+                    info = dl.get_info(one_url)
+                    entries = info.get("entries") or []
+                    if entries:
+                        typer.secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
+                        for idx, entry in enumerate(entries, start=1):
+                            entry_url = ia.get_entry_url(entry)
+                            if not entry_url:
+                                typer.secho(f"[WARN] Пропуск элемента #{idx}", fg=typer.colors.YELLOW)
+                                continue
+                            
+                            entry_title = entry.get("title", f"Видео {idx}")
+                            typer.secho(f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
+                            
+                            single_opts = DownloadOptions(
+                                url=entry_url,
+                                output_dir=cfg.output,
+                                audio_only=cfg.audio_only,
+                                audio_format=cfg.audio_format,  # type: ignore[arg-type]
+                                video_format=cfg.video_format,  # type: ignore[arg-type]
+                                quality=cfg.quality,  # type: ignore[arg-type]
+                                name_template=final_name_template,
+                                subtitles=cfg.subtitles,
+                                proxy=cfg.proxy,
+                                retry=cfg.retry,
+                                retry_delay=cfg.retry_delay,
+                                save_metadata=cfg.save_metadata,
+                                dry_run=dry_run,
+                                playlist=False,
+                                playlist_items=None,
+                                custom_format=chosen_format,
+                                file_prefix=file_prefix,
+                                quality_suffix=quality_suffix if not custom_name else None,
+                                overwrite=overwrite,
+                            )
+                            
+                            try:
+                                files = dl.download(single_opts)
+                                if not dry_run:
+                                    total_files += len(files)
+                                typer.secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                           fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
+                                if not dry_run and not files:
+                                    failed += 1
+                            except KeyboardInterrupt:
+                                raise
+                            except Exception:
+                                failed += 1
+                                logger.exception("Ошибка загрузки %s", entry_url)
+                                typer.secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                            
+                            # Проверить паузу после видео
+                            if pause_controller.is_pause_requested():
+                                pause_controller.wait_if_paused()
+                        
+                        # Пропустить стандартный путь загрузки плейлиста
+                        continue
+                except Exception as e:
+                    logger.warning("Не удалось разобрать плейлист для поштучной загрузки: %s — пробуем обычный путь", e)
+            
             opts = DownloadOptions(
                 url=one_url,
                 output_dir=cfg.output,
@@ -461,6 +550,10 @@ def cmd_download(
                 failed += 1
                 logger.exception("Ошибка загрузки %s", one_url)
                 typer.secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+        
+        # Отключить контроллер пауз после завершения всех загрузок
+        if pause_controller:
+            pause_controller.disable()
 
         if dry_run:
             typer.secho("[OK] Dry-run завершён (файлы не скачаны)", fg=typer.colors.GREEN)
@@ -482,6 +575,9 @@ def cmd_download(
     except KeyboardInterrupt:
         typer.secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
         sys.exit(1)
+    except typer.Exit:
+        # Позволяем корректным выходам Typer завершаться без лишнего логирования стека
+        raise
     except Exception as e:
         logger.exception("Ошибка загрузки")
         typer.secho(f"✗ Ошибка: {e}", fg=typer.colors.RED)

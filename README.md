@@ -64,6 +64,16 @@
   - `ytd download PLAYLIST_URL --playlist --interactive`
   - Программа предложит выбрать режим (единые настройки или для каждого видео), качество, нумерацию (01_, 02_, ...), стратегию подбора качества
   - Результат: `01_Видео [ID]_720p.mp4`, `02_Видео [ID]_720p.mp4`, ...
+- **Интерактивная загрузка плейлиста из файла с паузами** (рекомендуемая команда):
+  - `ytd download --urls-file .\urls.local.txt --playlist --interactive --pause-between`
+  - Или короткая версия: `ytd download --urls-file .\urls.local.txt --playlist -i --pause-between`
+  - Выбор качества, нумерация, возможность поставить на паузу между видео (нажать `p`, возобновить `r`)
 - Интерактивная загрузка с предпросмотром (dry-run):
   - `ytd download URL --interactive --dry-run`
   - `ytd download PLAYLIST_URL --playlist --interactive --dry-run`
+- **Пауза между видео в плейлистах** (NEW):
+  - `ytd download PLAYLIST_URL --playlist --pause-between`
+  - Во время загрузки нажмите `p` для запроса паузы после текущего видео
+  - После завершения загрузки нажмите `r` (или Enter) для возобновления
+  - Работает как в обычном, так и в интерактивном режиме плейлиста
+  - **Примечание**: требуется Windows (использует `msvcrt`); для Linux/macOS будет fallback на ввод Enter

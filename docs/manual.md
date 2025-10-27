@@ -56,6 +56,21 @@
   ytd download --urls-file .\urls.local.txt --playlist --interactive
   ```
 
+- **Интерактивная загрузка плейлиста с паузами между видео** (NEW):
+  
+  ```powershell
+  ytd download --urls-file .\urls.local.txt --playlist --interactive --pause-between
+  ```
+  
+  Или короткая версия:
+  
+  ```powershell
+  ytd download --urls-file .\urls.local.txt --playlist -i --pause-between
+  ```
+  
+  - Нажмите `p` во время загрузки для паузы после текущего видео
+  - Нажмите `r` (или Enter) для возобновления
+
 - Если ссылок несколько — взять первую и выбрать качество:
   
   ```powershell

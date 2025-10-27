@@ -23,6 +23,9 @@ _ENV_MAP: dict[str, str] = {
     "retry": "YTD_RETRY",
     "retry_delay": "YTD_RETRY_DELAY",
     "save_metadata": "YTD_SAVE_METADATA",
+    "pause_between_videos": "YTD_PAUSE_BETWEEN_VIDEOS",
+    "pause_key": "YTD_PAUSE_KEY",
+    "resume_key": "YTD_RESUME_KEY",
 }
 
 

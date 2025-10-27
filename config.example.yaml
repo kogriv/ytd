@@ -1,0 +1,48 @@
+# Пример конфигурационного файла ytd
+# Разместите этот файл как ~/.config/ytd/config.yaml (Linux/macOS)
+# или %APPDATA%\ytd\config.yaml (Windows)
+
+# Папка для сохранения загруженных файлов
+output: downloads
+
+# Качество видео (best, 1080p, 720p, audio)
+quality: best
+
+# Формат видео-контейнера (mp4, webm)
+video_format: mp4
+
+# Скачивать только аудио
+audio_only: false
+
+# Формат аудио (m4a, mp3, opus)
+audio_format: m4a
+
+# Шаблон имени файла (синтаксис yt-dlp)
+name_template: "%(title)s [%(id)s].%(ext)s"
+
+# Список языков субтитров для загрузки (например: [ru, en])
+subtitles: []
+
+# URL прокси-сервера (опционально)
+# proxy: "http://proxy.example.com:8080"
+
+# Количество попыток при ошибках
+retry: 3
+
+# Задержка между попытками (секунды)
+retry_delay: 5.0
+
+# Путь для сохранения метаданных (JSONL)
+save_metadata: data/meta.jsonl
+
+# === Управление паузами ===
+
+# Включить возможность паузы между видео в плейлистах
+# (можно переопределить через --pause-between в CLI)
+pause_between_videos: false
+
+# Клавиша для запроса паузы (нажать во время загрузки)
+pause_key: p
+
+# Клавиша для возобновления после паузы
+resume_key: r
