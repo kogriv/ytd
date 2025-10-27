@@ -129,6 +129,8 @@ def cmd_download(
             quality_suffix: Optional[str] = None
             overwrite: bool = False
             custom_name: Optional[str] = None
+            # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
+            skip_post_processing: bool = False
             
             if interactive:
                 if len(urls) > 1:
@@ -283,7 +285,13 @@ def cmd_download(
                                         failed += 1
                                         logger.exception("Ошибка загрузки %s", entry_url)
                                         typer.secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
-                                
+
+                                # После завершения режима с едиными настройками мы уже скачали все элементы
+                                # этого плейлиста по одному. Сбросим потенциально протекший префикс и
+                                # пометим, что нужно пропустить общий путь ниже по коду.
+                                file_prefix = None
+                                skip_post_processing = True
+
                             elif mode == 2:
                                 # Настроить каждое отдельно
                                 typer.secho("\n→ Режим: Настройка каждого видео отдельно", fg=typer.colors.GREEN)
@@ -397,6 +405,11 @@ def cmd_download(
                         
                     except Exception as e:
                         logger.warning("Не удалось получить форматы: %s — продолжим с настройками по умолчанию", e)
+
+            # Если мы уже обработали плейлист поштучно в интерактивном режиме —
+            # пропускаем общий путь, чтобы не запустить повторную загрузку всего плейлиста.
+            if skip_post_processing:
+                continue
 
             # Определить итоговый шаблон имени
             final_name_template = cfg.name_template
