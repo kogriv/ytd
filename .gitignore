@@ -1,0 +1,87 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+venv_ytd/
+.python-version
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Type checkers
+.mypy_cache/
+.pytype/
+
+# Logs
+logs/
+!logs/.gitkeep
+*.log
+
+# Data and downloads
+data/
+!data/.gitkeep
+downloads/
+!downloads/.gitkeep
+downloads_test/
+
+# Video files
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.mov
+*.flv
+*.wmv
+*.m4v
+*.3gp
+
+# Audio files
+*.mp3
+*.m4a
+*.wav
+*.flac
+*.aac
+*.ogg
+*.opus
+
+# Local URLs files (do not commit real links)
+urls.local.txt
+
+# Local tools (portable binaries)
+tools/
+
+# Caches
+.cache/
+.ytd_cache/
+
+# Environment files
+.env
+.env.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
