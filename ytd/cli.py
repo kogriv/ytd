@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 from typing import Optional, Any, Iterable
+from urllib.parse import urlparse, parse_qs
 
 import typer
 
@@ -17,6 +18,23 @@ from . import interactive as ia
 from .pause import PauseController
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
+
+
+def _looks_like_playlist_url(url: str) -> bool:
+    """Грубая эвристика для определения ссылок на плейлист."""
+
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False
+
+    path = (parsed.path or "").lower()
+    if "playlist" in path:
+        return True
+
+    query = parse_qs(parsed.query)
+    lists = query.get("list") or []
+    return any(item.strip() for item in lists)
 
 
 def _format_info(info: dict[str, Any]) -> str:
@@ -123,6 +141,59 @@ def cmd_download(
             else:
                 typer.secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
             raise typer.Exit(code=2)
+
+        selected_playlist_url: Optional[str] = None
+        if interactive and playlist:
+            playlist_candidates = [u for u in urls if _looks_like_playlist_url(u)]
+            if len(playlist_candidates) > 1:
+                typer.echo()
+                typer.secho(
+                    "Найдено несколько плейлистов в списке ссылок.",
+                    fg=typer.colors.YELLOW,
+                )
+                typer.echo("Выберите плейлист для интерактивной загрузки:")
+                for idx, candidate in enumerate(playlist_candidates, start=1):
+                    typer.echo(f"  {idx}) {candidate}")
+                typer.echo("  0) Отмена")
+
+                while True:
+                    choice = typer.prompt("Ваш выбор", default="1")
+                    if choice == "0":
+                        typer.secho("Загрузка отменена", fg=typer.colors.YELLOW)
+                        raise typer.Exit(code=0)
+                    try:
+                        selected_idx = int(choice)
+                    except ValueError:
+                        selected_idx = -1
+
+                    if 1 <= selected_idx <= len(playlist_candidates):
+                        selected_playlist_url = playlist_candidates[selected_idx - 1]
+                        break
+
+                    typer.secho("Введите номер из списка.", fg=typer.colors.RED)
+
+                typer.secho(f"Выбран плейлист: {selected_playlist_url}", fg=typer.colors.GREEN)
+                if len(playlist_candidates) - 1:
+                    typer.secho(
+                        "Остальные плейлисты будут пропущены в интерактивном режиме.",
+                        fg=typer.colors.YELLOW,
+                    )
+                ignored_count = len(urls) - len(playlist_candidates)
+                if ignored_count:
+                    typer.secho(
+                        "Прочие ссылки из списка также будут пропущены в интерактивном режиме плейлиста.",
+                        fg=typer.colors.YELLOW,
+                    )
+            elif len(playlist_candidates) == 1:
+                selected_playlist_url = playlist_candidates[0]
+                if len(urls) > 1:
+                    typer.secho(
+                        f"Интерактивный режим будет выполнен только для плейлиста: {selected_playlist_url}",
+                        fg=typer.colors.CYAN,
+                    )
+
+        if selected_playlist_url:
+            urls = [selected_playlist_url]
 
         # Запустить загрузку последовательно
         dl = Downloader(cfg, logger, verbose=verbose)
