@@ -3,12 +3,14 @@ from __future__ import annotations
 import logging
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 import yt_dlp as yt_dlp  # type: ignore
 
-from .types import AppConfig, DownloadOptions
+from .history import record_event
+from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 
 
@@ -20,6 +22,126 @@ class Downloader:
         self.logger = logger or logging.getLogger("ytd")
         self.verbose = verbose
         self._finished_files: list[Path] = []
+
+    def _iter_entries(self, info: Any) -> list[dict[str, Any]]:
+        """Преобразовать ответ yt-dlp в список записей для истории."""
+        if not isinstance(info, dict):
+            return []
+
+        entries = info.get("entries")
+        if isinstance(entries, Iterable):
+            normalized: list[dict[str, Any]] = []
+            for entry in entries:
+                if isinstance(entry, dict):
+                    normalized.append(entry)
+            if normalized:
+                return normalized
+
+        if info:
+            return [info]
+        return []
+
+    def _build_events(
+        self,
+        info: Any,
+        opts: DownloadOptions,
+        *,
+        status: str,
+        started_at: Optional[datetime] = None,
+        finished_at: Optional[datetime] = None,
+        file_paths: Optional[list[Path]] = None,
+        error: Optional[str] = None,
+    ) -> list[DownloadEvent]:
+        """Сформировать DownloadEvent по данным yt-dlp."""
+
+        entries = self._iter_entries(info)
+
+        playlist_id: Optional[str] = None
+        playlist_title: Optional[str] = None
+        if isinstance(info, dict) and info.get("entries"):
+            raw_playlist_id = info.get("id") or info.get("playlist_id")
+            raw_playlist_title = info.get("title") or info.get("playlist_title")
+            if raw_playlist_id:
+                playlist_id = str(raw_playlist_id)
+            if raw_playlist_title:
+                playlist_title = str(raw_playlist_title)
+
+        if not entries:
+            entries = [
+                {
+                    "id": opts.url,
+                    "title": None,
+                    "webpage_url": opts.url,
+                }
+            ]
+
+        out: list[DownloadEvent] = []
+        for idx, entry in enumerate(entries):
+            video_id = entry.get("id") or entry.get("url") or opts.url
+            if not video_id:
+                continue
+            url = (
+                entry.get("webpage_url")
+                or entry.get("original_url")
+                or entry.get("url")
+                or opts.url
+            )
+            title = entry.get("title")
+            entry_playlist_id = entry.get("playlist_id") or playlist_id
+            entry_playlist_title = entry.get("playlist_title") or playlist_title
+
+            resolved_path: Optional[Path] = None
+            if file_paths:
+                if idx < len(file_paths):
+                    resolved_path = Path(file_paths[idx])
+
+            event = DownloadEvent(
+                video_id=str(video_id),
+                url=str(url),
+                title=title,
+                status=status,
+                started_at=started_at,
+                finished_at=finished_at,
+                file_path=resolved_path,
+                error=error,
+                playlist_id=entry_playlist_id,
+                playlist_title=entry_playlist_title,
+            )
+            out.append(event)
+        return out
+
+    def _record_history(
+        self,
+        info: Any,
+        opts: DownloadOptions,
+        *,
+        status: str,
+        started_at: Optional[datetime] = None,
+        finished_at: Optional[datetime] = None,
+        file_paths: Optional[list[Path]] = None,
+        error: Optional[str] = None,
+    ) -> None:
+        """Безопасно записать события загрузки в историю."""
+
+        if opts.dry_run:
+            return
+
+        events = self._build_events(
+            info,
+            opts,
+            status=status,
+            started_at=started_at,
+            finished_at=finished_at,
+            file_paths=file_paths,
+            error=error,
+        )
+
+        for event in events:
+            try:
+                record_event(event)
+            except Exception as history_err:  # noqa: BLE001
+                self.logger.debug("не удалось записать историю: %s", history_err)
+                break
 
     # ---------------------- internal helpers ----------------------
     def _print_file_info(self, info: dict[str, Any]) -> None:
@@ -241,6 +363,7 @@ class Downloader:
 
         while attempt < max(1, int(opts.retry)):
             attempt += 1
+            history_info: Optional[dict[str, Any]] = None
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
                     # Сначала получим информацию без скачивания для вывода метаданных
@@ -248,12 +371,22 @@ class Downloader:
                         info_preview = ydl.extract_info(opts.url, download=False)
                         if info_preview:
                             self._print_file_info(info_preview)
-                    
+                        history_info = info_preview if isinstance(info_preview, dict) else None
+                        self._record_history(
+                            history_info,
+                            opts,
+                            status="in_progress",
+                            started_at=datetime.utcnow(),
+                        )
+
                     # extract_info управляет и скачиванием, и dry-run через download=False
                     info = ydl.extract_info(opts.url, download=not opts.dry_run)
                     # при dry-run файлов нет — просто выходим
                     if opts.dry_run:
                         return []
+
+                    if isinstance(info, dict):
+                        history_info = info
 
                     # Если хуки не отработали (напр., старые версии), попробуем подготовить имя
                     if not self._finished_files and info:
@@ -276,9 +409,24 @@ class Downloader:
                         except Exception as meta_err:  # не ломаем загрузку из-за метаданных
                             self.logger.warning("не удалось сохранить метаданные: %s", meta_err)
 
+                self._record_history(
+                    history_info,
+                    opts,
+                    status="success",
+                    finished_at=datetime.utcnow(),
+                    file_paths=list(self._finished_files),
+                )
+
                 return list(self._finished_files)
             except Exception as e:  # noqa: BLE001 — намеренно широкое перехватывание для ретраев
                 last_err = e
+                self._record_history(
+                    history_info,
+                    opts,
+                    status="failed",
+                    finished_at=datetime.utcnow(),
+                    error=str(e),
+                )
                 if attempt >= max(1, int(opts.retry)):
                     self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
                     raise
