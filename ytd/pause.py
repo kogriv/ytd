@@ -7,6 +7,8 @@ from typing import Optional
 
 import typer
 
+from .cli import safe_echo, safe_secho
+
 
 class PauseController:
     """Контроллер пауз с поддержкой клавиатурного управления.
@@ -65,7 +67,7 @@ class PauseController:
                     if char == self.pause_key:
                         self._pause_requested.set()
                         # Мгновенно показываем индикатор запроса паузы
-                        typer.secho(
+                        safe_secho(
                             f"\n⏸  Пауза запрошена (будет применена после текущей загрузки)...",
                             fg=typer.colors.YELLOW
                         )
@@ -84,10 +86,10 @@ class PauseController:
         if not self._pause_requested.is_set():
             return
         
-        typer.echo("\n" + "═" * 60)
-        typer.secho("⏸  ПАУЗА", fg=typer.colors.YELLOW, bold=True)
-        typer.echo("═" * 60)
-        typer.secho(
+        safe_echo("\n" + "═" * 60)
+        safe_secho("⏸  ПАУЗА", fg=typer.colors.YELLOW, bold=True)
+        safe_echo("═" * 60)
+        safe_secho(
             f"Нажмите '{self.resume_key}' для возобновления или Ctrl+C для выхода...",
             fg=typer.colors.CYAN
         )
@@ -99,7 +101,7 @@ class PauseController:
             # Не Windows - fallback на input()
             typer.prompt("Нажмите Enter для продолжения", default="", show_default=False)
             self._pause_requested.clear()
-            typer.secho("▶  Возобновление загрузки...\n", fg=typer.colors.GREEN)
+            safe_secho("▶  Возобновление загрузки...\n", fg=typer.colors.GREEN)
             return
         
         # Windows: ждём клавишу возобновления
@@ -109,7 +111,7 @@ class PauseController:
                     char = msvcrt.getch().decode("utf-8", errors="ignore").lower()
                     if char == self.resume_key or char == "\r":  # 'r' или Enter
                         self._pause_requested.clear()
-                        typer.secho("▶  Возобновление загрузки...\n", fg=typer.colors.GREEN)
+                        safe_secho("▶  Возобновление загрузки...\n", fg=typer.colors.GREEN)
                         return
                 except Exception:
                     pass
