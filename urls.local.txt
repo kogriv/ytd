@@ -1,0 +1,23 @@
+# Локальный файл со ссылками для загрузки (не попадает в Git)
+# По одной ссылке в строке. Строки, начинающиеся с #, игнорируются.
+
+# Одиночное видео:
+# https://www.youtube.com/watch?v=oPeutXr71kU
+# https://www.youtube.com/watch?v=LYCBwmd-7-E&list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW
+# https://www.youtube.com/watch?v=81cMcT7tAOE&list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW&index=2
+# https://www.youtube.com/watch?v=JiJ3f8m8Tzs&list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj&index=2
+
+# Обучение сборки Кубика Рубика 3х3:
+# https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
+
+# 1 курс. Линейная алгебра. Кожевников
+# https://www.youtube.com/playlist?list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW
+
+# 2 курс. Линейная алгебра, Кожевников
+# https://www.youtube.com/playlist?list=PLti61wgkUWHw6awjl_mR-hqorTLi0xdJS
+
+# Аналитическая геометрия, Кожевников П. А., 1 семестр
+https://www.youtube.com/playlist?list=PLti61wgkUWHyaCObrkSf79UxBxKniw9Af
+
+# Кожевников П.А. Аналитическая геометрия (2 семестр)
+https://www.youtube.com/playlist?list=PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m

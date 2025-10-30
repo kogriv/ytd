@@ -1,0 +1,1541 @@
+2025-10-26 14:06:22 | DEBUG | [youtube] Extracting URL: https://www.youtube.com/watch?v=oPeutXr71kU
+2025-10-26 14:06:22 | DEBUG | [youtube] oPeutXr71kU: Downloading webpage
+2025-10-26 14:06:42 | DEBUG | [youtube] oPeutXr71kU: Downloading android sdkless player API JSON
+2025-10-26 14:06:43 | DEBUG | [youtube] oPeutXr71kU: Downloading tv client config
+2025-10-26 14:06:45 | DEBUG | [youtube] oPeutXr71kU: Downloading tv player API JSON
+2025-10-26 14:06:46 | DEBUG | [youtube] oPeutXr71kU: Downloading web safari player API JSON
+2025-10-26 14:06:47 | DEBUG | [youtube] oPeutXr71kU: Downloading player 6e4dbefe-main
+2025-10-26 14:07:20 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:07:20 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = H2V7QuybiGQIOd2b ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:07:20 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:07:20 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:07:20 | DEBUG | [youtube] oPeutXr71kU: Downloading m3u8 information
+2025-10-26 14:07:21 | DEBUG | [info] oPeutXr71kU: Downloading 1 format(s): 399+140
+2025-10-26 14:07:22 | DEBUG | [download] Destination: C:\Users\Ivan\Documents\pro\ytd\downloads\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:07:22 | DEBUG | [download] [0;94m  0.0%[0m of   15.56MiB at [0;32m   2.48KiB/s[0m ETA [0;33m01:47:16[0m
+2025-10-26 14:07:22 | DEBUG | downloading: [0;94m  0.0%[0m
+2025-10-26 14:07:22 | DEBUG | [download] [0;94m  0.0%[0m of   15.56MiB at [0;32m   7.23KiB/s[0m ETA [0;33m36:43[0m
+2025-10-26 14:07:22 | DEBUG | downloading: [0;94m  0.0%[0m
+2025-10-26 14:07:22 | DEBUG | [download] [0;94m  0.0%[0m of   15.56MiB at [0;32m  16.76KiB/s[0m ETA [0;33m15:50[0m
+2025-10-26 14:07:22 | DEBUG | downloading: [0;94m  0.0%[0m
+2025-10-26 14:07:22 | DEBUG | [download] [0;94m  0.1%[0m of   15.56MiB at [0;32m  35.70KiB/s[0m ETA [0;33m07:25[0m
+2025-10-26 14:07:22 | DEBUG | downloading: [0;94m  0.1%[0m
+2025-10-26 14:07:24 | DEBUG | [download] [0;94m  0.2%[0m of   15.56MiB at [0;32m  20.01KiB/s[0m ETA [0;33m13:14[0m
+2025-10-26 14:07:24 | DEBUG | downloading: [0;94m  0.2%[0m
+2025-10-26 14:07:25 | DEBUG | [download] [0;94m  0.3%[0m of   15.56MiB at [0;32m  14.78KiB/s[0m ETA [0;33m17:55[0m
+2025-10-26 14:07:25 | DEBUG | downloading: [0;94m  0.3%[0m
+2025-10-26 14:07:25 | DEBUG | [download] [0;94m  0.3%[0m of   15.56MiB at [0;32m  16.84KiB/s[0m ETA [0;33m15:43[0m
+2025-10-26 14:07:25 | DEBUG | downloading: [0;94m  0.3%[0m
+2025-10-26 14:07:25 | DEBUG | [download] [0;94m  0.5%[0m of   15.56MiB at [0;32m  21.40KiB/s[0m ETA [0;33m12:20[0m
+2025-10-26 14:07:25 | DEBUG | downloading: [0;94m  0.5%[0m
+2025-10-26 14:07:28 | DEBUG | [download] [0;94m  0.7%[0m of   15.56MiB at [0;32m  17.86KiB/s[0m ETA [0;33m14:45[0m
+2025-10-26 14:07:28 | DEBUG | downloading: [0;94m  0.7%[0m
+2025-10-26 14:07:30 | DEBUG | [download] [0;94m  0.8%[0m of   15.56MiB at [0;32m  16.39KiB/s[0m ETA [0;33m16:04[0m
+2025-10-26 14:07:30 | DEBUG | downloading: [0;94m  0.8%[0m
+2025-10-26 14:07:30 | DEBUG | [download] [0;94m  0.9%[0m of   15.56MiB at [0;32m  17.77KiB/s[0m ETA [0;33m14:48[0m
+2025-10-26 14:07:30 | DEBUG | downloading: [0;94m  0.9%[0m
+2025-10-26 14:07:31 | DEBUG | [download] [0;94m  1.0%[0m of   15.56MiB at [0;32m  17.52KiB/s[0m ETA [0;33m15:00[0m
+2025-10-26 14:07:31 | DEBUG | downloading: [0;94m  1.0%[0m
+2025-10-26 14:07:32 | DEBUG | [download] [0;94m  1.1%[0m of   15.56MiB at [0;32m  17.99KiB/s[0m ETA [0;33m14:35[0m
+2025-10-26 14:07:32 | DEBUG | downloading: [0;94m  1.1%[0m
+2025-10-26 14:07:32 | DEBUG | [download] [0;94m  1.3%[0m of   15.56MiB at [0;32m  19.53KiB/s[0m ETA [0;33m13:25[0m
+2025-10-26 14:07:32 | DEBUG | downloading: [0;94m  1.3%[0m
+2025-10-26 14:07:36 | DEBUG | [download] [0;94m  1.6%[0m of   15.56MiB at [0;32m  17.61KiB/s[0m ETA [0;33m14:50[0m
+2025-10-26 14:07:36 | DEBUG | downloading: [0;94m  1.6%[0m
+2025-10-26 14:07:38 | DEBUG | [download] [0;94m  1.7%[0m of   15.56MiB at [0;32m  17.62KiB/s[0m ETA [0;33m14:48[0m
+2025-10-26 14:07:38 | DEBUG | downloading: [0;94m  1.7%[0m
+2025-10-26 14:07:39 | DEBUG | [download] [0;94m  1.9%[0m of   15.56MiB at [0;32m  17.96KiB/s[0m ETA [0;33m14:30[0m
+2025-10-26 14:07:39 | DEBUG | downloading: [0;94m  1.9%[0m
+2025-10-26 14:07:39 | DEBUG | [download] [0;94m  2.0%[0m of   15.56MiB at [0;32m  18.91KiB/s[0m ETA [0;33m13:45[0m
+2025-10-26 14:07:39 | DEBUG | downloading: [0;94m  2.0%[0m
+2025-10-26 14:07:40 | DEBUG | [download] [0;94m  2.3%[0m of   15.56MiB at [0;32m  20.08KiB/s[0m ETA [0;33m12:55[0m
+2025-10-26 14:07:40 | DEBUG | downloading: [0;94m  2.3%[0m
+2025-10-26 14:07:42 | DEBUG | [download] [0;94m  2.5%[0m of   15.56MiB at [0;32m  19.81KiB/s[0m ETA [0;33m13:03[0m
+2025-10-26 14:07:42 | DEBUG | downloading: [0;94m  2.5%[0m
+2025-10-26 14:07:43 | DEBUG | [download] [0;94m  2.6%[0m of   15.56MiB at [0;32m  20.30KiB/s[0m ETA [0;33m12:44[0m
+2025-10-26 14:07:43 | DEBUG | downloading: [0;94m  2.6%[0m
+2025-10-26 14:07:45 | DEBUG | [download] [0;94m  2.9%[0m of   15.56MiB at [0;32m  20.25KiB/s[0m ETA [0;33m12:44[0m
+2025-10-26 14:07:45 | DEBUG | downloading: [0;94m  2.9%[0m
+2025-10-26 14:07:45 | DEBUG | [download] [0;94m  3.0%[0m of   15.56MiB at [0;32m  20.79KiB/s[0m ETA [0;33m12:23[0m
+2025-10-26 14:07:45 | DEBUG | downloading: [0;94m  3.0%[0m
+2025-10-26 14:07:46 | DEBUG | [download] [0;94m  3.2%[0m of   15.56MiB at [0;32m  21.34KiB/s[0m ETA [0;33m12:02[0m
+2025-10-26 14:07:46 | DEBUG | downloading: [0;94m  3.2%[0m
+2025-10-26 14:07:48 | DEBUG | [download] [0;94m  3.4%[0m of   15.56MiB at [0;32m  21.34KiB/s[0m ETA [0;33m12:00[0m
+2025-10-26 14:07:48 | DEBUG | downloading: [0;94m  3.4%[0m
+2025-10-26 14:07:49 | DEBUG | [download] [0;94m  3.6%[0m of   15.56MiB at [0;32m  21.48KiB/s[0m ETA [0;33m11:55[0m
+2025-10-26 14:07:49 | DEBUG | downloading: [0;94m  3.6%[0m
+2025-10-26 14:07:50 | DEBUG | [download] [0;94m  3.7%[0m of   15.56MiB at [0;32m  21.01KiB/s[0m ETA [0;33m12:10[0m
+2025-10-26 14:07:50 | DEBUG | downloading: [0;94m  3.7%[0m
+2025-10-26 14:07:50 | DEBUG | [download] [0;94m  3.8%[0m of   15.56MiB at [0;32m  21.51KiB/s[0m ETA [0;33m11:52[0m
+2025-10-26 14:07:50 | DEBUG | downloading: [0;94m  3.8%[0m
+2025-10-26 14:07:51 | DEBUG | [download] [0;94m  4.0%[0m of   15.56MiB at [0;32m  22.29KiB/s[0m ETA [0;33m11:26[0m
+2025-10-26 14:07:51 | DEBUG | downloading: [0;94m  4.0%[0m
+2025-10-26 14:07:53 | DEBUG | [download] [0;94m  4.3%[0m of   15.56MiB at [0;32m  22.62KiB/s[0m ETA [0;33m11:13[0m
+2025-10-26 14:07:53 | DEBUG | downloading: [0;94m  4.3%[0m
+2025-10-26 14:07:55 | DEBUG | [download] [0;94m  4.5%[0m of   15.56MiB at [0;32m  22.15KiB/s[0m ETA [0;33m11:26[0m
+2025-10-26 14:07:55 | DEBUG | downloading: [0;94m  4.5%[0m
+2025-10-26 14:07:55 | DEBUG | [download] [0;94m  4.6%[0m of   15.56MiB at [0;32m  22.60KiB/s[0m ETA [0;33m11:12[0m
+2025-10-26 14:07:55 | DEBUG | downloading: [0;94m  4.6%[0m
+2025-10-26 14:07:56 | DEBUG | [download] [0;94m  4.8%[0m of   15.56MiB at [0;32m  22.44KiB/s[0m ETA [0;33m11:15[0m
+2025-10-26 14:07:56 | DEBUG | downloading: [0;94m  4.8%[0m
+2025-10-26 14:07:57 | DEBUG | [download] [0;94m  4.9%[0m of   15.56MiB at [0;32m  22.27KiB/s[0m ETA [0;33m11:20[0m
+2025-10-26 14:07:57 | DEBUG | downloading: [0;94m  4.9%[0m
+2025-10-26 14:07:58 | DEBUG | [download] [0;94m  5.0%[0m of   15.56MiB at [0;32m  22.35KiB/s[0m ETA [0;33m11:16[0m
+2025-10-26 14:07:58 | DEBUG | downloading: [0;94m  5.0%[0m
+2025-10-26 14:07:59 | DEBUG | [download] [0;94m  5.2%[0m of   15.56MiB at [0;32m  22.57KiB/s[0m ETA [0;33m11:09[0m
+2025-10-26 14:07:59 | DEBUG | downloading: [0;94m  5.2%[0m
+2025-10-26 14:08:02 | DEBUG | [download] [0;94m  5.4%[0m of   15.56MiB at [0;32m  21.27KiB/s[0m ETA [0;33m11:48[0m
+2025-10-26 14:08:02 | DEBUG | downloading: [0;94m  5.4%[0m
+2025-10-26 14:08:03 | DEBUG | [download] [0;94m  5.5%[0m of   15.56MiB at [0;32m  21.47KiB/s[0m ETA [0;33m11:41[0m
+2025-10-26 14:08:03 | DEBUG | downloading: [0;94m  5.5%[0m
+2025-10-26 14:08:05 | DEBUG | [download] [0;94m  5.7%[0m of   15.56MiB at [0;32m  21.26KiB/s[0m ETA [0;33m11:46[0m
+2025-10-26 14:08:05 | DEBUG | downloading: [0;94m  5.7%[0m
+2025-10-26 14:08:05 | DEBUG | [download] [0;94m  5.8%[0m of   15.56MiB at [0;32m  21.55KiB/s[0m ETA [0;33m11:36[0m
+2025-10-26 14:08:05 | DEBUG | downloading: [0;94m  5.8%[0m
+2025-10-26 14:08:06 | DEBUG | [download] [0;94m  6.0%[0m of   15.56MiB at [0;32m  21.95KiB/s[0m ETA [0;33m11:22[0m
+2025-10-26 14:08:06 | DEBUG | downloading: [0;94m  6.0%[0m
+2025-10-26 14:08:07 | DEBUG | [download] [0;94m  6.3%[0m of   15.56MiB at [0;32m  22.12KiB/s[0m ETA [0;33m11:14[0m
+2025-10-26 14:08:07 | DEBUG | downloading: [0;94m  6.3%[0m
+2025-10-26 14:08:10 | DEBUG | [download] [0;94m  6.5%[0m of   15.56MiB at [0;32m  21.67KiB/s[0m ETA [0;33m11:27[0m
+2025-10-26 14:08:10 | DEBUG | downloading: [0;94m  6.5%[0m
+2025-10-26 14:08:10 | DEBUG | [download] [0;94m  6.5%[0m of   15.56MiB at [0;32m  21.72KiB/s[0m ETA [0;33m11:25[0m
+2025-10-26 14:08:10 | DEBUG | downloading: [0;94m  6.5%[0m
+2025-10-26 14:08:11 | DEBUG | [download] [0;94m  6.7%[0m of   15.56MiB at [0;32m  21.93KiB/s[0m ETA [0;33m11:17[0m
+2025-10-26 14:08:11 | DEBUG | downloading: [0;94m  6.7%[0m
+2025-10-26 14:08:13 | DEBUG | [download] [0;94m  6.9%[0m of   15.56MiB at [0;32m  21.76KiB/s[0m ETA [0;33m11:21[0m
+2025-10-26 14:08:13 | DEBUG | downloading: [0;94m  6.9%[0m
+2025-10-26 14:08:13 | DEBUG | [download] [0;94m  7.0%[0m of   15.56MiB at [0;32m  22.03KiB/s[0m ETA [0;33m11:12[0m
+2025-10-26 14:08:13 | DEBUG | downloading: [0;94m  7.0%[0m
+2025-10-26 14:08:14 | DEBUG | [download] [0;94m  7.3%[0m of   15.56MiB at [0;32m  22.24KiB/s[0m ETA [0;33m11:04[0m
+2025-10-26 14:08:14 | DEBUG | downloading: [0;94m  7.3%[0m
+2025-10-26 14:08:16 | DEBUG | [download] [0;94m  7.5%[0m of   15.56MiB at [0;32m  21.93KiB/s[0m ETA [0;33m11:12[0m
+2025-10-26 14:08:16 | DEBUG | downloading: [0;94m  7.5%[0m
+2025-10-26 14:08:17 | DEBUG | [download] [0;94m  7.6%[0m of   15.56MiB at [0;32m  21.96KiB/s[0m ETA [0;33m11:10[0m
+2025-10-26 14:08:17 | DEBUG | downloading: [0;94m  7.6%[0m
+2025-10-26 14:08:19 | DEBUG | [download] [0;94m  7.7%[0m of   15.56MiB at [0;32m  21.75KiB/s[0m ETA [0;33m11:15[0m
+2025-10-26 14:08:19 | DEBUG | downloading: [0;94m  7.7%[0m
+2025-10-26 14:08:20 | DEBUG | [download] [0;94m  7.8%[0m of   15.56MiB at [0;32m  21.39KiB/s[0m ETA [0;33m11:26[0m
+2025-10-26 14:08:20 | DEBUG | downloading: [0;94m  7.8%[0m
+2025-10-26 14:08:21 | DEBUG | [download] [0;94m  7.9%[0m of   15.56MiB at [0;32m  21.37KiB/s[0m ETA [0;33m11:26[0m
+2025-10-26 14:08:21 | DEBUG | downloading: [0;94m  7.9%[0m
+2025-10-26 14:08:21 | DEBUG | [download] [0;94m  8.0%[0m of   15.56MiB at [0;32m  21.54KiB/s[0m ETA [0;33m11:20[0m
+2025-10-26 14:08:21 | DEBUG | downloading: [0;94m  8.0%[0m
+2025-10-26 14:08:22 | DEBUG | [download] [0;94m  8.2%[0m of   15.56MiB at [0;32m  21.70KiB/s[0m ETA [0;33m11:14[0m
+2025-10-26 14:08:22 | DEBUG | downloading: [0;94m  8.2%[0m
+2025-10-26 14:08:25 | DEBUG | [download] [0;94m  8.4%[0m of   15.56MiB at [0;32m  21.09KiB/s[0m ETA [0;33m11:31[0m
+2025-10-26 14:08:25 | DEBUG | downloading: [0;94m  8.4%[0m
+2025-10-26 14:08:26 | DEBUG | [download] [0;94m  8.5%[0m of   15.56MiB at [0;32m  21.11KiB/s[0m ETA [0;33m11:30[0m
+2025-10-26 14:08:26 | DEBUG | downloading: [0;94m  8.5%[0m
+2025-10-26 14:08:26 | DEBUG | [download] [0;94m  8.6%[0m of   15.56MiB at [0;32m  21.42KiB/s[0m ETA [0;33m11:19[0m
+2025-10-26 14:08:26 | DEBUG | downloading: [0;94m  8.6%[0m
+2025-10-26 14:08:28 | DEBUG | [download] [0;94m  8.9%[0m of   15.56MiB at [0;32m  21.69KiB/s[0m ETA [0;33m11:09[0m
+2025-10-26 14:08:28 | DEBUG | downloading: [0;94m  8.9%[0m
+2025-10-26 14:08:29 | DEBUG | [download] [0;94m  9.1%[0m of   15.56MiB at [0;32m  21.63KiB/s[0m ETA [0;33m11:09[0m
+2025-10-26 14:08:29 | DEBUG | downloading: [0;94m  9.1%[0m
+2025-10-26 14:08:30 | DEBUG | [download] [0;94m  9.2%[0m of   15.56MiB at [0;32m  21.71KiB/s[0m ETA [0;33m11:05[0m
+2025-10-26 14:08:30 | DEBUG | downloading: [0;94m  9.2%[0m
+2025-10-26 14:08:30 | DEBUG | [download] [0;94m  9.4%[0m of   15.56MiB at [0;32m  21.99KiB/s[0m ETA [0;33m10:56[0m
+2025-10-26 14:08:30 | DEBUG | downloading: [0;94m  9.4%[0m
+2025-10-26 14:08:32 | DEBUG | [download] [0;94m  9.8%[0m of   15.56MiB at [0;32m  22.19KiB/s[0m ETA [0;33m10:47[0m
+2025-10-26 14:08:32 | DEBUG | downloading: [0;94m  9.8%[0m
+2025-10-26 14:08:33 | DEBUG | [download] [0;94m 10.0%[0m of   15.56MiB at [0;32m  22.43KiB/s[0m ETA [0;33m10:39[0m
+2025-10-26 14:08:33 | DEBUG | downloading: [0;94m 10.0%[0m
+2025-10-26 14:08:34 | DEBUG | [download] [0;94m 10.3%[0m of   15.56MiB at [0;32m  22.87KiB/s[0m ETA [0;33m10:24[0m
+2025-10-26 14:08:34 | DEBUG | downloading: [0;94m 10.3%[0m
+2025-10-26 14:08:36 | DEBUG | [download] [0;94m 10.6%[0m of   15.56MiB at [0;32m  22.86KiB/s[0m ETA [0;33m10:22[0m
+2025-10-26 14:08:36 | DEBUG | downloading: [0;94m 10.6%[0m
+2025-10-26 14:08:47 | DEBUG | [download] [0;94m 10.8%[0m of   15.56MiB at [0;32m  20.28KiB/s[0m ETA [0;33m11:40[0m
+2025-10-26 14:08:47 | DEBUG | downloading: [0;94m 10.8%[0m
+2025-10-26 14:08:47 | DEBUG | [download] [0;94m 10.9%[0m of   15.56MiB at [0;32m  20.43KiB/s[0m ETA [0;33m11:34[0m
+2025-10-26 14:08:47 | DEBUG | downloading: [0;94m 10.9%[0m
+2025-10-26 14:08:47 | DEBUG | [download] [0;94m 11.1%[0m of   15.56MiB at [0;32m  20.75KiB/s[0m ETA [0;33m11:22[0m
+2025-10-26 14:08:47 | DEBUG | downloading: [0;94m 11.1%[0m
+2025-10-26 14:08:47 | DEBUG | [download] [0;94m 11.4%[0m of   15.56MiB at [0;32m  21.37KiB/s[0m ETA [0;33m11:00[0m
+2025-10-26 14:08:47 | DEBUG | downloading: [0;94m 11.4%[0m
+2025-10-26 14:08:52 | DEBUG | [download] [0;94m 12.1%[0m of   15.56MiB at [0;32m  21.43KiB/s[0m ETA [0;33m10:53[0m
+2025-10-26 14:08:52 | DEBUG | downloading: [0;94m 12.1%[0m
+2025-10-26 14:08:52 | DEBUG | [download] [0;94m 12.4%[0m of   15.56MiB at [0;32m  22.02KiB/s[0m ETA [0;33m10:33[0m
+2025-10-26 14:08:52 | DEBUG | downloading: [0;94m 12.4%[0m
+2025-10-26 14:08:58 | DEBUG | [download] [0;94m 13.1%[0m of   15.56MiB at [0;32m  21.63KiB/s[0m ETA [0;33m10:40[0m
+2025-10-26 14:08:58 | DEBUG | downloading: [0;94m 13.1%[0m
+2025-10-26 14:09:00 | DEBUG | [download] [0;94m 13.4%[0m of   15.56MiB at [0;32m  21.77KiB/s[0m ETA [0;33m10:33[0m
+2025-10-26 14:09:00 | DEBUG | downloading: [0;94m 13.4%[0m
+2025-10-26 14:09:01 | DEBUG | [download] [0;94m 13.6%[0m of   15.56MiB at [0;32m  21.79KiB/s[0m ETA [0;33m10:31[0m
+2025-10-26 14:09:01 | DEBUG | downloading: [0;94m 13.6%[0m
+2025-10-26 14:09:02 | DEBUG | [download] [0;94m 13.7%[0m of   15.56MiB at [0;32m  21.91KiB/s[0m ETA [0;33m10:27[0m
+2025-10-26 14:09:02 | DEBUG | downloading: [0;94m 13.7%[0m
+2025-10-26 14:09:03 | DEBUG | [download] [0;94m 14.0%[0m of   15.56MiB at [0;32m  22.14KiB/s[0m ETA [0;33m10:18[0m
+2025-10-26 14:09:03 | DEBUG | downloading: [0;94m 14.0%[0m
+2025-10-26 14:09:06 | DEBUG | [download] [0;94m 14.3%[0m of   15.56MiB at [0;32m  21.98KiB/s[0m ETA [0;33m10:21[0m
+2025-10-26 14:09:06 | DEBUG | downloading: [0;94m 14.3%[0m
+2025-10-26 14:09:06 | DEBUG | [download] [0;94m 14.4%[0m of   15.56MiB at [0;32m  22.09KiB/s[0m ETA [0;33m10:17[0m
+2025-10-26 14:09:06 | DEBUG | downloading: [0;94m 14.4%[0m
+2025-10-26 14:09:08 | DEBUG | [download] [0;94m 14.7%[0m of   15.56MiB at [0;32m  22.17KiB/s[0m ETA [0;33m10:12[0m
+2025-10-26 14:09:08 | DEBUG | downloading: [0;94m 14.7%[0m
+2025-10-26 14:09:10 | DEBUG | [download] [0;94m 14.9%[0m of   15.56MiB at [0;32m  22.00KiB/s[0m ETA [0;33m10:16[0m
+2025-10-26 14:09:10 | DEBUG | downloading: [0;94m 14.9%[0m
+2025-10-26 14:09:10 | DEBUG | [download] [0;94m 15.0%[0m of   15.56MiB at [0;32m  22.13KiB/s[0m ETA [0;33m10:12[0m
+2025-10-26 14:09:10 | DEBUG | downloading: [0;94m 15.0%[0m
+2025-10-26 14:09:11 | DEBUG | [download] [0;94m 15.1%[0m of   15.56MiB at [0;32m  22.12KiB/s[0m ETA [0;33m10:11[0m
+2025-10-26 14:09:11 | DEBUG | downloading: [0;94m 15.1%[0m
+2025-10-26 14:09:11 | DEBUG | [download] [0;94m 15.3%[0m of   15.56MiB at [0;32m  22.23KiB/s[0m ETA [0;33m10:07[0m
+2025-10-26 14:09:11 | DEBUG | downloading: [0;94m 15.3%[0m
+2025-10-26 14:09:13 | DEBUG | [download] [0;94m 15.5%[0m of   15.56MiB at [0;32m  22.31KiB/s[0m ETA [0;33m10:03[0m
+2025-10-26 14:09:13 | DEBUG | downloading: [0;94m 15.5%[0m
+2025-10-26 14:09:15 | DEBUG | [download] [0;94m 15.7%[0m of   15.56MiB at [0;32m  22.23KiB/s[0m ETA [0;33m10:04[0m
+2025-10-26 14:09:15 | DEBUG | downloading: [0;94m 15.7%[0m
+2025-10-26 14:09:16 | DEBUG | [download] [0;94m 15.8%[0m of   15.56MiB at [0;32m  22.20KiB/s[0m ETA [0;33m10:04[0m
+2025-10-26 14:09:16 | DEBUG | downloading: [0;94m 15.8%[0m
+2025-10-26 14:09:16 | DEBUG | [download] [0;94m 15.9%[0m of   15.56MiB at [0;32m  22.25KiB/s[0m ETA [0;33m10:02[0m
+2025-10-26 14:09:16 | DEBUG | downloading: [0;94m 15.9%[0m
+2025-10-26 14:09:17 | DEBUG | [download] [0;94m 16.1%[0m of   15.56MiB at [0;32m  22.37KiB/s[0m ETA [0;33m09:57[0m
+2025-10-26 14:09:17 | DEBUG | downloading: [0;94m 16.1%[0m
+2025-10-26 14:09:18 | DEBUG | [download] [0;94m 16.4%[0m of   15.56MiB at [0;32m  22.48KiB/s[0m ETA [0;33m09:52[0m
+2025-10-26 14:09:18 | DEBUG | downloading: [0;94m 16.4%[0m
+2025-10-26 14:09:19 | DEBUG | [download] [0;94m 16.6%[0m of   15.56MiB at [0;32m  22.55KiB/s[0m ETA [0;33m09:49[0m
+2025-10-26 14:09:19 | DEBUG | downloading: [0;94m 16.6%[0m
+2025-10-26 14:09:21 | DEBUG | [download] [0;94m 16.8%[0m of   15.56MiB at [0;32m  22.57KiB/s[0m ETA [0;33m09:47[0m
+2025-10-26 14:09:21 | DEBUG | downloading: [0;94m 16.8%[0m
+2025-10-26 14:09:21 | DEBUG | [download] [0;94m 16.9%[0m of   15.56MiB at [0;32m  22.66KiB/s[0m ETA [0;33m09:43[0m
+2025-10-26 14:09:21 | DEBUG | downloading: [0;94m 16.9%[0m
+2025-10-26 14:09:23 | DEBUG | [download] [0;94m 17.2%[0m of   15.56MiB at [0;32m  22.62KiB/s[0m ETA [0;33m09:43[0m
+2025-10-26 14:09:23 | DEBUG | downloading: [0;94m 17.2%[0m
+2025-10-26 14:09:24 | DEBUG | [download] [0;94m 17.3%[0m of   15.56MiB at [0;32m  22.70KiB/s[0m ETA [0;33m09:40[0m
+2025-10-26 14:09:24 | DEBUG | downloading: [0;94m 17.3%[0m
+2025-10-26 14:09:25 | DEBUG | [download] [0;94m 17.6%[0m of   15.56MiB at [0;32m  22.81KiB/s[0m ETA [0;33m09:35[0m
+2025-10-26 14:09:25 | DEBUG | downloading: [0;94m 17.6%[0m
+2025-10-26 14:09:26 | DEBUG | [download] [0;94m 17.8%[0m of   15.56MiB at [0;32m  22.95KiB/s[0m ETA [0;33m09:30[0m
+2025-10-26 14:09:26 | DEBUG | downloading: [0;94m 17.8%[0m
+2025-10-26 14:09:27 | DEBUG | [download] [0;94m 18.1%[0m of   15.56MiB at [0;32m  23.13KiB/s[0m ETA [0;33m09:24[0m
+2025-10-26 14:09:27 | DEBUG | downloading: [0;94m 18.1%[0m
+2025-10-26 14:09:28 | DEBUG | [download] [0;94m 18.4%[0m of   15.56MiB at [0;32m  23.17KiB/s[0m ETA [0;33m09:21[0m
+2025-10-26 14:09:28 | DEBUG | downloading: [0;94m 18.4%[0m
+2025-10-26 14:09:29 | DEBUG | [download] [0;94m 18.5%[0m of   15.56MiB at [0;32m  23.34KiB/s[0m ETA [0;33m09:15[0m
+2025-10-26 14:09:29 | DEBUG | downloading: [0;94m 18.5%[0m
+2025-10-26 14:09:29 | DEBUG | [download] [0;94m 18.9%[0m of   15.56MiB at [0;32m  23.61KiB/s[0m ETA [0;33m09:07[0m
+2025-10-26 14:09:29 | DEBUG | downloading: [0;94m 18.9%[0m
+2025-10-26 14:09:31 | DEBUG | [download] [0;94m 19.3%[0m of   15.56MiB at [0;32m  23.84KiB/s[0m ETA [0;33m08:59[0m
+2025-10-26 14:09:31 | DEBUG | downloading: [0;94m 19.3%[0m
+2025-10-26 14:09:34 | DEBUG | [download] [0;94m 19.6%[0m of   15.56MiB at [0;32m  23.69KiB/s[0m ETA [0;33m09:00[0m
+2025-10-26 14:09:34 | DEBUG | downloading: [0;94m 19.6%[0m
+2025-10-26 14:09:34 | DEBUG | [download] [0;94m 19.7%[0m of   15.56MiB at [0;32m  23.71KiB/s[0m ETA [0;33m08:59[0m
+2025-10-26 14:09:34 | DEBUG | downloading: [0;94m 19.7%[0m
+2025-10-26 14:09:35 | DEBUG | [download] [0;94m 19.9%[0m of   15.56MiB at [0;32m  23.84KiB/s[0m ETA [0;33m08:55[0m
+2025-10-26 14:09:35 | DEBUG | downloading: [0;94m 19.9%[0m
+2025-10-26 14:09:37 | DEBUG | [download] [0;94m 20.2%[0m of   15.56MiB at [0;32m  23.89KiB/s[0m ETA [0;33m08:52[0m
+2025-10-26 14:09:37 | DEBUG | downloading: [0;94m 20.2%[0m
+2025-10-26 14:09:37 | DEBUG | [download] [0;94m 20.4%[0m of   15.56MiB at [0;32m  24.04KiB/s[0m ETA [0;33m08:47[0m
+2025-10-26 14:09:37 | DEBUG | downloading: [0;94m 20.4%[0m
+2025-10-26 14:09:39 | DEBUG | [download] [0;94m 20.7%[0m of   15.56MiB at [0;32m  24.11KiB/s[0m ETA [0;33m08:43[0m
+2025-10-26 14:09:39 | DEBUG | downloading: [0;94m 20.7%[0m
+2025-10-26 14:09:40 | DEBUG | [download] [0;94m 20.9%[0m of   15.56MiB at [0;32m  24.09KiB/s[0m ETA [0;33m08:43[0m
+2025-10-26 14:09:40 | DEBUG | downloading: [0;94m 20.9%[0m
+2025-10-26 14:09:41 | DEBUG | [download] [0;94m 21.0%[0m of   15.56MiB at [0;32m  24.08KiB/s[0m ETA [0;33m08:42[0m
+2025-10-26 14:09:41 | DEBUG | downloading: [0;94m 21.0%[0m
+2025-10-26 14:09:42 | DEBUG | [download] [0;94m 21.2%[0m of   15.56MiB at [0;32m  24.18KiB/s[0m ETA [0;33m08:39[0m
+2025-10-26 14:09:42 | DEBUG | downloading: [0;94m 21.2%[0m
+2025-10-26 14:09:43 | DEBUG | [download] [0;94m 21.5%[0m of   15.56MiB at [0;32m  24.22KiB/s[0m ETA [0;33m08:36[0m
+2025-10-26 14:09:43 | DEBUG | downloading: [0;94m 21.5%[0m
+2025-10-26 14:09:44 | DEBUG | [download] [0;94m 21.6%[0m of   15.56MiB at [0;32m  24.29KiB/s[0m ETA [0;33m08:33[0m
+2025-10-26 14:09:44 | DEBUG | downloading: [0;94m 21.6%[0m
+2025-10-26 14:09:45 | DEBUG | [download] [0;94m 21.9%[0m of   15.56MiB at [0;32m  24.44KiB/s[0m ETA [0;33m08:29[0m
+2025-10-26 14:09:45 | DEBUG | downloading: [0;94m 21.9%[0m
+2025-10-26 14:09:49 | DEBUG | [download] [0;94m 22.2%[0m of   15.56MiB at [0;32m  24.14KiB/s[0m ETA [0;33m08:33[0m
+2025-10-26 14:09:49 | DEBUG | downloading: [0;94m 22.2%[0m
+2025-10-26 14:14:03 | WARNING | [youtube] The read operation timed out. Retrying (1/3)...
+2025-10-26 14:14:39 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:14:39 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = biHOKfS0mGid1qt6 ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:14:39 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:14:39 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:17:05 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:17:05 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = IcS48Z_plmOS3YzY ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:17:05 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:17:05 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:23:36 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:23:36 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = MGJhdC_OHnpbQY0q ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:23:36 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:23:36 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:23:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:23:51 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:23:52 | INFO | Загрузка: Batman (1989) | Under The Pale Moonlight | Joker Monologue | ClipZone: Heroes & Villains | длительность 4:29 | размер ~19.7 МБ
+2025-10-26 14:23:52 | WARNING | не удалось сохранить метаданные: Object of type FFmpegMergerPP is not JSON serializable
+2025-10-26 14:28:21 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:28:21 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = OqwIybm1aVKdFxI- ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:28:21 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:28:21 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:28:37 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:28:40 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:28:40 | ERROR | Ошибка загрузки https://www.youtube.com/watch?v=oPeutXr71kU
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 141, in cmd_download
+    typer.echo(f"✓ {one_url} — ok" if (dry_run or files) else f"⚠ {one_url} — нет файлов")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\utils.py", line 321, in echo
+    file.write(out)  # type: ignore
+    ~~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+2025-10-26 14:28:40 | ERROR | Ошибка загрузки
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 141, in cmd_download
+    typer.echo(f"✓ {one_url} — ok" if (dry_run or files) else f"⚠ {one_url} — нет файлов")
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\utils.py", line 321, in echo
+    file.write(out)  # type: ignore
+    ~~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 149, in cmd_download
+    typer.secho(f"✗ {one_url} — ошибка: {e}", fg=typer.colors.RED)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\termui.py", line 684, in secho
+    return echo(message, file=file, nl=nl, err=err, color=color)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\utils.py", line 321, in echo
+    file.write(out)  # type: ignore
+    ~~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2717' in position 0: character maps to <undefined>
+2025-10-26 14:36:10 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:36:10 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = oCqIHZmAztCf3knV ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:36:10 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:36:10 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:36:17 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:36:19 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:39:01 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:39:01 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = x6XA260sZBkG0u8f ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:39:01 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:39:01 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:39:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:39:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:40:58 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:40:58 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = juTqafaE3mGC3ir0 ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:40:58 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:40:58 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:40:59 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:40:59 | INFO | Название: Batman (1989) | Under The Pale Moonlight | Joker Monologue | ClipZone: Heroes & Villains
+2025-10-26 14:40:59 | INFO | Канал: ClipZone: Heroes & Villains
+2025-10-26 14:40:59 | INFO | Длительность: 4:29
+2025-10-26 14:40:59 | INFO | Просмотров: 2 026 237
+2025-10-26 14:40:59 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:41:03 | WARNING | [youtube] Falling back to generic n function search
+         player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+2025-10-26 14:41:03 | WARNING | [youtube] oPeutXr71kU: nsig extraction failed: Some formats may be missing
+         n = V9FScjBemGtsvQZx ; player = https://www.youtube.com/s/player/6e4dbefe/player_ias.vflset/en_US/base.js
+         Please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U
+2025-10-26 14:41:03 | WARNING | [youtube] oPeutXr71kU: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:41:03 | WARNING | [youtube] oPeutXr71kU: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+2025-10-26 14:41:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:41:16 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:45:28 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:45:28 | INFO | Название: Batman (1989) | Under The Pale Moonlight | Joker Monologue | ClipZone: Heroes & Villains
+2025-10-26 14:45:28 | INFO | Канал: ClipZone: Heroes & Villains
+2025-10-26 14:45:28 | INFO | Длительность: 4:29
+2025-10-26 14:45:28 | INFO | Просмотров: 2 026 381
+2025-10-26 14:45:28 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:45:39 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:45:41 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:53:04 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:53:04 | INFO | Название: Batman (1989) | Under The Pale Moonlight | Joker Monologue | ClipZone: Heroes & Villains
+2025-10-26 14:53:04 | INFO | Канал: ClipZone: Heroes & Villains
+2025-10-26 14:53:04 | INFO | Длительность: 4:29
+2025-10-26 14:53:04 | INFO | Просмотров: 2 026 534
+2025-10-26 14:53:04 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:53:16 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f399.mp4
+2025-10-26 14:53:17 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Batman (1989) ｜ Under The Pale Moonlight ｜ Joker Monologue ｜ ClipZone： Heroes & Villains [oPeutXr71kU].f140.m4a
+2025-10-26 14:53:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:53:39 | INFO | Название: Batman (1989) | Under The Pale Moonlight | Joker Monologue | ClipZone: Heroes & Villains
+2025-10-26 14:53:39 | INFO | Канал: ClipZone: Heroes & Villains
+2025-10-26 14:53:39 | INFO | Длительность: 4:29
+2025-10-26 14:53:39 | INFO | Просмотров: 2 026 534
+2025-10-26 14:53:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 14:53:47 | DEBUG | downloading:   0.0%
+2025-10-26 14:53:47 | DEBUG | downloading:   0.0%
+2025-10-26 14:53:47 | DEBUG | downloading:   0.0%
+2025-10-26 14:53:47 | DEBUG | downloading:   0.1%
+2025-10-26 14:53:47 | DEBUG | downloading:   0.2%
+2025-10-26 14:53:47 | DEBUG | downloading:   0.4%
+2025-10-26 14:53:48 | DEBUG | downloading:   0.8%
+2025-10-26 14:53:49 | DEBUG | downloading:   1.3%
+2025-10-26 14:53:50 | DEBUG | downloading:   1.9%
+2025-10-26 14:53:50 | DEBUG | downloading:   2.7%
+2025-10-26 14:54:01 | DEBUG | downloading:   4.0%
+2025-10-26 14:54:01 | DEBUG | downloading:   4.6%
+2025-10-26 14:54:02 | WARNING | ошибка (попытка 1/3): Unable to download video: [Errno 22] Invalid argument; повтор через 5.0 с
+2025-10-26 14:54:07 | WARNING | ошибка (попытка 2/3): [Errno 22] Invalid argument; повтор через 10.0 с
+2025-10-26 14:54:17 | ERROR | не удалось скачать после 3 попыток: [Errno 22] Invalid argument
+2025-10-26 14:54:17 | ERROR | Ошибка загрузки https://www.youtube.com/watch?v=oPeutXr71kU
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 138, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 204, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 760, in extract
+    self.to_screen('Extracting URL: %s' % (
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+        url if self.get_param('verbose') else truncate_string(url, 100, 20)))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1217, in to_screen
+    self._downloader.to_screen(f'[{self.IE_NAME}] {msg}', *args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 948, in to_screen
+    self._write_string(
+    ~~~~~~~~~~~~~~~~~~^
+        '{}{}'.format(self._bidi_workaround(message), ('' if skip_eol else '\n')),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self._out_files.screen, only_once=only_once)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 929, in _write_string
+    write_string(message, out=out, encoding=self.params.get('encoding'))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 1488, in write_string
+    out.flush()
+    ~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+2025-10-26 14:54:17 | ERROR | Ошибка загрузки
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 138, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 204, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 760, in extract
+    self.to_screen('Extracting URL: %s' % (
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+        url if self.get_param('verbose') else truncate_string(url, 100, 20)))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1217, in to_screen
+    self._downloader.to_screen(f'[{self.IE_NAME}] {msg}', *args, **kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 948, in to_screen
+    self._write_string(
+    ~~~~~~~~~~~~~~~~~~^
+        '{}{}'.format(self._bidi_workaround(message), ('' if skip_eol else '\n')),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self._out_files.screen, only_once=only_once)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 929, in _write_string
+    write_string(message, out=out, encoding=self.params.get('encoding'))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 1488, in write_string
+    out.flush()
+    ~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 149, in cmd_download
+    typer.secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\termui.py", line 684, in secho
+    return echo(message, file=file, nl=nl, err=err, color=color)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\utils.py", line 322, in echo
+    file.flush()
+    ~~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+2025-10-26 15:02:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:02:25 | INFO | Плейлист: Обучение сборки Кубика Рубика 3х3
+2025-10-26 15:02:25 | INFO | Видео в плейлисте: 7
+2025-10-26 15:02:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:02:46 | WARNING | ошибка (попытка 1/3): Unable to download video: [Errno 22] Invalid argument; повтор через 5.0 с
+2025-10-26 15:03:42 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:03:42 | INFO | Плейлист: Обучение сборки Кубика Рубика 3х3
+2025-10-26 15:03:42 | INFO | Видео в плейлисте: 7
+2025-10-26 15:03:42 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:03:52 | WARNING | ошибка (попытка 2/3): Unable to download video: [Errno 22] Invalid argument; повтор через 10.0 с
+2025-10-26 15:04:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:04:32 | INFO | Плейлист: Обучение сборки Кубика Рубика 3х3
+2025-10-26 15:04:32 | INFO | Видео в плейлисте: 7
+2025-10-26 15:04:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:04:42 | ERROR | не удалось скачать после 3 попыток: Unable to download video: [Errno 22] Invalid argument
+2025-10-26 15:04:42 | ERROR | Ошибка загрузки https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3467, in process_info
+    partial_success, real_download = self.dl(fname, new_info)
+                                     ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3227, in dl
+    return fd.download(name, new_info, subtitle)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 479, in download
+    ret = self.real_download(filename, info_dict)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\http.py", line 363, in real_download
+    return download()
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\http.py", line 300, in download
+    self._hook_progress({
+    ~~~~~~~~~~~~~~~~~~~^^
+        'status': 'downloading',
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+        'ctx_id': info_dict.get('ctx_id'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }, info_dict)
+    ^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 494, in _hook_progress
+    ph(status)
+    ~~^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 404, in report_progress
+    self._report_progress_status(s, msg_template)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 331, in _report_progress_status
+    self._multiline.print_at_line(self.ydl.evaluate_outtmpl(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress_template.get('download') or '[download] %(progress._default_template)s',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress_dict), s.get('progress_idx') or 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 134, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 165, in print_at_line
+    self.write(prefix, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 102, in write
+    write_string(''.join(text), self.stream)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 1488, in write_string
+    out.flush()
+    ~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 138, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 209, in download
+    info = ydl.extract_info(opts.url, download=not opts.dry_run)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1930, in process_ie_result
+    return self.__process_playlist(ie_result, download)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2078, in __process_playlist
+    entry_result = self.__process_iterable_entry(entry, download, collections.ChainMap({
+        'playlist_index': playlist_index,
+        'playlist_autonumber': i + 1,
+    }, extra))
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2110, in __process_iterable_entry
+    return self.process_ie_result(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        entry, download=download, extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1880, in process_ie_result
+    return self.extract_info(
+           ~~~~~~~~~~~~~~~~~^
+        ie_result['url'], download,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ie_key=ie_result.get('ie_key'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1860, in process_ie_result
+    ie_result = self.process_video_result(ie_result, download=download)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3038, in process_video_result
+    self.process_info(new_info)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 187, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3497, in process_info
+    raise UnavailableVideoError(err)
+yt_dlp.utils.UnavailableVideoError: Unable to download video: [Errno 22] Invalid argument
+2025-10-26 15:04:42 | ERROR | Ошибка загрузки
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3467, in process_info
+    partial_success, real_download = self.dl(fname, new_info)
+                                     ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3227, in dl
+    return fd.download(name, new_info, subtitle)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 479, in download
+    ret = self.real_download(filename, info_dict)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\http.py", line 363, in real_download
+    return download()
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\http.py", line 300, in download
+    self._hook_progress({
+    ~~~~~~~~~~~~~~~~~~~^^
+        'status': 'downloading',
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+        'ctx_id': info_dict.get('ctx_id'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }, info_dict)
+    ^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 494, in _hook_progress
+    ph(status)
+    ~~^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 404, in report_progress
+    self._report_progress_status(s, msg_template)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\downloader\common.py", line 331, in _report_progress_status
+    self._multiline.print_at_line(self.ydl.evaluate_outtmpl(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress_template.get('download') or '[download] %(progress._default_template)s',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        progress_dict), s.get('progress_idx') or 0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 134, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 165, in print_at_line
+    self.write(prefix, text)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\minicurses.py", line 102, in write
+    write_string(''.join(text), self.stream)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 1488, in write_string
+    out.flush()
+    ~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 138, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 209, in download
+    info = ydl.extract_info(opts.url, download=not opts.dry_run)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1930, in process_ie_result
+    return self.__process_playlist(ie_result, download)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2078, in __process_playlist
+    entry_result = self.__process_iterable_entry(entry, download, collections.ChainMap({
+        'playlist_index': playlist_index,
+        'playlist_autonumber': i + 1,
+    }, extra))
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2110, in __process_iterable_entry
+    return self.process_ie_result(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        entry, download=download, extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1880, in process_ie_result
+    return self.extract_info(
+           ~~~~~~~~~~~~~~~~~^
+        ie_result['url'], download,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ie_key=ie_result.get('ie_key'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1860, in process_ie_result
+    ie_result = self.process_video_result(ie_result, download=download)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3038, in process_video_result
+    self.process_info(new_info)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 187, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 3497, in process_info
+    raise UnavailableVideoError(err)
+yt_dlp.utils.UnavailableVideoError: Unable to download video: [Errno 22] Invalid argument
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 149, in cmd_download
+    typer.secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\termui.py", line 684, in secho
+    return echo(message, file=file, nl=nl, err=err, color=color)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\click\utils.py", line 322, in echo
+    file.flush()
+    ~~~~~~~~~~^^
+OSError: [Errno 22] Invalid argument
+2025-10-26 15:09:44 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:09:44 | INFO | Плейлист: Обучение сборки Кубика Рубика 3х3
+2025-10-26 15:09:44 | INFO | Видео в плейлисте: 1
+2025-10-26 15:09:44 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:12:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s].f136.mp4
+2025-10-26 15:12:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads_test\Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s].f140.m4a
+2025-10-26 15:31:56 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:31:56 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-26 15:31:56 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-26 15:31:56 | INFO | Длительность: 2:04:00
+2025-10-26 15:31:56 | INFO | Просмотров: 13 700
+2025-10-26 15:31:56 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 15:37:49 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E].f137.mp4
+2025-10-26 15:39:07 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E].f140.m4a
+2025-10-26 17:53:16 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube] 81cMcT7tAOE: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out')); повтор через 5.0 с
+2025-10-26 17:53:53 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 17:53:54 | INFO | Название: "Линейная алгебра", Кожевников П. А. 10.02.2021г.
+2025-10-26 17:53:54 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-26 17:53:54 | INFO | Длительность: 1:59:44
+2025-10-26 17:53:54 | INFO | Просмотров: 1 838
+2025-10-26 17:53:54 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 18:00:54 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE].f137.mp4
+2025-10-26 18:01:34 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE].f140.m4a
+2025-10-26 21:54:40 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 21:54:40 | INFO | Название: "Линейная алгебра", Кожевников П. А. 10.02.2021г.
+2025-10-26 21:54:40 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-26 21:54:40 | INFO | Длительность: 1:59:44
+2025-10-26 21:54:40 | INFO | Просмотров: 1 838
+2025-10-26 21:54:40 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 21:56:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 21:56:12 | INFO | Название: Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ.
+2025-10-26 21:56:12 | INFO | Канал: Holdik Live
+2025-10-26 21:56:12 | INFO | Длительность: 23:03
+2025-10-26 21:56:12 | INFO | Просмотров: 959 354
+2025-10-26 21:56:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 22:04:24 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 22:04:24 | INFO | Название: Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ.
+2025-10-26 22:04:24 | INFO | Канал: Holdik Live
+2025-10-26 22:04:24 | INFO | Длительность: 23:03
+2025-10-26 22:04:24 | INFO | Просмотров: 959 354
+2025-10-26 22:04:24 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-26 22:08:03 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs].f136.mp4
+2025-10-26 22:08:13 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs].f140-1.m4a
+2025-10-27 11:26:20 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 11:26:20 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 11:26:20 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 11:26:20 | INFO | Длительность: 2:04:00
+2025-10-27 11:26:20 | INFO | Просмотров: 13 706
+2025-10-27 11:26:20 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 11:46:35 | WARNING | Не удалось получить форматы:  — продолжим с настройками по умолчанию
+2025-10-27 11:54:44 | WARNING | Не удалось получить форматы:  — продолжим с настройками по умолчанию
+2025-10-27 11:55:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 11:55:25 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 11:55:25 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 11:55:25 | INFO | Длительность: 2:04:00
+2025-10-27 11:55:25 | INFO | Просмотров: 13 706
+2025-10-27 11:55:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 11:56:20 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_360p.f134.mp4
+2025-10-27 11:56:54 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_360p.f140.m4a
+2025-10-27 12:02:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 12:02:25 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 12:02:25 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 12:02:25 | INFO | Длительность: 2:04:00
+2025-10-27 12:02:25 | INFO | Просмотров: 13 706
+2025-10-27 12:02:25 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 12:06:57 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f137.mp4
+2025-10-27 12:07:33 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f140.m4a
+2025-10-27 12:54:28 | WARNING | Не удалось обработать плейлист:  — продолжим с настройками по умолчанию
+2025-10-27 13:57:08 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 13:57:08 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 13:57:08 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 13:57:08 | INFO | Длительность: 2:04:00
+2025-10-27 13:57:08 | INFO | Просмотров: 13 706
+2025-10-27 13:57:08 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:02:17 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:02:17 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 14:02:17 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:02:17 | INFO | Длительность: 2:04:00
+2025-10-27 14:02:17 | INFO | Просмотров: 13 706
+2025-10-27 14:02:17 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:07:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f137.mp4
+2025-10-27 14:07:43 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f140.m4a
+2025-10-27 14:08:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:08:03 | INFO | Название: "Линейная алгебра", Кожевников П. А. 10.02.2021г.
+2025-10-27 14:08:03 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:08:03 | INFO | Длительность: 1:59:44
+2025-10-27 14:08:03 | INFO | Просмотров: 1 838
+2025-10-27 14:08:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:13:59 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE]_1080p.f137.mp4
+2025-10-27 14:14:37 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE]_1080p.f140.m4a
+2025-10-27 14:14:59 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:14:59 | INFO | Название: "Линейная алгебра", Кожевников. П. А. 17.02.2021г.
+2025-10-27 14:14:59 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:14:59 | INFO | Длительность: 1:07:45
+2025-10-27 14:14:59 | INFO | Просмотров: 1 254
+2025-10-27 14:14:59 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:18:46 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_＂Линейная алгебра＂, Кожевников. П. А. 17.02.2021г. [VFfme4TbOto]_1080p.f137.mp4
+2025-10-27 14:19:04 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_＂Линейная алгебра＂, Кожевников. П. А. 17.02.2021г. [VFfme4TbOto]_1080p.f140.m4a
+2025-10-27 14:19:19 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:19:19 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.03.2021г.
+2025-10-27 14:19:19 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:19:19 | INFO | Длительность: 1:30:40
+2025-10-27 14:19:19 | INFO | Просмотров: 1 074
+2025-10-27 14:19:19 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:22:37 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_＂Линейная алгебра＂, Кожевников П. А. 03.03.2021г. [O0pM4vaNW2Q]_1080p.f137.mp4
+2025-10-27 14:23:05 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_＂Линейная алгебра＂, Кожевников П. А. 03.03.2021г. [O0pM4vaNW2Q]_1080p.f140.m4a
+2025-10-27 14:23:23 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:23:23 | INFO | Название: "Линейная алгебра", Кожевников П. А. 10.03.2021г.
+2025-10-27 14:23:23 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:23:23 | INFO | Длительность: 2:04:00
+2025-10-27 14:23:23 | INFO | Просмотров: 846
+2025-10-27 14:23:23 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:27:11 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_＂Линейная алгебра＂, Кожевников П. А. 10.03.2021г. [v2pM5g0BkvY]_1080p.f137.mp4
+2025-10-27 14:27:51 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_＂Линейная алгебра＂, Кожевников П. А. 10.03.2021г. [v2pM5g0BkvY]_1080p.f140.m4a
+2025-10-27 14:28:11 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:28:11 | INFO | Название: "Линейная алгебра", Кожевников. П. А. 17.03.2021г.
+2025-10-27 14:28:11 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:28:11 | INFO | Длительность: 2:01:50
+2025-10-27 14:28:11 | INFO | Просмотров: 615
+2025-10-27 14:28:11 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:32:54 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_＂Линейная алгебра＂, Кожевников. П. А. 17.03.2021г. [7WMmk8_jIEc]_1080p.f137.mp4
+2025-10-27 14:33:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_＂Линейная алгебра＂, Кожевников. П. А. 17.03.2021г. [7WMmk8_jIEc]_1080p.f140.m4a
+2025-10-27 14:33:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:33:47 | INFO | Название: Линейная алгебра, Кожевников П. А. 24.03.2021г.
+2025-10-27 14:33:47 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:33:47 | INFO | Длительность: 2:07:46
+2025-10-27 14:33:47 | INFO | Просмотров: 618
+2025-10-27 14:33:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:38:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Линейная алгебра, Кожевников П. А. 24.03.2021г. [N-Gb0Ysbe4A]_1080p.f137.mp4
+2025-10-27 14:38:38 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Линейная алгебра, Кожевников П. А. 24.03.2021г. [N-Gb0Ysbe4A]_1080p.f140.m4a
+2025-10-27 14:39:07 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:39:07 | INFO | Название: Линейная алгебра, Кожевников. П. А. 31.03.2021г.
+2025-10-27 14:39:07 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:39:07 | INFO | Длительность: 2:08:14
+2025-10-27 14:39:07 | INFO | Просмотров: 657
+2025-10-27 14:39:07 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:44:59 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Линейная алгебра, Кожевников. П. А. 31.03.2021г. [bgVfIRuipIA]_1080p.f137.mp4
+2025-10-27 14:45:41 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Линейная алгебра, Кожевников. П. А. 31.03.2021г. [bgVfIRuipIA]_1080p.f140.m4a
+2025-10-27 14:46:01 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:46:01 | INFO | Название: Линейная алгебра, Кожевников П. А. 14.04.2021г.
+2025-10-27 14:46:01 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:46:01 | INFO | Длительность: 2:07:11
+2025-10-27 14:46:01 | INFO | Просмотров: 617
+2025-10-27 14:46:01 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:56:10 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Линейная алгебра, Кожевников П. А. 14.04.2021г. [VwTj2KC0JVQ]_1080p.f137.mp4
+2025-10-27 14:56:46 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Линейная алгебра, Кожевников П. А. 14.04.2021г. [VwTj2KC0JVQ]_1080p.f140.m4a
+2025-10-27 14:57:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 14:57:12 | INFO | Название: Линейная алгебра, Кожевников П. А. 21.04.2021г.
+2025-10-27 14:57:12 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 14:57:13 | INFO | Длительность: 1:47:00
+2025-10-27 14:57:13 | INFO | Просмотров: 587
+2025-10-27 14:57:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 15:04:34 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Линейная алгебра, Кожевников П. А. 21.04.2021г. [BlrzrAaz_0E]_1080p.f137.mp4
+2025-10-27 15:05:23 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Линейная алгебра, Кожевников П. А. 21.04.2021г. [BlrzrAaz_0E]_1080p.f140.m4a
+2025-10-27 15:05:43 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 15:05:43 | INFO | Название: Линейная алгебра, Кожевников П. А. 28.04.2021г.
+2025-10-27 15:05:43 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 15:05:43 | INFO | Длительность: 2:02:52
+2025-10-27 15:05:43 | INFO | Просмотров: 745
+2025-10-27 15:05:43 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 15:10:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Линейная алгебра, Кожевников П. А. 28.04.2021г. [H0Bq0-PyCs8]_1080p.f137.mp4
+2025-10-27 15:11:23 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Линейная алгебра, Кожевников П. А. 28.04.2021г. [H0Bq0-PyCs8]_1080p.f140.m4a
+2025-10-27 15:12:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 15:12:33 | INFO | Плейлист: 1 курс. Линейная алгебра. Кожевников П.А. Весна 2021.
+2025-10-27 15:12:33 | INFO | Видео в плейлисте: 11
+2025-10-27 15:12:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 15:17:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f137.mp4
+2025-10-27 15:17:38 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f140.m4a
+2025-10-27 15:23:47 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE]_1080p.f137.mp4
+2025-10-27 15:24:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 10.02.2021г. [81cMcT7tAOE]_1080p.f140.m4a
+2025-10-27 15:28:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников. П. А. 17.02.2021г. [VFfme4TbOto]_1080p.f137.mp4
+2025-10-27 15:28:23 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников. П. А. 17.02.2021г. [VFfme4TbOto]_1080p.f140.m4a
+2025-10-27 15:32:49 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 03.03.2021г. [O0pM4vaNW2Q]_1080p.f137.mp4
+2025-10-27 15:33:15 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 03.03.2021г. [O0pM4vaNW2Q]_1080p.f140.m4a
+2025-10-27 15:39:21 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 10.03.2021г. [v2pM5g0BkvY]_1080p.f137.mp4
+2025-10-27 15:39:52 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников П. А. 10.03.2021г. [v2pM5g0BkvY]_1080p.f140.m4a
+2025-10-27 15:43:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников. П. А. 17.03.2021г. [7WMmk8_jIEc]_1080p.f137.mp4
+2025-10-27 15:44:37 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_＂Линейная алгебра＂, Кожевников. П. А. 17.03.2021г. [7WMmk8_jIEc]_1080p.f140.m4a
+2025-10-27 15:44:46 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube] N-Gb0Ysbe4A: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 5.0 с
+2025-10-27 15:45:01 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] LYCBwmd-7-E: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 10.0 с
+2025-10-27 15:45:17 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube] LYCBwmd-7-E: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+2025-10-27 15:45:17 | ERROR | Ошибка загрузки https://www.youtube.com/playlist?list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 4001, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1274, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] LYCBwmd-7-E: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 433, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 235, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1930, in process_ie_result
+    return self.__process_playlist(ie_result, download)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2078, in __process_playlist
+    entry_result = self.__process_iterable_entry(entry, download, collections.ChainMap({
+        'playlist_index': playlist_index,
+        'playlist_autonumber': i + 1,
+    }, extra))
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2110, in __process_iterable_entry
+    return self.process_ie_result(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        entry, download=download, extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1880, in process_ie_result
+    return self.extract_info(
+           ~~~~~~~~~~~~~~~~~^
+        ie_result['url'], download,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ie_key=ie_result.get('ie_key'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] LYCBwmd-7-E: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+2025-10-27 18:24:31 | ERROR | Ошибка загрузки
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 119, in cmd_download
+    raise typer.Exit(code=2)
+click.exceptions.Exit
+2025-10-27 18:24:53 | ERROR | Ошибка загрузки
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 119, in cmd_download
+    raise typer.Exit(code=2)
+click.exceptions.Exit
+2025-10-27 18:31:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:31:12 | INFO | Название: Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ.
+2025-10-27 18:31:12 | INFO | Канал: Holdik Live
+2025-10-27 18:31:12 | INFO | Длительность: 17:42
+2025-10-27 18:31:12 | INFO | Просмотров: 1 096 299
+2025-10-27 18:31:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:31:25 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_144p.f160.mp4
+2025-10-27 18:31:33 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_144p.f140.m4a
+2025-10-27 18:31:48 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:31:48 | INFO | Название: Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ.
+2025-10-27 18:31:48 | INFO | Канал: Holdik Live
+2025-10-27 18:31:48 | INFO | Длительность: 23:03
+2025-10-27 18:31:48 | INFO | Просмотров: 959 366
+2025-10-27 18:31:48 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:32:07 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs]_144p.f160.mp4
+2025-10-27 18:32:16 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs]_144p.f140-1.m4a
+2025-10-27 18:32:34 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:32:34 | INFO | Название: Как собрать Кубик Рубика 3х3. Часть 3 - второй слой.
+2025-10-27 18:32:34 | INFO | Канал: Holdik Live
+2025-10-27 18:32:34 | INFO | Длительность: 18:51
+2025-10-27 18:32:34 | INFO | Просмотров: 610 137
+2025-10-27 18:32:34 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:32:49 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Как собрать Кубик Рубика 3х3. Часть 3 - второй слой. [hyQ0HTERxI4]_144p.f160.mp4
+2025-10-27 18:32:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Как собрать Кубик Рубика 3х3. Часть 3 - второй слой. [hyQ0HTERxI4]_144p.f140-1.m4a
+2025-10-27 18:33:10 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:33:10 | INFO | Название: Обучение сборки Кубика Рубика 3х3. 4 часть - ВЕРХНИЙ КРЕСТ.
+2025-10-27 18:33:10 | INFO | Канал: Holdik Live
+2025-10-27 18:33:10 | INFO | Длительность: 11:31
+2025-10-27 18:33:10 | INFO | Просмотров: 510 321
+2025-10-27 18:33:10 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:33:27 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Обучение сборки Кубика Рубика 3х3. 4 часть - ВЕРХНИЙ КРЕСТ. [YQ3hdyNebaA]_144p.f160.mp4
+2025-10-27 18:33:31 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Обучение сборки Кубика Рубика 3х3. 4 часть - ВЕРХНИЙ КРЕСТ. [YQ3hdyNebaA]_144p.f140.m4a
+2025-10-27 18:33:46 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:33:46 | INFO | Название: Обучение сборки Кубика Рубика Рубика 3х3. 5 часть - УГЛЫ НА ВЕРХУ.
+2025-10-27 18:33:46 | INFO | Канал: Holdik Live
+2025-10-27 18:33:46 | INFO | Длительность: 8:48
+2025-10-27 18:33:46 | INFO | Просмотров: 503 793
+2025-10-27 18:33:46 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:33:58 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Обучение сборки Кубика Рубика Рубика 3х3. 5 часть - УГЛЫ НА ВЕРХУ. [34nOwCPS2K8]_144p.f160.mp4
+2025-10-27 18:34:01 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Обучение сборки Кубика Рубика Рубика 3х3. 5 часть - УГЛЫ НА ВЕРХУ. [34nOwCPS2K8]_144p.f140-1.m4a
+2025-10-27 18:34:16 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:34:16 | INFO | Название: Обучение сборки Кубика Рубика 3х3. 6 часть - РЕБРА НА ШАПКЕ(или убийство)
+2025-10-27 18:34:16 | INFO | Канал: Holdik Live
+2025-10-27 18:34:16 | INFO | Длительность: 8:05
+2025-10-27 18:34:16 | INFO | Просмотров: 601 528
+2025-10-27 18:34:16 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:34:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Обучение сборки Кубика Рубика 3х3. 6 часть - РЕБРА НА ШАПКЕ(или убийство) [Db-sQCSYYmA]_144p.f160.mp4
+2025-10-27 18:34:31 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Обучение сборки Кубика Рубика 3х3. 6 часть - РЕБРА НА ШАПКЕ(или убийство) [Db-sQCSYYmA]_144p.f140.m4a
+2025-10-27 18:34:44 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:34:44 | INFO | Название: Обучение сборки Кубика Рубика 3х3. 7 часть - УГЛЫ НА ВЕРХУ(БОЛЬНИЧКА)
+2025-10-27 18:34:44 | INFO | Канал: Holdik Live
+2025-10-27 18:34:44 | INFO | Длительность: 17:21
+2025-10-27 18:34:44 | INFO | Просмотров: 508 364
+2025-10-27 18:34:44 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 18:35:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Обучение сборки Кубика Рубика 3х3. 7 часть - УГЛЫ НА ВЕРХУ(БОЛЬНИЧКА) [bA_igKoEPL8]_144p.f160.mp4
+2025-10-27 18:35:07 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Обучение сборки Кубика Рубика 3х3. 7 часть - УГЛЫ НА ВЕРХУ(БОЛЬНИЧКА) [bA_igKoEPL8]_144p.f140.m4a
+2025-10-27 18:57:36 | WARNING | Не удалось обработать плейлист:  — продолжим с настройками по умолчанию
+2025-10-27 19:00:09 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:00:09 | INFO | Название: Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ.
+2025-10-27 19:00:09 | INFO | Канал: Holdik Live
+2025-10-27 19:00:09 | INFO | Длительность: 17:42
+2025-10-27 19:00:09 | INFO | Просмотров: 1 096 308
+2025-10-27 19:00:09 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:00:20 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_144p.f160.mp4
+2025-10-27 19:00:27 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_144p.f140.m4a
+2025-10-27 19:05:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:05:32 | INFO | Название: "Линейная алгебра", Кожевников П. А. 03.02.2021г.
+2025-10-27 19:05:32 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-27 19:05:32 | INFO | Длительность: 2:04:00
+2025-10-27 19:05:32 | INFO | Просмотров: 13 706
+2025-10-27 19:05:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:10:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f137.mp4
+2025-10-27 19:11:39 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_＂Линейная алгебра＂, Кожевников П. А. 03.02.2021г. [LYCBwmd-7-E]_1080p.f140.m4a
+2025-10-27 19:12:01 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:12:01 | INFO | Название: №2. Подпространства, сумма подпространств. Аффинные пространства.
+2025-10-27 19:12:01 | INFO | Канал: DGAP Lectorium
+2025-10-27 19:12:01 | INFO | Длительность: 2:00:22
+2025-10-27 19:12:01 | INFO | Просмотров: 1 442
+2025-10-27 19:12:01 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-27 19:19:11 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_№2. Подпространства, сумма подпространств. Аффинные пространства. [bH7Mm6Y8unM]_1080p.f137.mp4
+2025-10-27 19:20:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_№2. Подпространства, сумма подпространств. Аффинные пространства. [bH7Mm6Y8unM]_1080p.f140.m4a
+2025-10-28 10:40:31 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:40:31 | INFO | Название: №3. Линейные отображения и операции над ними. Изоморфизмы.
+2025-10-28 10:40:31 | INFO | Канал: DGAP Lectorium
+2025-10-28 10:40:31 | INFO | Длительность: 1:23:55
+2025-10-28 10:40:31 | INFO | Просмотров: 1 702
+2025-10-28 10:40:31 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:46:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_№3. Линейные отображения и операции над ними. Изоморфизмы. [Zc2P-AVzyic]_1080p.f137.mp4
+2025-10-28 10:46:30 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_№3. Линейные отображения и операции над ними. Изоморфизмы. [Zc2P-AVzyic]_1080p.f140.m4a
+2025-10-28 10:46:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:46:47 | INFO | Название: №4. Собственные векторы, диагонализируемость.
+2025-10-28 10:46:47 | INFO | Канал: DGAP Lectorium
+2025-10-28 10:46:47 | INFO | Длительность: 2:14:16
+2025-10-28 10:46:47 | INFO | Просмотров: 2 151
+2025-10-28 10:46:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:50:13 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_№4. Собственные векторы, диагонализируемость. [Um-5ms6GrlA]_1080p.f137.mp4
+2025-10-28 10:50:50 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_№4. Собственные векторы, диагонализируемость. [Um-5ms6GrlA]_1080p.f140.m4a
+2025-10-28 10:51:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:51:12 | INFO | Название: №5. Структура недиагонализируемого преобразования. Жорданова нормальная форма.
+2025-10-28 10:51:12 | INFO | Канал: DGAP Lectorium
+2025-10-28 10:51:12 | INFO | Длительность: 2:22:40
+2025-10-28 10:51:12 | INFO | Просмотров: 1 830
+2025-10-28 10:51:12 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:55:53 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_№5. Структура недиагонализируемого преобразования. Жорданова нормальная форма. [lKx5mC8_FNg]_1080p.f137.mp4
+2025-10-28 10:56:29 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_№5. Структура недиагонализируемого преобразования. Жорданова нормальная форма. [lKx5mC8_FNg]_1080p.f140.m4a
+2025-10-28 10:56:54 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 10:56:54 | INFO | Название: №6. Билинейные и квадратичные формы. Канонический вид. Знакоопределенные формы.
+2025-10-28 10:56:54 | INFO | Канал: DGAP Lectorium
+2025-10-28 10:56:54 | INFO | Длительность: 2:14:00
+2025-10-28 10:56:54 | INFO | Просмотров: 1 506
+2025-10-28 10:56:54 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:01:41 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_№6. Билинейные и квадратичные формы. Канонический вид. Знакоопределенные формы. [KoR-SqOIxRs]_1080p.f137.mp4
+2025-10-28 11:02:16 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_№6. Билинейные и квадратичные формы. Канонический вид. Знакоопределенные формы. [KoR-SqOIxRs]_1080p.f140.m4a
+2025-10-28 11:02:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:02:39 | INFO | Название: №7. Кососимметричные формы. Евклидовы пространства. Ортогональное дополнение подпространства.
+2025-10-28 11:02:39 | INFO | Канал: DGAP Lectorium
+2025-10-28 11:02:39 | INFO | Длительность: 2:07:44
+2025-10-28 11:02:39 | INFO | Просмотров: 820
+2025-10-28 11:02:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:06:46 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_№7. Кососимметричные формы. Евклидовы пространства. Ортогональное дополнение подпространства. [WfBXgZt9Aw4]_1080p.f137.mp4
+2025-10-28 11:07:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_№7. Кососимметричные формы. Евклидовы пространства. Ортогональное дополнение подпространства. [WfBXgZt9Aw4]_1080p.f140.m4a
+2025-10-28 11:07:51 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:07:51 | INFO | Название: №8. Ортогонализация. Самосопряженные, ортогональные (унитарные) преобразования. Полярное разложение.
+2025-10-28 11:07:51 | INFO | Канал: DGAP Lectorium
+2025-10-28 11:07:51 | INFO | Длительность: 2:22:10
+2025-10-28 11:07:51 | INFO | Просмотров: 1 573
+2025-10-28 11:07:51 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:14:40 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_№8. Ортогонализация. Самосопряженные, ортогональные (унитарные) преобразования. Полярное разложение. [jf9pKEmzt0I]_1080p.f137.mp4
+2025-10-28 11:15:43 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_№8. Ортогонализация. Самосопряженные, ортогональные (унитарные) преобразования. Полярное разложение. [jf9pKEmzt0I]_1080p.f140.m4a
+2025-10-28 11:16:08 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:16:08 | INFO | Название: №9. Билинейные формы в евклидовом пространстве. Сопряженное пространство. Взаимный базис.
+2025-10-28 11:16:08 | INFO | Канал: DGAP Lectorium
+2025-10-28 11:16:08 | INFO | Длительность: 2:22:45
+2025-10-28 11:16:08 | INFO | Просмотров: 1 419
+2025-10-28 11:16:08 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:23:30 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_№9. Билинейные формы в евклидовом пространстве. Сопряженное пространство. Взаимный базис. [Wjq1QscN_l4]_1080p.f137.mp4
+2025-10-28 11:24:25 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_№9. Билинейные формы в евклидовом пространстве. Сопряженное пространство. Взаимный базис. [Wjq1QscN_l4]_1080p.f140.m4a
+2025-10-28 11:24:46 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:24:46 | INFO | Название: №10. Биортогональное дополнение, сопряженное преобразование. Тензоры.
+2025-10-28 11:24:46 | INFO | Канал: DGAP Lectorium
+2025-10-28 11:24:46 | INFO | Длительность: 2:05:00
+2025-10-28 11:24:46 | INFO | Просмотров: 1 240
+2025-10-28 11:24:46 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:30:24 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_№10. Биортогональное дополнение, сопряженное преобразование. Тензоры. [yLiDX2uzoLs]_1080p.f137.mp4
+2025-10-28 11:30:59 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_№10. Биортогональное дополнение, сопряженное преобразование. Тензоры. [yLiDX2uzoLs]_1080p.f140.m4a
+2025-10-28 11:31:20 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:31:20 | INFO | Название: №11. Тензоры. Основные тензорные операции. Симметричные и кососимметричные тензоры. Внешние формы.
+2025-10-28 11:31:20 | INFO | Канал: DGAP Lectorium
+2025-10-28 11:31:20 | INFO | Длительность: 2:17:09
+2025-10-28 11:31:20 | INFO | Просмотров: 1 724
+2025-10-28 11:31:20 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:36:17 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_№11. Тензоры. Основные тензорные операции. Симметричные и кососимметричные тензоры. Внешние формы. [h9DLEOTMOMk]_1080p.f137.mp4
+2025-10-28 11:36:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_№11. Тензоры. Основные тензорные операции. Симметричные и кососимметричные тензоры. Внешние формы. [h9DLEOTMOMk]_1080p.f140.m4a
+2025-10-28 11:37:18 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:37:18 | INFO | Название: Линейная алгебра, Кожевников П. А. 14.06.2021г.
+2025-10-28 11:37:18 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 11:37:18 | INFO | Длительность: 2:41:04
+2025-10-28 11:37:18 | INFO | Просмотров: 1 642
+2025-10-28 11:37:18 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 11:48:17 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Линейная алгебра, Кожевников П. А. 14.06.2021г. [L11m7EY4nvg]_1080p.f137.mp4
+2025-10-28 11:49:05 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Линейная алгебра, Кожевников П. А. 14.06.2021г. [L11m7EY4nvg]_1080p.f140.m4a
+2025-10-28 13:06:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:06:03 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 01.09.2021. Лекция 1.
+2025-10-28 13:06:03 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:06:03 | INFO | Длительность: 2:16:00
+2025-10-28 13:06:03 | INFO | Просмотров: 7 026
+2025-10-28 13:06:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:14:42 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Аналитическая геометрия, Кожевников П. А., 01.09.2021. Лекция 1. [y9CiuCIkvU8]_1080p.f137.mp4
+2025-10-28 13:15:26 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Аналитическая геометрия, Кожевников П. А., 01.09.2021. Лекция 1. [y9CiuCIkvU8]_1080p.f140.m4a
+2025-10-28 13:15:50 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:15:50 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 08.09.2021. Лекция 2.
+2025-10-28 13:15:50 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:15:50 | INFO | Длительность: 2:13:10
+2025-10-28 13:15:50 | INFO | Просмотров: 2 532
+2025-10-28 13:15:50 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:21:34 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Аналитическая геометрия, Кожевников П. А., 08.09.2021. Лекция 2. [YYShlkMU-Zg]_1080p.f137.mp4
+2025-10-28 13:22:20 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Аналитическая геометрия, Кожевников П. А., 08.09.2021. Лекция 2. [YYShlkMU-Zg]_1080p.f140.m4a
+2025-10-28 13:22:40 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:22:40 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 15.09.2021. Лекция 3.
+2025-10-28 13:22:40 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:22:40 | INFO | Длительность: 2:15:05
+2025-10-28 13:22:40 | INFO | Просмотров: 2 059
+2025-10-28 13:22:40 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:28:19 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Аналитическая геометрия, Кожевников П. А., 15.09.2021. Лекция 3. [tQGfcOxU5xk]_1080p.f137.mp4
+2025-10-28 13:29:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Аналитическая геометрия, Кожевников П. А., 15.09.2021. Лекция 3. [tQGfcOxU5xk]_1080p.f140.m4a
+2025-10-28 13:29:38 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:29:38 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 22.09.2021. Лекция 4.
+2025-10-28 13:29:38 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:29:38 | INFO | Длительность: 2:08:05
+2025-10-28 13:29:38 | INFO | Просмотров: 1 988
+2025-10-28 13:29:38 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:35:11 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Аналитическая геометрия, Кожевников П. А., 22.09.2021. Лекция 4. [oIFMicLjE0o]_1080p.f137.mp4
+2025-10-28 13:36:01 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Аналитическая геометрия, Кожевников П. А., 22.09.2021. Лекция 4. [oIFMicLjE0o]_1080p.f140.m4a
+2025-10-28 13:36:23 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:36:23 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 29.09.2021. Лекция 5.
+2025-10-28 13:36:23 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:36:23 | INFO | Длительность: 2:19:39
+2025-10-28 13:36:23 | INFO | Просмотров: 2 049
+2025-10-28 13:36:23 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:44:13 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Аналитическая геометрия, Кожевников П. А., 29.09.2021. Лекция 5. [YDwac3rsG-Q]_1080p.f137.mp4
+2025-10-28 13:45:02 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Аналитическая геометрия, Кожевников П. А., 29.09.2021. Лекция 5. [YDwac3rsG-Q]_1080p.f140.m4a
+2025-10-28 13:45:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:45:27 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 27.10.2021. Лекция 6.
+2025-10-28 13:45:27 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:45:27 | INFO | Длительность: 2:27:20
+2025-10-28 13:45:27 | INFO | Просмотров: 1 964
+2025-10-28 13:45:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:54:02 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Аналитическая геометрия, Кожевников П. А., 27.10.2021. Лекция 6. [aOMw2Yqtcio]_1080p.f137.mp4
+2025-10-28 13:54:53 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Аналитическая геометрия, Кожевников П. А., 27.10.2021. Лекция 6. [aOMw2Yqtcio]_1080p.f140.m4a
+2025-10-28 13:55:17 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 13:55:17 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 10.11.2021.
+2025-10-28 13:55:17 | INFO | Канал: DGAP Lectorium
+2025-10-28 13:55:17 | INFO | Длительность: 2:09:35
+2025-10-28 13:55:17 | INFO | Просмотров: 1 559
+2025-10-28 13:55:17 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:01:29 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Аналитическая геометрия, Кожевников П. А., 10.11.2021. [atn1lVr93vU]_1080p.f137.mp4
+2025-10-28 14:02:23 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Аналитическая геометрия, Кожевников П. А., 10.11.2021. [atn1lVr93vU]_1080p.f140.m4a
+2025-10-28 14:02:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:02:47 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 11.11.2021.
+2025-10-28 14:02:47 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:02:47 | INFO | Длительность: 1:19:30
+2025-10-28 14:02:47 | INFO | Просмотров: 1 450
+2025-10-28 14:02:47 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:07:20 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Аналитическая геометрия, Кожевников П. А., 11.11.2021. [LZRPo3YuAB8]_1080p.f137.mp4
+2025-10-28 14:08:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Аналитическая геометрия, Кожевников П. А., 11.11.2021. [LZRPo3YuAB8]_1080p.f140.m4a
+2025-10-28 14:08:26 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:08:26 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 17.11.2021.
+2025-10-28 14:08:26 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:08:26 | INFO | Длительность: 1:47:25
+2025-10-28 14:08:26 | INFO | Просмотров: 1 099
+2025-10-28 14:08:26 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:09:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Аналитическая геометрия, Кожевников П. А., 17.11.2021. [abQv1EqnL7M]_1080p.f136.mp4
+2025-10-28 14:09:59 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Аналитическая геометрия, Кожевников П. А., 17.11.2021. [abQv1EqnL7M]_1080p.f140.m4a
+2025-10-28 14:10:18 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:10:18 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 24.11.2021.
+2025-10-28 14:10:18 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:10:18 | INFO | Длительность: 2:13:00
+2025-10-28 14:10:18 | INFO | Просмотров: 1 402
+2025-10-28 14:10:18 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:17:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Аналитическая геометрия, Кожевников П. А., 24.11.2021. [wQ1jvbajxww]_1080p.f137.mp4
+2025-10-28 14:18:26 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Аналитическая геометрия, Кожевников П. А., 24.11.2021. [wQ1jvbajxww]_1080p.f140.m4a
+2025-10-28 14:18:50 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:18:50 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 01.12.2021.
+2025-10-28 14:18:51 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:18:51 | INFO | Длительность: 2:07:00
+2025-10-28 14:18:51 | INFO | Просмотров: 1 192
+2025-10-28 14:18:51 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:23:50 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Аналитическая геометрия, Кожевников П. А., 01.12.2021. [eHIFFwyQlgU]_1080p.f137.mp4
+2025-10-28 14:24:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Аналитическая геометрия, Кожевников П. А., 01.12.2021. [eHIFFwyQlgU]_1080p.f140.m4a
+2025-10-28 14:25:11 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:25:11 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 02.12.2021.
+2025-10-28 14:25:11 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:25:11 | INFO | Длительность: 1:25:15
+2025-10-28 14:25:11 | INFO | Просмотров: 1 025
+2025-10-28 14:25:11 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:36:19 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Аналитическая геометрия, Кожевников П. А., 02.12.2021. [wCDQo1u2ez0]_1080p.f137.mp4
+2025-10-28 14:36:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Аналитическая геометрия, Кожевников П. А., 02.12.2021. [wCDQo1u2ez0]_1080p.f140.m4a
+2025-10-28 14:37:09 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:37:09 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 08.12.2021.
+2025-10-28 14:37:09 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:37:09 | INFO | Длительность: 1:19:00
+2025-10-28 14:37:09 | INFO | Просмотров: 1 032
+2025-10-28 14:37:09 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:39:57 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\13_Аналитическая геометрия, Кожевников П. А., 08.12.2021. [_5dFPKn0Ysk]_1080p.f137.mp4
+2025-10-28 14:40:30 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\13_Аналитическая геометрия, Кожевников П. А., 08.12.2021. [_5dFPKn0Ysk]_1080p.f140.m4a
+2025-10-28 14:40:50 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:40:50 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 08.12.2021. Доп. лекция (Кривые и поверхности)
+2025-10-28 14:40:50 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:40:50 | INFO | Длительность: 1:00:00
+2025-10-28 14:40:50 | INFO | Просмотров: 918
+2025-10-28 14:40:50 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:43:21 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\14_Аналитическая геометрия, Кожевников П. А., 08.12.2021. Доп. лекция (Кривые и поверхности) [_WNh8LH9oGI]_1080p.f137.mp4
+2025-10-28 14:43:44 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\14_Аналитическая геометрия, Кожевников П. А., 08.12.2021. Доп. лекция (Кривые и поверхности) [_WNh8LH9oGI]_1080p.f140.m4a
+2025-10-28 14:44:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:44:03 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 09.12.2021. Доп. лекция (Кривые и поверхности)
+2025-10-28 14:44:03 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:44:03 | INFO | Длительность: 1:17:35
+2025-10-28 14:44:03 | INFO | Просмотров: 985
+2025-10-28 14:44:03 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:47:56 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\15_Аналитическая геометрия, Кожевников П. А., 09.12.2021. Доп. лекция (Кривые и поверхности) [Tntv3UZwuAs]_1080p.f137.mp4
+2025-10-28 14:48:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\15_Аналитическая геометрия, Кожевников П. А., 09.12.2021. Доп. лекция (Кривые и поверхности) [Tntv3UZwuAs]_1080p.f140.m4a
+2025-10-28 14:48:43 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:48:43 | INFO | Название: Аналитическая геометрия, Кожевников П. А., 18.01.2022. Консультация перед экзаменом.
+2025-10-28 14:48:43 | INFO | Канал: DGAP Lectorium
+2025-10-28 14:48:43 | INFO | Длительность: 2:29:50
+2025-10-28 14:48:43 | INFO | Просмотров: 1 053
+2025-10-28 14:48:43 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 14:55:12 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\16_Аналитическая геометрия, Кожевников П. А., 18.01.2022. Консультация перед экзаменом. [VsicluA7HzM]_1080p.f137.mp4
+2025-10-28 14:56:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\16_Аналитическая геометрия, Кожевников П. А., 18.01.2022. Консультация перед экзаменом. [VsicluA7HzM]_1080p.f140.m4a
+2025-10-28 15:17:07 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 15:17:07 | INFO | Плейлист: Аналитическая геометрия, Кожевников П. А., 1 семестр, 2021
+2025-10-28 15:17:07 | INFO | Видео в плейлисте: 16
+2025-10-28 15:17:07 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 15:20:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 15:20:27 | INFO | Плейлист: Аналитическая геометрия, Кожевников П. А., 1 семестр, 2021
+2025-10-28 15:20:27 | INFO | Видео в плейлисте: 16
+2025-10-28 15:20:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 15:34:26 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 01.09.2021. Лекция 1. [y9CiuCIkvU8].f137.mp4
+2025-10-28 15:35:30 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 01.09.2021. Лекция 1. [y9CiuCIkvU8].f140.m4a
+2025-10-28 15:45:34 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.09.2021. Лекция 2. [YYShlkMU-Zg].f137.mp4
+2025-10-28 15:46:43 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.09.2021. Лекция 2. [YYShlkMU-Zg].f140.m4a
+2025-10-28 15:54:33 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 15.09.2021. Лекция 3. [tQGfcOxU5xk].f137.mp4
+2025-10-28 15:55:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 15.09.2021. Лекция 3. [tQGfcOxU5xk].f140.m4a
+2025-10-28 16:04:56 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 22.09.2021. Лекция 4. [oIFMicLjE0o].f137.mp4
+2025-10-28 16:05:58 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 22.09.2021. Лекция 4. [oIFMicLjE0o].f140.m4a
+2025-10-28 16:16:19 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 29.09.2021. Лекция 5. [YDwac3rsG-Q].f137.mp4
+2025-10-28 16:17:49 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 29.09.2021. Лекция 5. [YDwac3rsG-Q].f140.m4a
+2025-10-28 16:29:26 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 27.10.2021. Лекция 6. [aOMw2Yqtcio].f137.mp4
+2025-10-28 16:30:57 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 27.10.2021. Лекция 6. [aOMw2Yqtcio].f140.m4a
+2025-10-28 16:39:26 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 10.11.2021. [atn1lVr93vU].f137.mp4
+2025-10-28 16:40:24 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 10.11.2021. [atn1lVr93vU].f140.m4a
+2025-10-28 16:45:52 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 11.11.2021. [LZRPo3YuAB8].f137.mp4
+2025-10-28 16:46:37 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 11.11.2021. [LZRPo3YuAB8].f140.m4a
+2025-10-28 16:47:41 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 17.11.2021. [abQv1EqnL7M].f136.mp4
+2025-10-28 16:48:59 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 17.11.2021. [abQv1EqnL7M].f140.m4a
+2025-10-28 16:58:11 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 24.11.2021. [wQ1jvbajxww].f137.mp4
+2025-10-28 16:59:20 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 24.11.2021. [wQ1jvbajxww].f140.m4a
+2025-10-28 17:05:38 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 01.12.2021. [eHIFFwyQlgU].f137.mp4
+2025-10-28 17:06:51 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 01.12.2021. [eHIFFwyQlgU].f140.m4a
+2025-10-28 17:19:52 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 02.12.2021. [wCDQo1u2ez0].f137.mp4
+2025-10-28 17:20:31 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 02.12.2021. [wCDQo1u2ez0].f140.m4a
+2025-10-28 17:24:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.12.2021. [_5dFPKn0Ysk].f137.mp4
+2025-10-28 17:24:39 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.12.2021. [_5dFPKn0Ysk].f140.m4a
+2025-10-28 17:27:31 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.12.2021. Доп. лекция (Кривые и поверхности) [_WNh8LH9oGI].f137.mp4
+2025-10-28 17:28:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 08.12.2021. Доп. лекция (Кривые и поверхности) [_WNh8LH9oGI].f140.m4a
+2025-10-28 17:33:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 09.12.2021. Доп. лекция (Кривые и поверхности) [Tntv3UZwuAs].f137.mp4
+2025-10-28 17:34:34 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 09.12.2021. Доп. лекция (Кривые и поверхности) [Tntv3UZwuAs].f140.m4a
+2025-10-28 17:43:48 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 18.01.2022. Консультация перед экзаменом. [VsicluA7HzM].f137.mp4
+2025-10-28 17:45:47 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Аналитическая геометрия, Кожевников П. А., 18.01.2022. Консультация перед экзаменом. [VsicluA7HzM].f140.m4a
+2025-10-28 17:47:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 17:47:39 | INFO | Плейлист: Кожевников П.А. Аналитическая геометрия (2 семестр)
+2025-10-28 17:47:39 | INFO | Видео в плейлисте: 15
+2025-10-28 17:47:39 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 17:55:07 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №1. Введение. [S3M3D4T8NOs].f136.mp4
+2025-10-28 17:56:19 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №1. Введение. [S3M3D4T8NOs].f140.m4a
+2025-10-28 18:07:35 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №2. Линейная зависимость векторов.  Базис векторного пространства [OnlyCNrSH3I].f136.mp4
+2025-10-28 18:08:38 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №2. Линейная зависимость векторов.  Базис векторного пространства [OnlyCNrSH3I].f140.m4a
+2025-10-28 18:13:12 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №3. Системы координат.  Скалярное произведение [EmGIIXHWxOE].f136.mp4
+2025-10-28 18:14:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\Лекция №3. Системы координат.  Скалярное произведение [EmGIIXHWxOE].f140.m4a
+2025-10-28 18:43:05 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 18:43:05 | INFO | Название: Лекция №1. Введение.
+2025-10-28 18:43:05 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 18:43:05 | INFO | Длительность: 1:13:29
+2025-10-28 18:43:05 | INFO | Просмотров: 33 055
+2025-10-28 18:43:05 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 18:51:31 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Лекция №1. Введение. [S3M3D4T8NOs]_720p.f136.mp4
+2025-10-28 18:52:13 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Лекция №1. Введение. [S3M3D4T8NOs]_720p.f140.m4a
+2025-10-28 18:52:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 18:52:33 | INFO | Название: Лекция №2. Линейная зависимость векторов.  Базис векторного пространства
+2025-10-28 18:52:33 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 18:52:33 | INFO | Длительность: 1:16:59
+2025-10-28 18:52:33 | INFO | Просмотров: 19 530
+2025-10-28 18:52:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 18:59:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Лекция №2. Линейная зависимость векторов.  Базис векторного пространства [OnlyCNrSH3I]_720p.f136.mp4
+2025-10-28 19:00:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Лекция №2. Линейная зависимость векторов.  Базис векторного пространства [OnlyCNrSH3I]_720p.f140.m4a
+2025-10-28 19:00:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:00:33 | INFO | Название: Лекция №3. Системы координат.  Скалярное произведение
+2025-10-28 19:00:33 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:00:33 | INFO | Длительность: 1:16:09
+2025-10-28 19:00:33 | INFO | Просмотров: 8 198
+2025-10-28 19:00:33 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:07:45 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Лекция №3. Системы координат.  Скалярное произведение [EmGIIXHWxOE]_720p.f136.mp4
+2025-10-28 19:09:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\03_Лекция №3. Системы координат.  Скалярное произведение [EmGIIXHWxOE]_720p.f140.m4a
+2025-10-28 19:09:21 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:09:21 | INFO | Название: Лекция №4. Векторное и смешанное произведения
+2025-10-28 19:09:21 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:09:21 | INFO | Длительность: 1:16:13
+2025-10-28 19:09:21 | INFO | Просмотров: 7 645
+2025-10-28 19:09:21 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:14:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Лекция №4. Векторное и смешанное произведения [Ht8QCkHb3tg]_720p.f136.mp4
+2025-10-28 19:15:00 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\04_Лекция №4. Векторное и смешанное произведения [Ht8QCkHb3tg]_720p.f140.m4a
+2025-10-28 19:15:21 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:15:21 | INFO | Название: Лекция №5. Прямая на плоскости.  Плоскость в пространстве
+2025-10-28 19:15:21 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:15:21 | INFO | Длительность: 1:12:52
+2025-10-28 19:15:21 | INFO | Просмотров: 9 245
+2025-10-28 19:15:21 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:20:25 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Лекция №5. Прямая на плоскости.  Плоскость в пространстве [JR6ozNM_Wjk]_720p.f136.mp4
+2025-10-28 19:21:25 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\05_Лекция №5. Прямая на плоскости.  Плоскость в пространстве [JR6ozNM_Wjk]_720p.f140.m4a
+2025-10-28 19:21:48 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:21:48 | INFO | Название: Лекция №6. Плоскости и прямые в пространстве
+2025-10-28 19:21:48 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:21:48 | INFO | Длительность: 1:21:08
+2025-10-28 19:21:48 | INFO | Просмотров: 4 583
+2025-10-28 19:21:48 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:30:50 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Лекция №6. Плоскости и прямые в пространстве [YadV1XNaba0]_720p.f136.mp4
+2025-10-28 19:31:51 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\06_Лекция №6. Плоскости и прямые в пространстве [YadV1XNaba0]_720p.f140.m4a
+2025-10-28 19:32:19 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:32:19 | INFO | Название: Лекция №7. Алгебраические кривые и поверхности
+2025-10-28 19:32:19 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:32:19 | INFO | Длительность: 1:18:34
+2025-10-28 19:32:19 | INFO | Просмотров: 4 798
+2025-10-28 19:32:19 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:43:12 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Лекция №7. Алгебраические кривые и поверхности [MfJqkV4-4zs]_720p.f136.mp4
+2025-10-28 19:43:52 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\07_Лекция №7. Алгебраические кривые и поверхности [MfJqkV4-4zs]_720p.f140.m4a
+2025-10-28 19:44:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:44:13 | INFO | Название: Лекция №8. Общее уравнение кривых второго порядка
+2025-10-28 19:44:13 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-28 19:44:13 | INFO | Длительность: 1:18:57
+2025-10-28 19:44:13 | INFO | Просмотров: 5 035
+2025-10-28 19:44:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-28 19:50:18 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Лекция №8. Общее уравнение кривых второго порядка [n_GslvMKO3A]_720p.f136.mp4
+2025-10-28 19:50:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\08_Лекция №8. Общее уравнение кривых второго порядка [n_GslvMKO3A]_720p.f140.m4a
+2025-10-30 12:29:11 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] mD0BFoc7jkQ: Unable to download API page: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение (caused by TransportError('[WinError 10054] Удаленный хост принудительно разорвал существующее подключение')) — продолжим с настройками по умолчанию
+2025-10-30 12:31:47 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение (caused by TransportError('[WinError 10054] Удаленный хост принудительно разорвал существующее подключение')); повтор через 5.0 с
+2025-10-30 12:34:30 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [WinError 10054] Удаленный хост принудительно разорвал существующее подключение (caused by TransportError('[WinError 10054] Удаленный хост принудительно разорвал существующее подключение')); повтор через 10.0 с
+2025-10-30 12:37:17 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+2025-10-30 12:37:17 | ERROR | Ошибка загрузки https://www.youtube.com/playlist?list=PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m
+Traceback (most recent call last):
+  File "C:\Python313\Lib\urllib\request.py", line 1319, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Python313\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1011: The handshake operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 909, in _request_webpage
+    return self._downloader.urlopen(self._create_request(url_or_request, data, headers, query, extensions))
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 4189, in urlopen
+    return self._request_director.send(req)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 194, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 359, in send
+    return self._send(request)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 413, in _send
+    handle_response_read_exceptions(cause)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 330, in handle_response_read_exceptions
+    raise TransportError(cause=e) from e
+yt_dlp.networking.exceptions.TransportError: _ssl.c:1011: The handshake operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 54, in wrapper
+    info_dict = func(self, url, smuggled_data)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 2185, in _real_extract
+    data, ytcfg = self._extract_data(url, display_id)
+                  ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 946, in _extract_data
+    data = self._extract_tab_endpoint(url, item_id, ytcfg, fatal=fatal, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 951, in _extract_tab_endpoint
+    resolve_response = self._extract_response(
+        item_id=item_id, query={'url': url}, check_get_keys='endpoint', headers=headers, ytcfg=ytcfg, fatal=fatal,
+        ep='navigation/resolve_url', note='Downloading API parameters API JSON', default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1257, in _extract_response
+    next(main_retries)
+    ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5260, in __iter__
+    self.error_callback(self.error, self.attempt, self.retries)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 4059, in _error_or_warning
+    RetryManager.report_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, _count or int(fatal), _retries,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        info=self.to_screen, warn=self.report_warning, error=None if fatal else self.report_warning,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        sleep_func=self.get_param('retry_sleep_functions', {}).get('extractor'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5268, in report_retry
+    raise e
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1247, in _extract_response
+    response = self._call_api(
+        ep=ep, fatal=True, headers=headers,
+        video_id=item_id, query=query, note=note,
+        context=self._extract_context(ytcfg, default_client),
+        api_hostname=api_hostname, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 825, in _call_api
+    return self._download_json(
+           ~~~~~~~~~~~~~~~~~~~^
+        f'https://{self._select_api_hostname(api_hostname, default_client)}/youtubei/v1/{ep}',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+            'prettyPrint': 'false',
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        }, cndn=lambda _, v: v))
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1150, in download_content
+    res = getattr(self, download_handle.__name__)(url_or_request, video_id, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1108, in download_handle
+    res = self._download_webpage_handle(
+        url_or_request, video_id, note=note, errnote=errnote, fatal=fatal, encoding=encoding,
+        data=data, headers=headers, query=query, expected_status=expected_status,
+        impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 973, in _download_webpage_handle
+    urlh = self._request_webpage(url_or_request, video_id, note, errnote, fatal, data=data,
+                                 headers=headers, query=query, expected_status=expected_status,
+                                 impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 803, in _request_webpage
+    response = super()._request_webpage(*args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 922, in _request_webpage
+    raise ExtractorError(errmsg, cause=err)
+yt_dlp.utils.ExtractorError: [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 606, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 235, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
