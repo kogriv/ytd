@@ -3,15 +3,16 @@ from __future__ import annotations
 import sys
 import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING, Mapping
 from urllib.parse import urlparse, parse_qs
 
 import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
-from .history.storage import ensure_schema, init_db
+from .history.storage import ensure_schema, init_db, fetch_download, update_download
 from .logging import setup_logging
 from .types import DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
@@ -58,6 +59,51 @@ def safe_echo(message: object = "", *args: Any, **kwargs: Any) -> None:
         typer.echo(message, *args, **kwargs)
     except UnicodeEncodeError:
         typer.echo(_sanitize_console_text(message), *args, **kwargs)
+
+
+@dataclass
+class HistoryDecision:
+    proceed: bool
+    overwrite: bool = False
+    new_output: Optional[Path] = None
+    action: Optional[str] = None
+    increment_retry: bool = False
+
+
+_YT_VIDEO_ID_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"[?&]v=([A-Za-z0-9_-]{11})"),
+    re.compile(r"youtu\.be/([A-Za-z0-9_-]{11})"),
+    re.compile(r"youtube\.com/(?:shorts|embed|live)/([A-Za-z0-9_-]{11})"),
+)
+
+
+def _extract_video_id(candidate: str) -> Optional[str]:
+    for pattern in _YT_VIDEO_ID_PATTERNS:
+        match = pattern.search(candidate)
+        if match:
+            return match.group(1)
+    return None
+
+
+def _print_history_card(entry: Mapping[str, Any]) -> None:
+    safe_echo()
+    safe_secho("История загрузок:", fg=typer.colors.MAGENTA, bold=True)
+    safe_echo(f"  Статус: {entry.get('status', 'unknown')}")
+    title = entry.get("title") or "—"
+    safe_echo(f"  Название: {title}")
+    if entry.get("started_at"):
+        safe_echo(f"  Начато: {entry.get('started_at')}")
+    if entry.get("finished_at"):
+        safe_echo(f"  Завершено: {entry.get('finished_at')}")
+    if entry.get("file_path"):
+        safe_echo(f"  Файл: {entry.get('file_path')}")
+    if entry.get("error"):
+        safe_secho(f"  Ошибка: {entry.get('error')}", fg=typer.colors.RED)
+    retry_count = entry.get("retry_count")
+    if retry_count is not None:
+        safe_echo(f"  Повторы: {retry_count}")
+    if entry.get("last_action"):
+        safe_echo(f"  Последнее действие: {entry.get('last_action')}")
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
 
@@ -257,6 +303,103 @@ def cmd_download(
 
         # Запустить загрузку последовательно
         dl = Downloader(cfg, logger, verbose=verbose)
+
+        def prompt_history_decision(
+            *,
+            video_id: Optional[str],
+            current_url: str,
+            title_hint: Optional[str] = None,
+        ) -> HistoryDecision:
+            try:
+                entry = fetch_download(video_id=video_id, url=current_url)
+            except Exception as fetch_err:  # noqa: BLE001
+                logger.debug("не удалось получить историю для %s: %s", current_url, fetch_err)
+                return HistoryDecision(proceed=True)
+
+            if not entry:
+                return HistoryDecision(proceed=True)
+
+            if title_hint:
+                safe_echo(f"→ {title_hint}")
+            _print_history_card(entry)
+            status = (entry.get("status") or "").lower()
+
+            if status == "success":
+                safe_echo("Найдена успешная загрузка. Выберите действие:")
+                safe_echo("  1) Пропустить повторную загрузку")
+                safe_echo("  2) Перезаписать файлы")
+                safe_echo("  3) Скачать в другую папку")
+                choice = typer.prompt("Ваш выбор", default="1")
+
+                if choice.strip() == "2":
+                    decision = HistoryDecision(
+                        proceed=True,
+                        overwrite=True,
+                        action="overwrite",
+                        increment_retry=True,
+                    )
+                elif choice.strip() == "3":
+                    default_dir = Path(entry.get("file_path") or cfg.output)
+                    new_dir_str = typer.prompt(
+                        "Введите путь к новой папке",
+                        default=str(default_dir),
+                    )
+                    decision = HistoryDecision(
+                        proceed=True,
+                        new_output=Path(new_dir_str).expanduser(),
+                        action="download_elsewhere",
+                        increment_retry=True,
+                    )
+                else:
+                    decision = HistoryDecision(proceed=False, action="skip")
+            elif status in {"failed", "in_progress"}:
+                safe_echo("Предыдущая загрузка не завершилась успешно. Что сделать?")
+                safe_echo("  1) Возобновить")
+                safe_echo("  2) Начать заново")
+                safe_echo("  0) Пропустить")
+                choice = typer.prompt("Ваш выбор", default="1")
+                normalized = choice.strip()
+                if normalized == "2":
+                    decision = HistoryDecision(
+                        proceed=True,
+                        overwrite=True,
+                        action="restart",
+                        increment_retry=True,
+                    )
+                elif normalized == "0":
+                    decision = HistoryDecision(proceed=False, action="skip")
+                else:
+                    decision = HistoryDecision(
+                        proceed=True,
+                        action="resume",
+                        increment_retry=True,
+                    )
+            else:
+                safe_echo("Найдена запись в истории. Продолжить загрузку?")
+                safe_echo("  1) Да")
+                safe_echo("  0) Нет, пропустить")
+                choice = typer.prompt("Ваш выбор", default="1")
+                decision = (
+                    HistoryDecision(proceed=False, action="skip")
+                    if choice.strip() == "0"
+                    else HistoryDecision(proceed=True, action="proceed")
+                )
+
+            try:
+                update_download(
+                    video_id=video_id,
+                    url=current_url,
+                    last_action=decision.action,
+                    retry_increment=decision.increment_retry,
+                    status="in_progress" if decision.proceed and decision.action != "skip" else None,
+                )
+            except Exception as update_err:  # noqa: BLE001
+                logger.debug("не удалось обновить запись истории: %s", update_err)
+
+            if not decision.proceed:
+                safe_secho("Загрузка пропущена по истории", fg=typer.colors.CYAN)
+            return decision
+
         total_files = 0
         failed = 0
         
@@ -284,6 +427,7 @@ def cmd_download(
             custom_name: Optional[str] = None
             # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
             skip_post_processing: bool = False
+            history_video_id: Optional[str] = _extract_video_id(one_url)
             
             if interactive:
                 if len(urls) > 1:
@@ -297,6 +441,8 @@ def cmd_download(
                     try:
                         info = dl.get_info(one_url)
                         entries = info.get("entries") or []
+                        if info.get("id"):
+                            history_video_id = str(info.get("id"))
                         
                         if not entries:
                             safe_secho("[WARN] Плейлист пуст, интерактивный режим отключён", fg=typer.colors.YELLOW)
@@ -487,6 +633,18 @@ def cmd_download(
                                         overwrite=overwrite_all,
                                     )
 
+                                    decision = prompt_history_decision(
+                                        video_id=str(entry.get("id")) if entry.get("id") else None,
+                                        current_url=entry_url,
+                                        title_hint=entry_title,
+                                    )
+                                    if not decision.proceed:
+                                        continue
+                                    if decision.new_output:
+                                        single_opts.output_dir = decision.new_output
+                                    if decision.overwrite:
+                                        single_opts.overwrite = True
+
                                     try:
                                         safe_secho(f"  ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
                                         files = dl.download(single_opts)
@@ -528,6 +686,8 @@ def cmd_download(
                     try:
                         info = dl.get_info(one_url)
                         video_id = info.get("id", "unknown")
+                        if info.get("id"):
+                            history_video_id = str(info.get("id"))
                         video_title = info.get("title", "unknown")
                         
                         fmts = info.get("formats") or []
@@ -677,6 +837,18 @@ def cmd_download(
                                 overwrite=overwrite,
                             )
                             
+                            decision = prompt_history_decision(
+                                video_id=str(entry.get("id")) if entry.get("id") else None,
+                                current_url=entry_url,
+                                title_hint=entry_title,
+                            )
+                            if not decision.proceed:
+                                continue
+                            if decision.new_output:
+                                single_opts.output_dir = decision.new_output
+                            if decision.overwrite:
+                                single_opts.overwrite = True
+
                             try:
                                 files = dl.download(single_opts)
                                 if not dry_run:
@@ -722,6 +894,18 @@ def cmd_download(
                 quality_suffix=quality_suffix if not custom_name else None,
                 overwrite=overwrite,
             )
+            decision = prompt_history_decision(
+                video_id=history_video_id,
+                current_url=one_url,
+            )
+            if not decision.proceed:
+                continue
+            if decision.new_output:
+                opts.output_dir = decision.new_output
+            if decision.overwrite:
+                overwrite = True
+                opts.overwrite = True
+
             try:
                 # Показать индикатор начала загрузки
                 if not interactive:
