@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
-from typing import Optional, Literal
+from typing import Any, Mapping, Optional, Literal
 
 
 @dataclass(slots=True)
@@ -53,7 +54,26 @@ class AppConfig:
     retry: int = 3
     retry_delay: float = 5.0
     save_metadata: Optional[Path] = Path("data/meta.jsonl")
+    history_db: Path = Path("data/history.db")
     # Поддержка пауз между видео в плейлистах
     pause_between_videos: bool = False
     pause_key: str = "p"
     resume_key: str = "r"
+
+
+@dataclass(slots=True)
+class DownloadEvent:
+    """Событие скачивания для записи в историю."""
+
+    video_id: str
+    url: str
+    title: Optional[str]
+    status: str
+    started_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+    file_path: Optional[Path] = None
+    error: Optional[str] = None
+    playlist_id: Optional[str] = None
+    playlist_title: Optional[str] = None
+    metadata: Optional[Mapping[str, Any]] = None
+    metadata_path: Optional[Path] = None

@@ -23,6 +23,7 @@ _ENV_MAP: dict[str, str] = {
     "retry": "YTD_RETRY",
     "retry_delay": "YTD_RETRY_DELAY",
     "save_metadata": "YTD_SAVE_METADATA",
+    "history_db": "YTD_HISTORY_DB",
     "pause_between_videos": "YTD_PAUSE_BETWEEN_VIDEOS",
     "pause_key": "YTD_PAUSE_KEY",
     "resume_key": "YTD_RESUME_KEY",
@@ -88,6 +89,8 @@ def _normalize_types(updates: dict[str, Any]) -> dict[str, Any]:
         out["output"] = Path(out["output"]).expanduser()
     if "save_metadata" in out and isinstance(out["save_metadata"], str):
         out["save_metadata"] = Path(out["save_metadata"]).expanduser()
+    if "history_db" in out and isinstance(out["history_db"], str):
+        out["history_db"] = Path(out["history_db"]).expanduser()
     return out
 
 
@@ -103,7 +106,11 @@ def _normalize_and_prepare(cfg: AppConfig) -> AppConfig:
         if not save_meta.is_absolute():
             save_meta = Path.cwd() / save_meta
         ensure_dir(save_meta.parent)
-    return replace(cfg, output=output, save_metadata=save_meta)
+    history_db = Path(cfg.history_db).expanduser()
+    if not history_db.is_absolute():
+        history_db = Path.cwd() / history_db
+    ensure_dir(history_db.parent)
+    return replace(cfg, output=output, save_metadata=save_meta, history_db=history_db)
 
 
 def load_config(config_path: Optional[Path] = None) -> AppConfig:
