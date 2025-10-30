@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 import time
 from pathlib import Path
 from typing import Any, Optional
@@ -26,13 +27,25 @@ class Downloader:
         if not isinstance(info, dict):
             return
         
+        def _border_line(symbol: str = "━") -> str:
+            encoding = getattr(sys.stdout, "encoding", None)
+            try:
+                if not encoding:
+                    raise LookupError
+                symbol.encode(encoding)
+                return symbol * 60
+            except (UnicodeEncodeError, LookupError, AttributeError):
+                return "-" * 60
+
+        border = _border_line()
+
         # Если это плейлист
         entries = info.get("entries")
         if entries:
-            self.logger.info("━" * 60)
+            self.logger.info(border)
             self.logger.info("Плейлист: %s", info.get("title", "неизвестно"))
             self.logger.info("Видео в плейлисте: %d", len(entries))
-            self.logger.info("━" * 60)
+            self.logger.info(border)
             return
         
         # Для одиночного видео
@@ -41,7 +54,7 @@ class Downloader:
         duration = info.get("duration")
         view_count = info.get("view_count")
         
-        self.logger.info("━" * 60)
+        self.logger.info(border)
         self.logger.info("Название: %s", title)
         if uploader:
             self.logger.info("Канал: %s", uploader)
@@ -54,7 +67,7 @@ class Downloader:
                 self.logger.info("Длительность: %d:%02d", mins, secs)
         if view_count:
             self.logger.info("Просмотров: %s", f"{view_count:,}".replace(",", " "))
-        self.logger.info("━" * 60)
+        self.logger.info(border)
     
     def _progress_hook(self, d: dict[str, Any]) -> None:
         status = d.get("status")

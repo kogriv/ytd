@@ -4,7 +4,7 @@ import sys
 import json
 import re
 from pathlib import Path
-from typing import Optional, Any, Iterable
+from typing import Optional, Any, TYPE_CHECKING
 from urllib.parse import urlparse, parse_qs
 
 import typer
@@ -14,8 +14,49 @@ from .downloader import Downloader
 from .logging import setup_logging
 from .types import DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
-from . import interactive as ia
-from .pause import PauseController
+if TYPE_CHECKING:
+    from .pause import PauseController
+
+
+_SANITIZE_REPLACEMENTS: tuple[tuple[str, str], ...] = (
+    ("✓", "[OK]"),
+    ("✔", "[OK]"),
+    ("✅", "[OK]"),
+    ("⚠", "[WARN]"),
+    ("⚠️", "[WARN]"),
+    ("✗", "[ERROR]"),
+    ("✘", "[ERROR]"),
+    ("❌", "[ERROR]"),
+    ("⛔", "[ERROR]"),
+    ("→", "->"),
+    ("▶", ">"),
+    ("⏳", "..."),
+    ("⏸", "[PAUSE]"),
+    ("✦", "*"),
+)
+
+
+def _sanitize_console_text(value: object) -> str:
+    text = "" if value is None else str(value)
+    for source, replacement in _SANITIZE_REPLACEMENTS:
+        text = text.replace(source, replacement)
+    text = re.sub(r"[═━]+", lambda match: "-" * len(match.group(0)), text)
+    text = text.replace("—", "-")
+    return text
+
+
+def safe_secho(message: object = "", *args: Any, **kwargs: Any) -> None:
+    try:
+        typer.secho(message, *args, **kwargs)
+    except UnicodeEncodeError:
+        typer.secho(_sanitize_console_text(message), *args, **kwargs)
+
+
+def safe_echo(message: object = "", *args: Any, **kwargs: Any) -> None:
+    try:
+        typer.echo(message, *args, **kwargs)
+    except UnicodeEncodeError:
+        typer.echo(_sanitize_console_text(message), *args, **kwargs)
 
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
 
@@ -84,6 +125,20 @@ def cmd_download(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Подробные логи (DEBUG)"),
 ):
     """Скачать видео/аудио по указанному URL."""
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(errors="replace")  # type: ignore[call-arg]
+        except (AttributeError, TypeError, ValueError, OSError):
+            pass
+    if hasattr(sys.stderr, "reconfigure"):
+        try:
+            sys.stderr.reconfigure(errors="replace")  # type: ignore[call-arg]
+        except (AttributeError, TypeError, ValueError, OSError):
+            pass
+
+    from . import interactive as ia
+    from .pause import PauseController
+
     log_level = "DEBUG" if verbose else "INFO"
     logger = setup_logging(level=log_level)
     
@@ -137,29 +192,29 @@ def cmd_download(
         if not urls:
             # Более дружелюбная диагностика для пустого файла со ссылками
             if urls_file is not None:
-                typer.secho(f"Файл со ссылками пуст или не содержит валидных строк: {urls_file}", fg=typer.colors.YELLOW)
+                safe_secho(f"Файл со ссылками пуст или не содержит валидных строк: {urls_file}", fg=typer.colors.YELLOW)
             else:
-                typer.secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
+                safe_secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
             raise typer.Exit(code=2)
 
         selected_playlist_url: Optional[str] = None
         if interactive and playlist:
             playlist_candidates = [u for u in urls if _looks_like_playlist_url(u)]
             if len(playlist_candidates) > 1:
-                typer.echo()
-                typer.secho(
+                safe_echo()
+                safe_secho(
                     "Найдено несколько плейлистов в списке ссылок.",
                     fg=typer.colors.YELLOW,
                 )
-                typer.echo("Выберите плейлист для интерактивной загрузки:")
+                safe_echo("Выберите плейлист для интерактивной загрузки:")
                 for idx, candidate in enumerate(playlist_candidates, start=1):
-                    typer.echo(f"  {idx}) {candidate}")
-                typer.echo("  0) Отмена")
+                    safe_echo(f"  {idx}) {candidate}")
+                safe_echo("  0) Отмена")
 
                 while True:
                     choice = typer.prompt("Ваш выбор", default="1")
                     if choice == "0":
-                        typer.secho("Загрузка отменена", fg=typer.colors.YELLOW)
+                        safe_secho("Загрузка отменена", fg=typer.colors.YELLOW)
                         raise typer.Exit(code=0)
                     try:
                         selected_idx = int(choice)
@@ -170,24 +225,24 @@ def cmd_download(
                         selected_playlist_url = playlist_candidates[selected_idx - 1]
                         break
 
-                    typer.secho("Введите номер из списка.", fg=typer.colors.RED)
+                    safe_secho("Введите номер из списка.", fg=typer.colors.RED)
 
-                typer.secho(f"Выбран плейлист: {selected_playlist_url}", fg=typer.colors.GREEN)
+                safe_secho(f"Выбран плейлист: {selected_playlist_url}", fg=typer.colors.GREEN)
                 if len(playlist_candidates) - 1:
-                    typer.secho(
+                    safe_secho(
                         "Остальные плейлисты будут пропущены в интерактивном режиме.",
                         fg=typer.colors.YELLOW,
                     )
                 ignored_count = len(urls) - len(playlist_candidates)
                 if ignored_count:
-                    typer.secho(
+                    safe_secho(
                         "Прочие ссылки из списка также будут пропущены в интерактивном режиме плейлиста.",
                         fg=typer.colors.YELLOW,
                     )
             elif len(playlist_candidates) == 1:
                 selected_playlist_url = playlist_candidates[0]
                 if len(urls) > 1:
-                    typer.secho(
+                    safe_secho(
                         f"Интерактивный режим будет выполнен только для плейлиста: {selected_playlist_url}",
                         fg=typer.colors.CYAN,
                     )
@@ -210,7 +265,7 @@ def cmd_download(
                 resume_key=cfg.resume_key or "r"
             )
             pause_controller.enable()
-            typer.secho(
+            safe_secho(
                 "⏸  Режим пауз включен: нажмите 'p' во время загрузки для паузы после текущего видео",
                 fg=typer.colors.CYAN
             )
@@ -227,19 +282,19 @@ def cmd_download(
             
             if interactive:
                 if len(urls) > 1:
-                    typer.secho("[WARN] Диалоговый выбор качества поддерживается только для одного URL. Флаг --interactive будет проигнорирован.", fg=typer.colors.YELLOW)
+                    safe_secho("[WARN] Диалоговый выбор качества поддерживается только для одного URL. Флаг --interactive будет проигнорирован.", fg=typer.colors.YELLOW)
                 elif playlist:
                     # ПЛЕЙЛИСТ В ИНТЕРАКТИВНОМ РЕЖИМЕ
-                    typer.echo("\n" + "═" * 60)
-                    typer.secho("⏳ Получение информации о плейлисте...", fg=typer.colors.CYAN, bold=True)
-                    typer.echo("Это может занять некоторое время для больших плейлистов.")
-                    typer.echo("═" * 60)
+                    safe_echo("\n" + "═" * 60)
+                    safe_secho("⏳ Получение информации о плейлисте...", fg=typer.colors.CYAN, bold=True)
+                    safe_echo("Это может занять некоторое время для больших плейлистов.")
+                    safe_echo("═" * 60)
                     try:
                         info = dl.get_info(one_url)
                         entries = info.get("entries") or []
                         
                         if not entries:
-                            typer.secho("[WARN] Плейлист пуст, интерактивный режим отключён", fg=typer.colors.YELLOW)
+                            safe_secho("[WARN] Плейлист пуст, интерактивный режим отключён", fg=typer.colors.YELLOW)
                         else:
                             # Показать информацию о плейлисте
                             ia.show_playlist_info(info)
@@ -248,13 +303,13 @@ def cmd_download(
                             mode = ia.choose_playlist_mode()
                             
                             if mode is None:
-                                typer.secho("Загрузка отменена", fg=typer.colors.YELLOW)
+                                safe_secho("Загрузка отменена", fg=typer.colors.YELLOW)
                                 continue
                             elif mode == 1:
                                 # Единые настройки для всех
-                                typer.secho("\n→ Режим: Единые настройки для всех видео", fg=typer.colors.GREEN)
+                                safe_secho("\n→ Режим: Единые настройки для всех видео", fg=typer.colors.GREEN)
                                 
-                                typer.secho("\n⏳ Анализ доступных форматов...", fg=typer.colors.CYAN)
+                                safe_secho("\n⏳ Анализ доступных форматов...", fg=typer.colors.CYAN)
                                 # Собрать общие доступные качества (пересечение)
                                 # Для простоты берём форматы первого видео как базу
                                 first_entry = entries[0]
@@ -296,19 +351,83 @@ def cmd_download(
                                 )
                                 
                                 if not confirmed:
-                                    typer.secho("Загрузка отменена", fg=typer.colors.YELLOW)
+                                    safe_secho("Загрузка отменена", fg=typer.colors.YELLOW)
                                     continue
-                                
+
+                                existing_map, missing_indices = ia.analyze_playlist_progress(cfg.output, entries)
+                                indices_to_download: Optional[set[int]] = None
+
+                                delete_existing = False
+                                if existing_map:
+                                    selected_indices, delete_existing = ia.prompt_playlist_resume(
+                                        entries,
+                                        existing_map,
+                                        missing_indices,
+                                    )
+
+                                    if delete_existing:
+                                        safe_secho("Удаляем найденные файлы...", fg=typer.colors.YELLOW)
+                                        removed = 0
+                                        for files in existing_map.values():
+                                            for file_path in files:
+                                                try:
+                                                    file_path.unlink()
+                                                    removed += 1
+                                                except FileNotFoundError:
+                                                    continue
+                                                except OSError as unlink_err:
+                                                    logger.warning("Не удалось удалить %s: %s", file_path, unlink_err)
+                                                    safe_secho(
+                                                        f"[WARN] Не удалось удалить {file_path.name}: {unlink_err}",
+                                                        fg=typer.colors.YELLOW,
+                                                    )
+                                        safe_secho(
+                                            f"✓ Удалено файлов: {removed}. Плейлист будет скачан заново.",
+                                            fg=typer.colors.CYAN,
+                                        )
+
+                                    if selected_indices:
+                                        indices_to_download = set(selected_indices)
+                                    else:
+                                        if delete_existing:
+                                            indices_to_download = set(range(1, len(entries) + 1))
+                                        else:
+                                            safe_secho(
+                                                "[OK] Все видео плейлиста уже скачаны — загрузка не требуется",
+                                                fg=typer.colors.GREEN,
+                                            )
+                                            continue
+                                else:
+                                    indices_to_download = None
+
                                 # Применить настройки ко всем видео плейлиста
-                                typer.echo("\n" + "═" * 60)
-                                typer.secho(f"▶ Начинаем загрузку плейлиста ({len(entries)} видео)...", fg=typer.colors.GREEN, bold=True)
-                                typer.echo("═" * 60 + "\n")
-                                
+                                safe_echo("\n" + "═" * 60)
+                                safe_secho(
+                                    f"▶ Начинаем загрузку плейлиста ({len(entries)} видео)...",
+                                    fg=typer.colors.GREEN,
+                                    bold=True,
+                                )
+                                safe_echo("═" * 60 + "\n")
+
                                 for idx, entry in enumerate(entries, start=1):
-                                    typer.secho(f"[{idx}/{len(entries)}] Обработка...", fg=typer.colors.CYAN)
+                                    if indices_to_download is not None and idx not in indices_to_download:
+                                        entry_title_hint = entry.get("title", f"Видео {idx}")
+                                        if idx in existing_map:
+                                            safe_secho(
+                                                f"[SKIP] {entry_title_hint} — уже скачано",
+                                                fg=typer.colors.CYAN,
+                                            )
+                                        else:
+                                            safe_secho(
+                                                f"[SKIP] {entry_title_hint} — пропущено по выбору",
+                                                fg=typer.colors.YELLOW,
+                                            )
+                                        continue
+
+                                    safe_secho(f"[{idx}/{len(entries)}] Обработка...", fg=typer.colors.CYAN)
                                     entry_url = ia.get_entry_url(entry)
                                     if not entry_url:
-                                        typer.secho(f"[WARN] Пропуск: не удалось получить URL для элемента #{idx}", fg=typer.colors.YELLOW)
+                                        safe_secho(f"[WARN] Пропуск: не удалось получить URL для элемента #{idx}", fg=typer.colors.YELLOW)
                                         continue
                                     # Получить полную информацию для подбора качества
                                     entry_info = dl.get_info(entry_url)
@@ -364,11 +483,11 @@ def cmd_download(
                                     )
 
                                     try:
-                                        typer.secho(f"  ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
+                                        safe_secho(f"  ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
                                         files = dl.download(single_opts)
                                         if not dry_run:
                                             total_files += len(files)
-                                        typer.secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов", 
+                                        safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов", 
                                                    fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
                                         if not dry_run and not files:
                                             failed += 1
@@ -377,7 +496,7 @@ def cmd_download(
                                     except Exception:
                                         failed += 1
                                         logger.exception("Ошибка загрузки %s", entry_url)
-                                        typer.secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                        safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                                     
                                     # Проверить, запрошена ли пауза после этого видео
                                     if pause_controller and pause_controller.is_pause_requested():
@@ -391,16 +510,16 @@ def cmd_download(
 
                             elif mode == 2:
                                 # Настроить каждое отдельно
-                                typer.secho("\n→ Режим: Настройка каждого видео отдельно", fg=typer.colors.GREEN)
+                                safe_secho("\n→ Режим: Настройка каждого видео отдельно", fg=typer.colors.GREEN)
                                 # TODO: Реализовать покадровую настройку
                                 
                     except Exception as e:
                         logger.warning("Не удалось обработать плейлист: %s — продолжим с настройками по умолчанию", e)
                 else:
                     # ОДИНОЧНОЕ ВИДЕО В ИНТЕРАКТИВНОМ РЕЖИМЕ
-                    typer.echo("\n" + "═" * 60)
-                    typer.secho("⏳ Получение информации о видео...", fg=typer.colors.CYAN, bold=True)
-                    typer.echo("═" * 60)
+                    safe_echo("\n" + "═" * 60)
+                    safe_secho("⏳ Получение информации о видео...", fg=typer.colors.CYAN, bold=True)
+                    safe_echo("═" * 60)
                     try:
                         info = dl.get_info(one_url)
                         video_id = info.get("id", "unknown")
@@ -414,9 +533,9 @@ def cmd_download(
                         quality_options = ia.build_quality_options(height_to_ext, available_heights)
                         
                         # Показать меню и получить выбор
-                        typer.echo("\n" + "═" * 60)
-                        typer.echo("ШАГ 1: Выберите качество")
-                        typer.echo("═" * 60)
+                        safe_echo("\n" + "═" * 60)
+                        safe_echo("ШАГ 1: Выберите качество")
+                        safe_echo("═" * 60)
                         chosen_label, chosen_format, _ = ia.show_quality_menu(quality_options)
                         
                         # Определить суффикс качества
@@ -433,18 +552,18 @@ def cmd_download(
                             ext_hint = ext_match.group(1) if ext_match else "mp4"
                         
                         # ШАГ 2: Настройка имени файла
-                        typer.echo("\n" + "═" * 60)
-                        typer.echo("ШАГ 2: Настройка имени файла")
-                        typer.echo("═" * 60)
-                        typer.echo(f"Название: {safe_title} [{video_id}]")
-                        typer.echo(f"Расширение: .{ext_hint}")
-                        typer.echo(f"Предложенный суффикс качества: {default_suffix}")
+                        safe_echo("\n" + "═" * 60)
+                        safe_echo("ШАГ 2: Настройка имени файла")
+                        safe_echo("═" * 60)
+                        safe_echo(f"Название: {safe_title} [{video_id}]")
+                        safe_echo(f"Расширение: .{ext_hint}")
+                        safe_echo(f"Предложенный суффикс качества: {default_suffix}")
                         
                         # Спросить про суффикс качества
-                        typer.echo("\nДобавить суффикс качества к имени файла?")
-                        typer.echo(f"  1) Да, добавить '{default_suffix}'")
-                        typer.echo("  2) Да, но указать свой суффикс")
-                        typer.echo("  3) Нет, без суффикса")
+                        safe_echo("\nДобавить суффикс качества к имени файла?")
+                        safe_echo(f"  1) Да, добавить '{default_suffix}'")
+                        safe_echo("  2) Да, но указать свой суффикс")
+                        safe_echo("  3) Нет, без суффикса")
                         
                         suffix_choice = typer.prompt("Выберите вариант", default="1")
                         
@@ -459,11 +578,11 @@ def cmd_download(
                         # Построить полное имя с суффиксом (если есть)
                         name_with_suffix = f"{safe_title} [{video_id}]{quality_suffix or ''}.{ext_hint}"
                         
-                        typer.echo(f"\nИтоговое имя: {name_with_suffix}")
-                        typer.echo("\nДополнительные опции:")
-                        typer.echo("  1) Использовать как есть")
-                        typer.echo("  2) Добавить префикс (например, '01_')")
-                        typer.echo("  3) Изменить имя полностью")
+                        safe_echo(f"\nИтоговое имя: {name_with_suffix}")
+                        safe_echo("\nДополнительные опции:")
+                        safe_echo("  1) Использовать как есть")
+                        safe_echo("  2) Добавить префикс (например, '01_')")
+                        safe_echo("  3) Изменить имя полностью")
                         
                         name_choice = typer.prompt("Выберите действие", default="1")
                         
@@ -471,24 +590,24 @@ def cmd_download(
                             prefix = typer.prompt("Введите префикс (например, '01_')", default="")
                             if prefix:
                                 file_prefix = prefix
-                                typer.echo(f"Итоговое имя: {prefix}{name_with_suffix}")
+                                safe_echo(f"Итоговое имя: {prefix}{name_with_suffix}")
                         elif name_choice == "3":
                             new_name = typer.prompt("Введите полное имя файла (с расширением)", default=name_with_suffix)
                             custom_name = sanitize_filename(new_name)
                             quality_suffix = None  # Отключить автосуффикс если полное имя задано
-                            typer.echo(f"Итоговое имя: {custom_name}")
+                            safe_echo(f"Итоговое имя: {custom_name}")
                         else:
-                            typer.echo(f"Будет использовано: {name_with_suffix}")
+                            safe_echo(f"Будет использовано: {name_with_suffix}")
                         
                         # ШАГ 3: Проверка существующих файлов
                         existing = find_existing_files(cfg.output, video_id)
                         if existing:
-                            typer.echo("\n" + "═" * 60)
-                            typer.secho("⚠ ВНИМАНИЕ: Найдены существующие файлы этого видео:", fg=typer.colors.YELLOW)
-                            typer.echo("═" * 60)
+                            safe_echo("\n" + "═" * 60)
+                            safe_secho("⚠ ВНИМАНИЕ: Найдены существующие файлы этого видео:", fg=typer.colors.YELLOW)
+                            safe_echo("═" * 60)
                             for i, ex_file in enumerate(existing, start=1):
                                 size_mb = ex_file.stat().st_size / (1024 * 1024)
-                                typer.echo(f"  {i}) {ex_file.name} ({size_mb:.1f} МБ)")
+                                safe_echo(f"  {i}) {ex_file.name} ({size_mb:.1f} МБ)")
                             
                             overwrite_choice = typer.prompt(
                                 "\nПерезаписать существующие файлы? (y/n)",
@@ -496,9 +615,9 @@ def cmd_download(
                             )
                             if overwrite_choice.lower() in ("y", "yes", "д", "да"):
                                 overwrite = True
-                                typer.secho("✓ Существующие файлы будут перезаписаны", fg=typer.colors.GREEN)
+                                safe_secho("✓ Существующие файлы будут перезаписаны", fg=typer.colors.GREEN)
                             else:
-                                typer.secho("✓ Загрузка будет пропущена, если файл уже существует", fg=typer.colors.CYAN)
+                                safe_secho("✓ Загрузка будет пропущена, если файл уже существует", fg=typer.colors.CYAN)
                         
                     except Exception as e:
                         logger.warning("Не удалось получить форматы: %s — продолжим с настройками по умолчанию", e)
@@ -521,15 +640,15 @@ def cmd_download(
                     info = dl.get_info(one_url)
                     entries = info.get("entries") or []
                     if entries:
-                        typer.secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
+                        safe_secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
                         for idx, entry in enumerate(entries, start=1):
                             entry_url = ia.get_entry_url(entry)
                             if not entry_url:
-                                typer.secho(f"[WARN] Пропуск элемента #{idx}", fg=typer.colors.YELLOW)
+                                safe_secho(f"[WARN] Пропуск элемента #{idx}", fg=typer.colors.YELLOW)
                                 continue
                             
                             entry_title = entry.get("title", f"Видео {idx}")
-                            typer.secho(f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
+                            safe_secho(f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
                             
                             single_opts = DownloadOptions(
                                 url=entry_url,
@@ -557,7 +676,7 @@ def cmd_download(
                                 files = dl.download(single_opts)
                                 if not dry_run:
                                     total_files += len(files)
-                                typer.secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
                                            fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
                                 if not dry_run and not files:
                                     failed += 1
@@ -566,7 +685,7 @@ def cmd_download(
                             except Exception:
                                 failed += 1
                                 logger.exception("Ошибка загрузки %s", entry_url)
-                                typer.secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                             
                             # Проверить паузу после видео
                             if pause_controller.is_pause_requested():
@@ -601,7 +720,7 @@ def cmd_download(
             try:
                 # Показать индикатор начала загрузки
                 if not interactive:
-                    typer.secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
+                    safe_secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
                 
                 files = dl.download(opts)
                 if not dry_run:
@@ -609,9 +728,9 @@ def cmd_download(
                 
                 # Цветной вывод результата
                 if dry_run or files:
-                    typer.secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
+                    safe_secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
                 else:
-                    typer.secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
+                    safe_secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
                 
                 if not dry_run and not files:
                     failed += 1
@@ -620,38 +739,38 @@ def cmd_download(
             except Exception as e:  # noqa: BLE001
                 failed += 1
                 logger.exception("Ошибка загрузки %s", one_url)
-                typer.secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+                safe_secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
         
         # Отключить контроллер пауз после завершения всех загрузок
         if pause_controller:
             pause_controller.disable()
 
         if dry_run:
-            typer.secho("[OK] Dry-run завершён (файлы не скачаны)", fg=typer.colors.GREEN)
+            safe_secho("[OK] Dry-run завершён (файлы не скачаны)", fg=typer.colors.GREEN)
             sys.exit(0)
 
         if failed == 0 and total_files > 0:
-            typer.secho(f"[OK] Скачано файлов: {total_files}", fg=typer.colors.GREEN)
+            safe_secho(f"[OK] Скачано файлов: {total_files}", fg=typer.colors.GREEN)
             sys.exit(0)
         elif failed > 0 and total_files > 0:
-            typer.secho(f"[WARN] Скачано файлов: {total_files}, ошибок: {failed}", fg=typer.colors.YELLOW)
+            safe_secho(f"[WARN] Скачано файлов: {total_files}, ошибок: {failed}", fg=typer.colors.YELLOW)
             sys.exit(2)
         elif failed > 0 and total_files == 0:
-            typer.secho("✗ Ошибка загрузки (ни один файл не скачан)", fg=typer.colors.RED)
+            safe_secho("✗ Ошибка загрузки (ни один файл не скачан)", fg=typer.colors.RED)
             sys.exit(1)
         else:
-            typer.secho("⚠ Файлы не скачаны", fg=typer.colors.YELLOW)
+            safe_secho("⚠ Файлы не скачаны", fg=typer.colors.YELLOW)
             sys.exit(2)
     
     except KeyboardInterrupt:
-        typer.secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
+        safe_secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
         sys.exit(1)
     except typer.Exit:
         # Позволяем корректным выходам Typer завершаться без лишнего логирования стека
         raise
     except Exception as e:
         logger.exception("Ошибка загрузки")
-        typer.secho(f"✗ Ошибка: {e}", fg=typer.colors.RED)
+        safe_secho(f"✗ Ошибка: {e}", fg=typer.colors.RED)
         sys.exit(1)
 
 
@@ -671,18 +790,18 @@ def cmd_info(
         info = dl.get_info(url)
         
         if json_output:
-            typer.echo(json.dumps(info, indent=2, ensure_ascii=False))
+            safe_echo(json.dumps(info, indent=2, ensure_ascii=False))
         else:
-            typer.echo(_format_info(info))
+            safe_echo(_format_info(info))
         
         sys.exit(0)
     
     except KeyboardInterrupt:
-        typer.secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
+        safe_secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
         sys.exit(1)
     except Exception as e:
         logger.exception("Ошибка получения метаданных")
-        typer.secho(f"✗ Ошибка: {e}", fg=typer.colors.RED)
+        safe_secho(f"✗ Ошибка: {e}", fg=typer.colors.RED)
         sys.exit(1)
 
 
