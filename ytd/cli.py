@@ -11,6 +11,7 @@ import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
+from .history.storage import ensure_schema, init_db
 from .logging import setup_logging
 from .types import DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
@@ -171,6 +172,10 @@ def cmd_download(
         
         # Применить оверрайды
         cfg = merge_cli_overrides(cfg, cli_overrides)
+
+        # Инициализация БД истории загрузок
+        init_db(cfg.history_db)
+        ensure_schema()
         
         # Источник ссылок: позиционный аргумент и/или файл со списком
         def read_urls_from_file(fp: Path) -> list[str]:
