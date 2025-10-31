@@ -1539,3 +1539,514 @@ Traceback (most recent call last):
   File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
     raise DownloadError(message, exc_info)
 yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+2025-10-30 14:47:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-30 14:47:13 | INFO | Название: Лекция №9. Поверхности в пространстве
+2025-10-30 14:47:13 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-30 14:47:13 | INFO | Длительность: 1:08:11
+2025-10-30 14:47:13 | INFO | Просмотров: 3 127
+2025-10-30 14:47:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-30 15:10:16 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [download] Got error: [Errno 11001] getaddrinfo failed. Giving up after 3 retries; повтор через 5.0 с
+2025-10-30 15:10:22 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] mD0BFoc7jkQ: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed')); повтор через 10.0 с
+2025-10-30 15:10:32 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube] mD0BFoc7jkQ: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+2025-10-30 15:10:32 | ERROR | Ошибка загрузки https://www.youtube.com/watch?v=mD0BFoc7jkQ
+Traceback (most recent call last):
+  File "C:\Python313\Lib\urllib\request.py", line 1319, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1472, in connect
+    super().connect()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1003, in connect
+    self.sock = self._create_connection(
+                ~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.host,self.port), self.timeout, self.source_address)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 246, in create_connection
+    ip_addrs = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
+  File "C:\Python313\Lib\socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 909, in _request_webpage
+    return self._downloader.urlopen(self._create_request(url_or_request, data, headers, query, extensions))
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 4189, in urlopen
+    return self._request_director.send(req)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 194, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 359, in send
+    return self._send(request)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 413, in _send
+    handle_response_read_exceptions(cause)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 330, in handle_response_read_exceptions
+    raise TransportError(cause=e) from e
+yt_dlp.networking.exceptions.TransportError: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3861, in _real_extract
+    webpage, webpage_ytcfg, initial_data, is_premium_subscriber, player_responses, player_url = self._initial_extract(
+                                                                                                ~~~~~~~~~~~~~~~~~~~~~^
+        url, smuggled_data, webpage_url, webpage_client, video_id)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3841, in _initial_extract
+    initial_data = self._download_initial_data(video_id, webpage, webpage_client, webpage_ytcfg)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3819, in _download_initial_data
+    initial_data = self._extract_response(
+        item_id=video_id, ep='next', fatal=False,
+        ytcfg=webpage_ytcfg, query=query, check_get_keys='contents',
+        note='Downloading initial data API JSON', default_client=webpage_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1257, in _extract_response
+    next(main_retries)
+    ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5260, in __iter__
+    self.error_callback(self.error, self.attempt, self.retries)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 4059, in _error_or_warning
+    RetryManager.report_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, _count or int(fatal), _retries,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        info=self.to_screen, warn=self.report_warning, error=None if fatal else self.report_warning,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        sleep_func=self.get_param('retry_sleep_functions', {}).get('extractor'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5268, in report_retry
+    raise e
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1247, in _extract_response
+    response = self._call_api(
+        ep=ep, fatal=True, headers=headers,
+        video_id=item_id, query=query, note=note,
+        context=self._extract_context(ytcfg, default_client),
+        api_hostname=api_hostname, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 825, in _call_api
+    return self._download_json(
+           ~~~~~~~~~~~~~~~~~~~^
+        f'https://{self._select_api_hostname(api_hostname, default_client)}/youtubei/v1/{ep}',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+            'prettyPrint': 'false',
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        }, cndn=lambda _, v: v))
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1150, in download_content
+    res = getattr(self, download_handle.__name__)(url_or_request, video_id, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1108, in download_handle
+    res = self._download_webpage_handle(
+        url_or_request, video_id, note=note, errnote=errnote, fatal=fatal, encoding=encoding,
+        data=data, headers=headers, query=query, expected_status=expected_status,
+        impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 973, in _download_webpage_handle
+    urlh = self._request_webpage(url_or_request, video_id, note, errnote, fatal, data=data,
+                                 headers=headers, query=query, expected_status=expected_status,
+                                 impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 803, in _request_webpage
+    response = super()._request_webpage(*args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 922, in _request_webpage
+    raise ExtractorError(errmsg, cause=err)
+yt_dlp.utils.ExtractorError: [youtube] mD0BFoc7jkQ: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 487, in cmd_download
+    files = dl.download(single_opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 248, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] mD0BFoc7jkQ: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+2025-10-30 15:10:32 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] J-a4p_QfqOA: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed')) — продолжим с настройками по умолчанию
+2025-10-30 15:10:32 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed')); повтор через 5.0 с
+2025-10-30 15:10:37 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed')); повтор через 10.0 с
+2025-10-30 15:10:47 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+2025-10-30 15:10:47 | ERROR | Ошибка загрузки https://www.youtube.com/playlist?list=PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m
+Traceback (most recent call last):
+  File "C:\Python313\Lib\urllib\request.py", line 1319, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1472, in connect
+    super().connect()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1003, in connect
+    self.sock = self._create_connection(
+                ~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.host,self.port), self.timeout, self.source_address)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 246, in create_connection
+    ip_addrs = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
+  File "C:\Python313\Lib\socket.py", line 977, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 909, in _request_webpage
+    return self._downloader.urlopen(self._create_request(url_or_request, data, headers, query, extensions))
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 4189, in urlopen
+    return self._request_director.send(req)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 194, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 359, in send
+    return self._send(request)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 413, in _send
+    handle_response_read_exceptions(cause)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 330, in handle_response_read_exceptions
+    raise TransportError(cause=e) from e
+yt_dlp.networking.exceptions.TransportError: [Errno 11001] getaddrinfo failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 54, in wrapper
+    info_dict = func(self, url, smuggled_data)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 2185, in _real_extract
+    data, ytcfg = self._extract_data(url, display_id)
+                  ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 946, in _extract_data
+    data = self._extract_tab_endpoint(url, item_id, ytcfg, fatal=fatal, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_tab.py", line 951, in _extract_tab_endpoint
+    resolve_response = self._extract_response(
+        item_id=item_id, query={'url': url}, check_get_keys='endpoint', headers=headers, ytcfg=ytcfg, fatal=fatal,
+        ep='navigation/resolve_url', note='Downloading API parameters API JSON', default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1257, in _extract_response
+    next(main_retries)
+    ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5260, in __iter__
+    self.error_callback(self.error, self.attempt, self.retries)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 4059, in _error_or_warning
+    RetryManager.report_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, _count or int(fatal), _retries,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        info=self.to_screen, warn=self.report_warning, error=None if fatal else self.report_warning,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        sleep_func=self.get_param('retry_sleep_functions', {}).get('extractor'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5268, in report_retry
+    raise e
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1247, in _extract_response
+    response = self._call_api(
+        ep=ep, fatal=True, headers=headers,
+        video_id=item_id, query=query, note=note,
+        context=self._extract_context(ytcfg, default_client),
+        api_hostname=api_hostname, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 825, in _call_api
+    return self._download_json(
+           ~~~~~~~~~~~~~~~~~~~^
+        f'https://{self._select_api_hostname(api_hostname, default_client)}/youtubei/v1/{ep}',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+            'prettyPrint': 'false',
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        }, cndn=lambda _, v: v))
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1150, in download_content
+    res = getattr(self, download_handle.__name__)(url_or_request, video_id, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1108, in download_handle
+    res = self._download_webpage_handle(
+        url_or_request, video_id, note=note, errnote=errnote, fatal=fatal, encoding=encoding,
+        data=data, headers=headers, query=query, expected_status=expected_status,
+        impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 973, in _download_webpage_handle
+    urlh = self._request_webpage(url_or_request, video_id, note, errnote, fatal, data=data,
+                                 headers=headers, query=query, expected_status=expected_status,
+                                 impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 803, in _request_webpage
+    response = super()._request_webpage(*args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 922, in _request_webpage
+    raise ExtractorError(errmsg, cause=err)
+yt_dlp.utils.ExtractorError: [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 725, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 248, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: [Errno 11001] getaddrinfo failed (caused by TransportError('[Errno 11001] getaddrinfo failed'))
+2025-10-31 12:38:45 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:38:45 | INFO | Название: Лекция №9. Поверхности в пространстве
+2025-10-31 12:38:45 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-31 12:38:45 | INFO | Длительность: 1:08:11
+2025-10-31 12:38:45 | INFO | Просмотров: 3 129
+2025-10-31 12:38:45 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:50:52 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Лекция №9. Поверхности в пространстве [mD0BFoc7jkQ]_720p.f136.mp4
+2025-10-31 12:51:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\09_Лекция №9. Поверхности в пространстве [mD0BFoc7jkQ]_720p.f140.m4a
+2025-10-31 12:51:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:51:32 | INFO | Название: Лекция №10. Понятие линейного преобразования
+2025-10-31 12:51:32 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-31 12:51:32 | INFO | Длительность: 1:18:47
+2025-10-31 12:51:32 | INFO | Просмотров: 3 766
+2025-10-31 12:51:32 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:53:39 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Лекция №10. Понятие линейного преобразования [J-a4p_QfqOA]_720p.f135.mp4
+2025-10-31 12:54:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\10_Лекция №10. Понятие линейного преобразования [J-a4p_QfqOA]_720p.f140.m4a
+2025-10-31 12:54:24 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:54:24 | INFO | Название: Лекция №11. Геометрические свойства аффинных преобразований
+2025-10-31 12:54:24 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-31 12:54:24 | INFO | Длительность: 1:20:27
+2025-10-31 12:54:24 | INFO | Просмотров: 4 090
+2025-10-31 12:54:24 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:57:36 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Лекция №11. Геометрические свойства аффинных преобразований [hnNAC5oJvSc]_720p.f136.mp4
+2025-10-31 12:58:06 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\11_Лекция №11. Геометрические свойства аффинных преобразований [hnNAC5oJvSc]_720p.f140.m4a
+2025-10-31 12:58:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 12:58:27 | INFO | Название: Лекция №12. Разложение аффинного преобразования.  Матрицы
+2025-10-31 12:58:27 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-31 12:58:27 | INFO | Длительность: 1:08:23
+2025-10-31 12:58:27 | INFO | Просмотров: 3 184
+2025-10-31 12:58:27 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 13:08:38 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Лекция №12. Разложение аффинного преобразования.  Матрицы [CQsqqHUjyHY]_720p.f136.mp4
+2025-10-31 13:15:07 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\12_Лекция №12. Разложение аффинного преобразования.  Матрицы [CQsqqHUjyHY]_720p.f140.m4a
+2025-10-31 13:17:16 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 13:17:16 | INFO | Название: Лекция №13. Линейная зависимость.  Ранг.
+2025-10-31 13:17:16 | INFO | Канал: Дистанционные занятия МФТИ
+2025-10-31 13:17:16 | INFO | Длительность: 1:21:58
+2025-10-31 13:17:16 | INFO | Просмотров: 3 714
+2025-10-31 13:17:16 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-10-31 13:24:20 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [download] Got error: [Errno 11001] getaddrinfo failed. Giving up after 3 retries; повтор через 5.0 с
+2025-10-31 13:27:07 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] lAtItb5zVjA: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out')); повтор через 10.0 с
+2025-10-31 13:30:00 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube] lAtItb5zVjA: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+2025-10-31 13:30:00 | ERROR | Ошибка загрузки https://www.youtube.com/watch?v=lAtItb5zVjA
+Traceback (most recent call last):
+  File "C:\Python313\Lib\urllib\request.py", line 1319, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "C:\Python313\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\http\client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Python313\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1011: The handshake operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 909, in _request_webpage
+    return self._downloader.urlopen(self._create_request(url_or_request, data, headers, query, extensions))
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 4189, in urlopen
+    return self._request_director.send(req)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 117, in send
+    response = handler.send(request)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_helper.py", line 194, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\common.py", line 359, in send
+    return self._send(request)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 413, in _send
+    handle_response_read_exceptions(cause)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\networking\_urllib.py", line 330, in handle_response_read_exceptions
+    raise TransportError(cause=e) from e
+yt_dlp.networking.exceptions.TransportError: _ssl.c:1011: The handshake operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3861, in _real_extract
+    webpage, webpage_ytcfg, initial_data, is_premium_subscriber, player_responses, player_url = self._initial_extract(
+                                                                                                ~~~~~~~~~~~~~~~~~~~~~^
+        url, smuggled_data, webpage_url, webpage_client, video_id)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3841, in _initial_extract
+    initial_data = self._download_initial_data(video_id, webpage, webpage_client, webpage_ytcfg)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 3819, in _download_initial_data
+    initial_data = self._extract_response(
+        item_id=video_id, ep='next', fatal=False,
+        ytcfg=webpage_ytcfg, query=query, check_get_keys='contents',
+        note='Downloading initial data API JSON', default_client=webpage_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1257, in _extract_response
+    next(main_retries)
+    ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5260, in __iter__
+    self.error_callback(self.error, self.attempt, self.retries)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 4059, in _error_or_warning
+    RetryManager.report_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, _count or int(fatal), _retries,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        info=self.to_screen, warn=self.report_warning, error=None if fatal else self.report_warning,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        sleep_func=self.get_param('retry_sleep_functions', {}).get('extractor'))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\utils\_utils.py", line 5268, in report_retry
+    raise e
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 1247, in _extract_response
+    response = self._call_api(
+        ep=ep, fatal=True, headers=headers,
+        video_id=item_id, query=query, note=note,
+        context=self._extract_context(ytcfg, default_client),
+        api_hostname=api_hostname, default_client=default_client)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 825, in _call_api
+    return self._download_json(
+           ~~~~~~~~~~~~~~~~~~~^
+        f'https://{self._select_api_hostname(api_hostname, default_client)}/youtubei/v1/{ep}',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+            'prettyPrint': 'false',
+            ^^^^^^^^^^^^^^^^^^^^^^^
+        }, cndn=lambda _, v: v))
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1150, in download_content
+    res = getattr(self, download_handle.__name__)(url_or_request, video_id, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1108, in download_handle
+    res = self._download_webpage_handle(
+        url_or_request, video_id, note=note, errnote=errnote, fatal=fatal, encoding=encoding,
+        data=data, headers=headers, query=query, expected_status=expected_status,
+        impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 973, in _download_webpage_handle
+    urlh = self._request_webpage(url_or_request, video_id, note, errnote, fatal, data=data,
+                                 headers=headers, query=query, expected_status=expected_status,
+                                 impersonate=impersonate, require_impersonation=require_impersonation)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_base.py", line 803, in _request_webpage
+    response = super()._request_webpage(*args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 922, in _request_webpage
+    raise ExtractorError(errmsg, cause=err)
+yt_dlp.utils.ExtractorError: [youtube] lAtItb5zVjA: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 894, in cmd_download
+    files = dl.download(single_opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 374, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] lAtItb5zVjA: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
