@@ -15,6 +15,7 @@ import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
+from .exceptions import NetworkUnavailableError
 from .history.storage import (
     ensure_schema,
     init_db,
@@ -69,6 +70,41 @@ def safe_echo(message: object = "", *args: Any, **kwargs: Any) -> None:
         typer.echo(message, *args, **kwargs)
     except UnicodeEncodeError:
         typer.echo(_sanitize_console_text(message), *args, **kwargs)
+
+
+def _prompt_network_recovery(
+    error: NetworkUnavailableError,
+    *,
+    context: Optional[str] = None,
+    title_hint: Optional[str] = None,
+) -> str:
+    safe_echo()
+    safe_secho("⚠ Потеряно подключение к сети", fg=typer.colors.RED, bold=True)
+    if title_hint:
+        safe_echo(f"  Объект: {title_hint}")
+    if context:
+        safe_echo(f"  URL: {context}")
+    safe_echo(f"  Детали: {_sanitize_console_text(error)}")
+    safe_echo("Возможные причины: отключён VPN/прокси, нет доступа в интернет, блокировка API.")
+
+    if not sys.stdin.isatty():
+        safe_secho("Терминал не интерактивный — остановка загрузки.", fg=typer.colors.RED)
+        return "abort"
+
+    safe_echo("После устранения проблемы выберите действие:")
+    safe_echo("  1) Повторить попытку")
+    safe_echo("  2) Пропустить этот элемент")
+    safe_echo("  3) Завершить программу")
+
+    while True:
+        choice = typer.prompt("Ваш выбор", default="1").strip().lower()
+        if choice in ("", "1", "r", "retry", "повтор", "п"):
+            return "retry"
+        if choice in ("2", "s", "skip", "пропустить", "п2"):
+            return "skip"
+        if choice in ("3", "q", "quit", "в", "выход", "abort"):
+            return "abort"
+        safe_secho("Введите 1, 2 или 3.", fg=typer.colors.YELLOW)
 
 
 def _initialize_history(cfg: AppConfig, logger: Optional[Any] = None) -> bool:
@@ -889,21 +925,63 @@ def cmd_download(
                                     if decision.overwrite:
                                         single_opts.overwrite = True
 
-                                    try:
-                                        safe_secho(f"  ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
-                                        files = dl.download(single_opts)
-                                        if not dry_run:
-                                            total_files += len(files)
-                                        safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов", 
-                                                   fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
-                                        if not dry_run and not files:
+                                    files: list[Path] = []
+                                    download_failed = False
+                                    skipped_due_to_network = False
+                                    first_attempt = True
+                                    while True:
+                                        if first_attempt:
+                                            safe_secho(
+                                                f"  ⏳ Загрузка: {entry_title[:60]}...",
+                                                fg=typer.colors.CYAN,
+                                            )
+                                            first_attempt = False
+                                        else:
+                                            safe_secho(
+                                                f"  ↻ Повтор: {entry_title[:60]}...",
+                                                fg=typer.colors.CYAN,
+                                            )
+                                        try:
+                                            files = dl.download(single_opts)
+                                            break
+                                        except KeyboardInterrupt:
+                                            raise
+                                        except NetworkUnavailableError as net_err:
+                                            decision = _prompt_network_recovery(
+                                                net_err,
+                                                context=entry_url,
+                                                title_hint=entry_title,
+                                            )
+                                            if decision == "retry":
+                                                continue
+                                            if decision == "skip":
+                                                failed += 1
+                                                skipped_due_to_network = True
+                                                safe_secho(
+                                                    f"  ⚠ [SKIP] {entry_title} — пропущено после сетевой ошибки",
+                                                    fg=typer.colors.YELLOW,
+                                                )
+                                                break
+                                            safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                                            raise typer.Exit(1) from net_err
+                                        except Exception:
                                             failed += 1
-                                    except KeyboardInterrupt:
-                                        raise
-                                    except Exception:
+                                            download_failed = True
+                                            logger.exception("Ошибка загрузки %s", entry_url)
+                                            safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                            break
+
+                                    if skipped_due_to_network or download_failed:
+                                        continue
+
+                                    if not dry_run:
+                                        total_files += len(files)
+                                    safe_secho(
+                                        f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                        fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW,
+                                    )
+                                    if not dry_run and not files:
                                         failed += 1
-                                        logger.exception("Ошибка загрузки %s", entry_url)
-                                        safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                                     
                                     # Проверить, запрошена ли пауза после этого видео
                                     if pause_controller and pause_controller.is_pause_requested():
@@ -1057,7 +1135,6 @@ def cmd_download(
                                 continue
                             
                             entry_title = entry.get("title", f"Видео {idx}")
-                            safe_secho(f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
                             
                             single_opts = DownloadOptions(
                                 url=entry_url,
@@ -1093,20 +1170,65 @@ def cmd_download(
                             if decision.overwrite:
                                 single_opts.overwrite = True
 
-                            try:
-                                files = dl.download(single_opts)
-                                if not dry_run:
-                                    total_files += len(files)
-                                safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
-                                           fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
-                                if not dry_run and not files:
+                            files: list[Path] = []
+                            download_failed = False
+                            skipped_due_to_network = False
+                            first_attempt = True
+
+                            while True:
+                                if first_attempt:
+                                    safe_secho(
+                                        f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...",
+                                        fg=typer.colors.CYAN,
+                                    )
+                                    first_attempt = False
+                                else:
+                                    safe_secho(
+                                        f"[{idx}/{len(entries)}] ↻ Повтор: {entry_title[:60]}...",
+                                        fg=typer.colors.CYAN,
+                                    )
+
+                                try:
+                                    files = dl.download(single_opts)
+                                    break
+                                except KeyboardInterrupt:
+                                    raise
+                                except NetworkUnavailableError as net_err:
+                                    decision = _prompt_network_recovery(
+                                        net_err,
+                                        context=entry_url,
+                                        title_hint=entry_title,
+                                    )
+                                    if decision == "retry":
+                                        continue
+                                    if decision == "skip":
+                                        failed += 1
+                                        skipped_due_to_network = True
+                                        safe_secho(
+                                            f"  ⚠ [SKIP] {entry_title} — пропущено после сетевой ошибки",
+                                            fg=typer.colors.YELLOW,
+                                        )
+                                        break
+                                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                                    raise typer.Exit(1) from net_err
+                                except Exception:
                                     failed += 1
-                            except KeyboardInterrupt:
-                                raise
-                            except Exception:
+                                    download_failed = True
+                                    logger.exception("Ошибка загрузки %s", entry_url)
+                                    safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                    break
+
+                            if skipped_due_to_network or download_failed:
+                                continue
+
+                            if not dry_run:
+                                total_files += len(files)
+                            safe_secho(
+                                f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW,
+                            )
+                            if not dry_run and not files:
                                 failed += 1
-                                logger.exception("Ошибка загрузки %s", entry_url)
-                                safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                             
                             # Проверить паузу после видео
                             if pause_controller.is_pause_requested():
@@ -1150,29 +1272,57 @@ def cmd_download(
                 overwrite = True
                 opts.overwrite = True
 
-            try:
-                # Показать индикатор начала загрузки
+            files: list[Path] = []
+            download_failed = False
+            skipped_due_to_network = False
+            first_attempt = True
+
+            while True:
                 if not interactive:
-                    safe_secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
-                
-                files = dl.download(opts)
-                if not dry_run:
-                    total_files += len(files)
-                
-                # Цветной вывод результата
-                if dry_run or files:
-                    safe_secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
-                else:
-                    safe_secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
-                
-                if not dry_run and not files:
+                    if first_attempt:
+                        safe_secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
+                    else:
+                        safe_secho(f"\n↻ Повтор: {one_url}", fg=typer.colors.CYAN)
+
+                try:
+                    files = dl.download(opts)
+                    break
+                except KeyboardInterrupt:
+                    raise
+                except NetworkUnavailableError as net_err:
+                    decision = _prompt_network_recovery(net_err, context=one_url)
+                    if decision == "retry":
+                        continue
+                    if decision == "skip":
+                        failed += 1
+                        skipped_due_to_network = True
+                        safe_secho(f"[SKIP] {one_url} — пропущено после сетевой ошибки", fg=typer.colors.YELLOW)
+                        break
+                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                    raise typer.Exit(1) from net_err
+                except Exception as e:  # noqa: BLE001
                     failed += 1
-            except KeyboardInterrupt:
-                raise
-            except Exception as e:  # noqa: BLE001
+                    download_failed = True
+                    logger.exception("Ошибка загрузки %s", one_url)
+                    safe_secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+                    break
+                finally:
+                    first_attempt = False
+
+            if skipped_due_to_network or download_failed:
+                continue
+
+            if not dry_run:
+                total_files += len(files)
+
+            # Цветной вывод результата
+            if dry_run or files:
+                safe_secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
+            else:
+                safe_secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
+
+            if not dry_run and not files:
                 failed += 1
-                logger.exception("Ошибка загрузки %s", one_url)
-                safe_secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
         
         # Отключить контроллер пауз после завершения всех загрузок
         if pause_controller:

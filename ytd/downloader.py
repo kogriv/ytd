@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import logging
+import socket
+import ssl
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 import yt_dlp as yt_dlp  # type: ignore
+from yt_dlp.networking.exceptions import TransportError
 
 from .history import record_event
+from .exceptions import NetworkUnavailableError
 from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 
@@ -423,6 +427,7 @@ class Downloader:
                 return list(self._finished_files)
             except Exception as e:  # noqa: BLE001 — намеренно широкое перехватывание для ретраев
                 last_err = e
+                is_network_issue = self._looks_like_network_issue(e)
                 self._record_history(
                     history_info,
                     opts,
@@ -432,15 +437,26 @@ class Downloader:
                 )
                 if attempt >= max(1, int(opts.retry)):
                     self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
+                    if is_network_issue:
+                        raise NetworkUnavailableError(str(e), original=e) from e
                     raise
                 else:
-                    self.logger.warning(
-                        "ошибка (попытка %d/%d): %s; повтор через %.1f с",
-                        attempt,
-                        int(opts.retry),
-                        e,
-                        delay,
-                    )
+                    if is_network_issue:
+                        self.logger.warning(
+                            "сетевая ошибка (попытка %d/%d): %s; повтор через %.1f с",
+                            attempt,
+                            int(opts.retry),
+                            e,
+                            delay,
+                        )
+                    else:
+                        self.logger.warning(
+                            "ошибка (попытка %d/%d): %s; повтор через %.1f с",
+                            attempt,
+                            int(opts.retry),
+                            e,
+                            delay,
+                        )
                     if delay > 0:
                         time.sleep(delay)
                     delay *= 2.0  # экспоненциальная задержка
@@ -449,3 +465,49 @@ class Downloader:
         if last_err:
             raise last_err
         return list(self._finished_files)
+
+    @staticmethod
+    def _looks_like_network_issue(exc: BaseException) -> bool:
+        """Попытаться определить, что ошибка связана с сетью."""
+
+        for cause in Downloader._iter_exception_chain(exc):
+            if isinstance(
+                cause,
+                (
+                    NetworkUnavailableError,
+                    TransportError,
+                    TimeoutError,
+                    socket.timeout,
+                    ssl.SSLError,
+                    ConnectionError,
+                ),
+            ):
+                return True
+            if isinstance(cause, OSError) and getattr(cause, "errno", None) in {101, 110, 111, 113}:
+                return True
+
+        lowered_chain = " ".join(str(cause).lower() for cause in Downloader._iter_exception_chain(exc))
+        keywords = (
+            "timed out",
+            "handshake",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "ssl",
+            "resolve",
+            "proxy",
+        )
+        return any(keyword in lowered_chain for keyword in keywords)
+
+    @staticmethod
+    def _iter_exception_chain(exc: BaseException) -> Iterator[BaseException]:
+        seen: set[int] = set()
+        current: Optional[BaseException] = exc
+        while current is not None and id(current) not in seen:
+            yield current
+            seen.add(id(current))
+            next_exc = current.__cause__ or current.__context__
+            if isinstance(next_exc, BaseException):
+                current = next_exc
+            else:
+                break
