@@ -4,7 +4,7 @@ import sqlite3
 from contextlib import closing
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 from ..types import DownloadEvent
 from ..utils import ensure_dir, save_metadata_jsonl
@@ -206,3 +206,49 @@ def update_download(
         query = f"UPDATE downloads SET {', '.join(updates)} WHERE {where_clause}"
         conn.execute(query, params)
         conn.commit()
+
+
+def list_downloads(
+    *,
+    statuses: Optional[Iterable[str]] = None,
+    limit: Optional[int] = None,
+    since: Optional[str] = None,
+    playlist_id: Optional[str] = None,
+) -> list[dict[str, Any]]:
+    """Получить список записей истории с поддержкой фильтров."""
+
+    ensure_schema()
+
+    normalized_statuses = [item for item in (statuses or []) if item]
+    normalized_limit = int(limit) if limit and limit > 0 else None
+
+    query = "SELECT * FROM downloads"
+    conditions: list[str] = []
+    params: dict[str, Any] = {}
+
+    if normalized_statuses:
+        placeholders = ", ".join(f":status_{idx}" for idx in range(len(normalized_statuses)))
+        conditions.append(f"status IN ({placeholders})")
+        for idx, status in enumerate(normalized_statuses):
+            params[f"status_{idx}"] = status
+
+    if since:
+        conditions.append("COALESCE(finished_at, started_at) >= :since")
+        params["since"] = since
+
+    if playlist_id:
+        conditions.append("playlist_id = :playlist_id")
+        params["playlist_id"] = playlist_id
+
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+
+    query += " ORDER BY COALESCE(finished_at, started_at) DESC"
+
+    if normalized_limit is not None:
+        query += " LIMIT :limit"
+        params["limit"] = normalized_limit
+
+    with closing(get_connection()) as conn:
+        rows = conn.execute(query, params).fetchall()
+        return [_row_to_dict(row) for row in rows if row is not None]

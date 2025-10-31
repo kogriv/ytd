@@ -7,6 +7,7 @@ from .storage import (
     record_event,
     fetch_download,
     update_download,
+    list_downloads,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "record_event",
     "fetch_download",
     "update_download",
+    "list_downloads",
 ]
