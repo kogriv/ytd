@@ -2211,3 +2211,77 @@ Traceback (most recent call last):
   File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
     raise DownloadError(message, exc_info)
 yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube:tab] PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m: Unable to download API page: _ssl.c:1011: The handshake operation timed out (caused by TransportError('_ssl.c:1011: The handshake operation timed out'))
+2025-10-31 14:21:05 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies — продолжим с настройками по умолчанию
+2025-10-31 14:21:37 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 5.0 с
+2025-10-31 14:21:48 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 10.0 с
+2025-10-31 14:22:04 | ERROR | не удалось скачать после 3 попыток: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+2025-10-31 14:22:04 | ERROR | Ошибка загрузки https://www.youtube.com/playlist?list=PLthfp5exSWEovnvr7XYXzDMxQJFDBAZ8m
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1780, in __extract_info
+    ie_result = ie.extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 762, in extract
+    ie_result = self._real_extract(url)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\youtube\_video.py", line 4001, in _real_extract
+    self.raise_no_formats(reason, expected=True)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\extractor\common.py", line 1274, in raise_no_formats
+    raise ExtractorError(msg, expected=expected, video_id=video_id)
+yt_dlp.utils.ExtractorError: [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\cli.py", line 1288, in cmd_download
+    files = dl.download(opts)
+  File "C:\Users\Ivan\Documents\pro\ytd\ytd\downloader.py", line 378, in download
+    info_preview = ydl.extract_info(opts.url, download=False)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1801, in __extract_info
+    return self.process_ie_result(ie_result, download, extra_info)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1930, in process_ie_result
+    return self.__process_playlist(ie_result, download)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2078, in __process_playlist
+    entry_result = self.__process_iterable_entry(entry, download, collections.ChainMap({
+        'playlist_index': playlist_index,
+        'playlist_autonumber': i + 1,
+    }, extra))
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1645, in wrapper
+    return func(self, *args, **kwargs)
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 2110, in __process_iterable_entry
+    return self.process_ie_result(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        entry, download=download, extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1880, in process_ie_result
+    return self.extract_info(
+           ~~~~~~~~~~~~~~~~~^
+        ie_result['url'], download,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ie_key=ie_result.get('ie_key'),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        extra_info=extra_info)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1634, in extract_info
+    return self.__extract_info(url, self.get_info_extractor(key), download, extra_info, process)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1663, in wrapper
+    self.report_error(str(e), e.format_traceback())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1103, in report_error
+    self.trouble(f'{self._format_err("ERROR:", self.Styles.ERROR)} {message}', *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ivan\Documents\pro\ytd\venv_ytd\Lib\site-packages\yt_dlp\YoutubeDL.py", line 1042, in trouble
+    raise DownloadError(message, exc_info)
+yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies
+2025-10-31 14:28:58 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies — продолжим с настройками по умолчанию
+2025-10-31 14:29:08 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 5.0 с
+2025-10-31 14:29:19 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 10.0 с
+2025-10-31 14:29:33 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies — продолжим с настройками по умолчанию
