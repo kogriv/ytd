@@ -13,6 +13,7 @@ def test_load_config_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     # Без файла и ENV — дефолты
     monkeypatch.delenv("YTD_CONFIG", raising=False)
     monkeypatch.delenv("YTD_OUTPUT", raising=False)
+    monkeypatch.delenv("YTD_HISTORY_ENABLED", raising=False)
 
     monkeypatch.chdir(tmp_path)
     cfg = load_config()
@@ -21,9 +22,12 @@ def test_load_config_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert cfg.output == tmp_path / "downloads"
     assert cfg.quality == "best"
     assert cfg.save_metadata == tmp_path / "data" / "meta.jsonl"
+    assert cfg.history_enabled is True
+    assert cfg.history_db == tmp_path / "data" / "history.db"
     # Директории должны быть созданы
     assert (tmp_path / "downloads").is_dir()
     assert (tmp_path / "data").is_dir()
+    assert (tmp_path / "data" / "history.db").parent.is_dir()
 
 
 def test_load_config_from_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -42,6 +46,8 @@ proxy: http://localhost:8888
 retry: 5
 retry_delay: 1.5
 save_metadata: ./info/meta.jsonl
+history_enabled: false
+history_db: ./storage/custom-history.db
 """,
         encoding="utf-8",
     )
@@ -59,9 +65,12 @@ save_metadata: ./info/meta.jsonl
     assert cfg.retry == 5
     assert cfg.retry_delay == 1.5
     assert cfg.save_metadata == tmp_path / "info" / "meta.jsonl"
+    assert cfg.history_enabled is False
+    assert cfg.history_db == tmp_path / "storage" / "custom-history.db"
     # Папки созданы
     assert (tmp_path / "dl").is_dir()
     assert (tmp_path / "info").is_dir()
+    assert (tmp_path / "storage").is_dir()
 
 
 def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -73,6 +82,7 @@ def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("YTD_PROXY", "http://env-proxy")
     monkeypatch.setenv("YTD_SUBTITLES", "ru,en")
     monkeypatch.setenv("YTD_AUDIO_ONLY", "true")
+    monkeypatch.setenv("YTD_HISTORY_ENABLED", "false")
 
     cfg = load_config()
 
@@ -80,6 +90,7 @@ def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert cfg.proxy == "http://env-proxy"
     assert cfg.subtitles == ["ru", "en"]
     assert cfg.audio_only is True
+    assert cfg.history_enabled is False
 
 
 def test_merge_cli_overrides(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

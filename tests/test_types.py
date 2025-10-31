@@ -76,6 +76,8 @@ def test_app_config_defaults():
     assert pytest.approx(cfg.retry_delay) == 5.0
     assert isinstance(cfg.save_metadata, (type(None), Path))
     assert cfg.save_metadata == Path("data/meta.jsonl")
+    assert cfg.history_enabled is True
+    assert cfg.history_db == Path("data/history.db")
 
 
 def test_slots_prevent_new_attributes():

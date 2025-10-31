@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from contextlib import closing
 from datetime import datetime
@@ -10,6 +11,20 @@ from ..types import DownloadEvent
 from ..utils import ensure_dir, save_metadata_jsonl
 
 _DB_PATH: Optional[Path] = None
+
+
+def _to_path(value: Any) -> Optional[Path]:
+    if isinstance(value, Path):
+        return value
+    if isinstance(value, str) and value.strip():
+        return Path(value.strip())
+    return None
+
+
+def _as_str(value: Any) -> Optional[str]:
+    if value in {None, ""}:
+        return None
+    return str(value)
 
 
 def init_db(path: Path | str) -> Path:
@@ -30,9 +45,18 @@ def get_connection() -> sqlite3.Connection:
     return conn
 
 
-def ensure_schema() -> None:
-    """Убедиться, что схема таблицы истории создана."""
+def ensure_schema() -> bool:
+    """Убедиться, что схема таблицы истории создана.
+
+    Возвращает True, если таблица была создана в ходе вызова.
+    """
     with closing(get_connection()) as conn:
+        existed = bool(
+            conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='downloads'"
+            ).fetchone()
+        )
+
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS downloads (
@@ -62,6 +86,8 @@ def ensure_schema() -> None:
         if "last_action" not in existing_columns:
             conn.execute("ALTER TABLE downloads ADD COLUMN last_action TEXT")
         conn.commit()
+
+        return not existed
 
 
 def _normalize_datetime(value: Any) -> Optional[str]:
@@ -125,6 +151,173 @@ def record_event(event: DownloadEvent) -> None:
         except Exception:
             # История не должна падать из-за метаданных
             pass
+
+
+def _extract_timestamp(raw: Any) -> Optional[str]:
+    candidates: list[Any] = []
+    if isinstance(raw, (int, float)):
+        candidates.append(raw)
+    elif isinstance(raw, str):
+        stripped = raw.strip()
+        if not stripped:
+            return None
+        candidates.append(stripped)
+    else:
+        candidates.append(raw)
+
+    for value in candidates:
+        if value in {None, ""}:
+            continue
+        if isinstance(value, (int, float)):
+            try:
+                return datetime.fromtimestamp(float(value)).isoformat(timespec="seconds")
+            except (OverflowError, OSError, ValueError):
+                continue
+        if isinstance(value, str):
+            # Формат YYYYMMDD
+            if len(value) == 8 and value.isdigit():
+                try:
+                    parsed = datetime.strptime(value, "%Y%m%d")
+                except ValueError:
+                    parsed = None
+                if parsed:
+                    return parsed.isoformat()
+            try:
+                num = float(value)
+            except ValueError:
+                num = None
+            if num is not None:
+                try:
+                    return datetime.fromtimestamp(num).isoformat(timespec="seconds")
+                except (OverflowError, OSError, ValueError):
+                    pass
+            try:
+                parsed = datetime.fromisoformat(value)
+            except ValueError:
+                parsed = None
+            if parsed:
+                return parsed.isoformat(timespec="seconds")
+    return None
+
+
+def import_from_jsonl(path: Path | str) -> int:
+    """Импортировать историю из JSONL-файла метаданных.
+
+    Возвращает количество добавленных записей. Если таблица уже содержит
+    записи или файл не найден — возвращает 0.
+    """
+
+    jsonl_path = Path(path).expanduser()
+    if not jsonl_path.is_file():
+        return 0
+
+    with closing(get_connection()) as conn:
+        existing_row = conn.execute("SELECT 1 FROM downloads LIMIT 1").fetchone()
+        if existing_row:
+            return 0
+
+    added = 0
+    rows: list[dict[str, Any]] = []
+    try:
+        with jsonl_path.open("r", encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line:
+                    continue
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if not isinstance(data, dict):
+                    continue
+
+                video_id = _as_str(
+                    data.get("id")
+                    or data.get("video_id")
+                    or data.get("display_id")
+                    or data.get("url")
+                )
+                if not video_id:
+                    continue
+
+                url = _as_str(
+                    data.get("webpage_url")
+                    or data.get("original_url")
+                    or data.get("url")
+                )
+                if not url:
+                    url = video_id
+
+                title = _as_str(data.get("title"))
+                status = _as_str(data.get("status")) or "finished"
+
+                playlist_id = _as_str(data.get("playlist_id") or data.get("playlist"))
+                playlist_title = _as_str(data.get("playlist_title") or data.get("playlist"))
+
+                raw_path = (
+                    data.get("filepath")
+                    or data.get("filename")
+                    or data.get("_filename")
+                )
+                if not raw_path:
+                    requested = data.get("requested_downloads")
+                    if isinstance(requested, list):
+                        for item in requested:
+                            if not isinstance(item, dict):
+                                continue
+                            raw_path = (
+                                item.get("filepath")
+                                or item.get("filename")
+                                or item.get("_filename")
+                            )
+                            if raw_path:
+                                break
+
+                file_path = _normalize_path(_to_path(raw_path)) if raw_path else None
+
+                finished_at = None
+                for ts_key in ("epoch", "timestamp", "release_timestamp", "upload_date"):
+                    finished_at = _extract_timestamp(data.get(ts_key))
+                    if finished_at:
+                        break
+
+                row = {
+                    "video_id": video_id,
+                    "url": url,
+                    "title": title,
+                    "status": status,
+                    "started_at": None,
+                    "finished_at": finished_at,
+                    "file_path": file_path,
+                    "error": None,
+                    "playlist_id": playlist_id,
+                    "playlist_title": playlist_title,
+                }
+                rows.append(row)
+    except OSError:
+        return 0
+
+    if not rows:
+        return 0
+
+    with closing(get_connection()) as conn:
+        conn.executemany(
+            """
+            INSERT INTO downloads (
+                video_id, url, title, status, started_at, finished_at,
+                file_path, error, playlist_id, playlist_title
+            ) VALUES (
+                :video_id, :url, :title, :status, :started_at, :finished_at,
+                :file_path, :error, :playlist_id, :playlist_title
+            )
+            ON CONFLICT(video_id) DO NOTHING
+            """,
+            rows,
+        )
+        conn.commit()
+        added = conn.total_changes
+
+    return added
 
 
 def _row_to_dict(row: sqlite3.Row | None) -> Optional[dict[str, Any]]:

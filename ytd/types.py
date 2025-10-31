@@ -54,6 +54,7 @@ class AppConfig:
     retry: int = 3
     retry_delay: float = 5.0
     save_metadata: Optional[Path] = Path("data/meta.jsonl")
+    history_enabled: bool = True
     history_db: Path = Path("data/history.db")
     # Поддержка пауз между видео в плейлистах
     pause_between_videos: bool = False

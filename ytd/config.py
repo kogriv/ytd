@@ -23,6 +23,7 @@ _ENV_MAP: dict[str, str] = {
     "retry": "YTD_RETRY",
     "retry_delay": "YTD_RETRY_DELAY",
     "save_metadata": "YTD_SAVE_METADATA",
+    "history_enabled": "YTD_HISTORY_ENABLED",
     "history_db": "YTD_HISTORY_DB",
     "pause_between_videos": "YTD_PAUSE_BETWEEN_VIDEOS",
     "pause_key": "YTD_PAUSE_KEY",
@@ -73,7 +74,7 @@ def _apply_env_overrides(base: AppConfig) -> AppConfig:
                     updates[field] = float(raw)
                 except ValueError:
                     continue
-            elif field in {"audio_only"}:
+            elif field in {"audio_only", "history_enabled"}:
                 updates[field] = _parse_bool(raw)
             else:
                 updates[field] = raw

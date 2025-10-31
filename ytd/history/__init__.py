@@ -8,6 +8,7 @@ from .storage import (
     fetch_download,
     update_download,
     list_downloads,
+    import_from_jsonl,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "fetch_download",
     "update_download",
     "list_downloads",
+    "import_from_jsonl",
 ]
