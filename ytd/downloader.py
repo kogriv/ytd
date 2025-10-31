@@ -123,6 +123,9 @@ class Downloader:
     ) -> None:
         """Безопасно записать события загрузки в историю."""
 
+        if not getattr(self.config, "history_enabled", True):
+            return
+
         if opts.dry_run:
             return
 

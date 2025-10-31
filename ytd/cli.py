@@ -15,9 +15,16 @@ import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
-from .history.storage import ensure_schema, init_db, fetch_download, update_download, list_downloads
+from .history.storage import (
+    ensure_schema,
+    init_db,
+    fetch_download,
+    update_download,
+    list_downloads,
+    import_from_jsonl,
+)
 from .logging import setup_logging
-from .types import DownloadOptions
+from .types import AppConfig, DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
 if TYPE_CHECKING:
     from .pause import PauseController
@@ -62,6 +69,36 @@ def safe_echo(message: object = "", *args: Any, **kwargs: Any) -> None:
         typer.echo(message, *args, **kwargs)
     except UnicodeEncodeError:
         typer.echo(_sanitize_console_text(message), *args, **kwargs)
+
+
+def _initialize_history(cfg: AppConfig, logger: Optional[Any] = None) -> bool:
+    """Подготовить базу истории и, при необходимости, импортировать JSONL."""
+
+    if not getattr(cfg, "history_enabled", True):
+        return False
+
+    try:
+        init_db(cfg.history_db)
+        created = ensure_schema()
+    except Exception as exc:  # noqa: BLE001
+        if logger is not None:
+            try:
+                logger.debug("не удалось инициализировать историю: %s", exc)
+            except Exception:  # noqa: BLE001
+                pass
+        return False
+
+    if created and cfg.save_metadata:
+        try:
+            import_from_jsonl(cfg.save_metadata)
+        except Exception as exc:  # noqa: BLE001
+            if logger is not None:
+                try:
+                    logger.debug("не удалось импортировать историю из %s: %s", cfg.save_metadata, exc)
+                except Exception:  # noqa: BLE001
+                    pass
+
+    return True
 
 
 @dataclass
@@ -152,8 +189,10 @@ def _collect_history_filters(
 
 def _load_history_entries(filters: Mapping[str, Any]) -> list[dict[str, Any]]:
     cfg = load_config()
-    init_db(cfg.history_db)
-    ensure_schema()
+    if not cfg.history_enabled:
+        return []
+    if not _initialize_history(cfg):
+        return []
     return list_downloads(**filters)
 
 
@@ -270,8 +309,13 @@ def history_root(
 @history_app.command("show")
 def history_show(video_id: str = typer.Argument(..., help="Идентификатор видео для просмотра")) -> None:
     cfg = load_config()
-    init_db(cfg.history_db)
-    ensure_schema()
+    if not cfg.history_enabled:
+        safe_secho("История отключена в конфигурации.", fg=typer.colors.YELLOW)
+        raise typer.Exit(code=1)
+
+    if not _initialize_history(cfg):
+        safe_secho("Не удалось инициализировать базу истории.", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
 
     candidate = _extract_video_id(video_id) or video_id
     entry = fetch_download(video_id=candidate)
@@ -418,9 +462,7 @@ def cmd_download(
         # Применить оверрайды
         cfg = merge_cli_overrides(cfg, cli_overrides)
 
-        # Инициализация БД истории загрузок
-        init_db(cfg.history_db)
-        ensure_schema()
+        history_available = _initialize_history(cfg, logger)
         
         # Источник ссылок: позиционный аргумент и/или файл со списком
         def read_urls_from_file(fp: Path) -> list[str]:
@@ -509,6 +551,8 @@ def cmd_download(
             current_url: str,
             title_hint: Optional[str] = None,
         ) -> HistoryDecision:
+            if not history_available:
+                return HistoryDecision(proceed=True)
             try:
                 entry = fetch_download(video_id=video_id, url=current_url)
             except Exception as fetch_err:  # noqa: BLE001
@@ -584,16 +628,17 @@ def cmd_download(
                     else HistoryDecision(proceed=True, action="proceed")
                 )
 
-            try:
-                update_download(
-                    video_id=video_id,
-                    url=current_url,
-                    last_action=decision.action,
-                    retry_increment=decision.increment_retry,
-                    status="in_progress" if decision.proceed and decision.action != "skip" else None,
-                )
-            except Exception as update_err:  # noqa: BLE001
-                logger.debug("не удалось обновить запись истории: %s", update_err)
+            if history_available:
+                try:
+                    update_download(
+                        video_id=video_id,
+                        url=current_url,
+                        last_action=decision.action,
+                        retry_increment=decision.increment_retry,
+                        status="in_progress" if decision.proceed and decision.action != "skip" else None,
+                    )
+                except Exception as update_err:  # noqa: BLE001
+                    logger.debug("не удалось обновить запись истории: %s", update_err)
 
             if not decision.proceed:
                 safe_secho("Загрузка пропущена по истории", fg=typer.colors.CYAN)

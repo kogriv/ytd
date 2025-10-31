@@ -32,6 +32,11 @@ retry: 3
 # Задержка между попытками (секунды)
 retry_delay: 5.0
 
+# Журнал загрузок
+# Включить сохранение истории в SQLite и использовать JSONL для импорта
+history_enabled: true
+# Путь к файлу базы истории (SQLite)
+history_db: data/history.db
 # Путь для сохранения метаданных (JSONL)
 save_metadata: data/meta.jsonl
 
