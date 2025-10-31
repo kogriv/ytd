@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import csv
+import io
 import sys
 import json
 import re
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Any, TYPE_CHECKING, Mapping
@@ -12,7 +15,7 @@ import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
-from .history.storage import ensure_schema, init_db, fetch_download, update_download
+from .history.storage import ensure_schema, init_db, fetch_download, update_download, list_downloads
 from .logging import setup_logging
 from .types import DownloadOptions
 from .utils import find_existing_files, extract_quality_suffix, sanitize_filename, find_best_quality_match
@@ -105,7 +108,203 @@ def _print_history_card(entry: Mapping[str, Any]) -> None:
     if entry.get("last_action"):
         safe_echo(f"  Последнее действие: {entry.get('last_action')}")
 
+
+def _parse_since_option(value: Optional[str]) -> Optional[str]:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError as exc:  # noqa: PERF203
+        raise typer.BadParameter(
+            "Неверный формат даты. Используйте ISO 8601, например 2024-01-01T00:00:00",
+            param_name="since",
+        ) from exc
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+    return parsed.isoformat(timespec="seconds")
+
+
+def _collect_history_filters(
+    status: Optional[list[str]],
+    limit: Optional[int],
+    since: Optional[str],
+    playlist: Optional[str],
+) -> dict[str, Any]:
+    filters: dict[str, Any] = {}
+
+    statuses = [item for item in (status or []) if item]
+    if statuses:
+        filters["statuses"] = statuses
+
+    if limit is not None and limit > 0:
+        filters["limit"] = limit
+
+    parsed_since = _parse_since_option(since)
+    if parsed_since:
+        filters["since"] = parsed_since
+
+    playlist_id = (playlist or "").strip()
+    if playlist_id:
+        filters["playlist_id"] = playlist_id
+
+    return filters
+
+
+def _load_history_entries(filters: Mapping[str, Any]) -> list[dict[str, Any]]:
+    cfg = load_config()
+    init_db(cfg.history_db)
+    ensure_schema()
+    return list_downloads(**filters)
+
+
+def _truncate_text(value: str, max_length: int) -> str:
+    if len(value) <= max_length:
+        return value
+    if max_length <= 1:
+        return value[:max_length]
+    return value[: max_length - 1] + "…"
+
+
+def _history_value(entry: Mapping[str, Any], key: str) -> str:
+    if key == "finished_at":
+        raw = entry.get("finished_at") or entry.get("started_at")
+    elif key == "playlist":
+        raw = entry.get("playlist_title") or entry.get("playlist_id")
+    else:
+        raw = entry.get(key)
+    if raw in {None, ""}:
+        return "—"
+    return str(raw)
+
+
+def _print_history_table(entries: list[dict[str, Any]]) -> None:
+    if not entries:
+        safe_secho("История загрузок пуста.", fg=typer.colors.YELLOW)
+        return
+
+    columns: list[tuple[str, str, int]] = [
+        ("video_id", "Видео ID", 12),
+        ("status", "Статус", 10),
+        ("title", "Название", 32),
+        ("finished_at", "Завершено", 19),
+        ("playlist", "Плейлист", 18),
+    ]
+
+    display_rows: list[list[str]] = []
+    widths: list[int] = []
+
+    for key, header, max_width in columns:
+        column_values = [_truncate_text(_history_value(entry, key), max_width) for entry in entries]
+        column_width = max(len(header), *(len(val) for val in column_values)) if column_values else len(header)
+        column_width = min(column_width, max_width)
+        widths.append(column_width)
+        for idx, value in enumerate(column_values):
+            if len(display_rows) <= idx:
+                display_rows.append(["" for _ in columns])
+            display_rows[idx][len(widths) - 1] = value.ljust(column_width)
+
+    header_parts = [_truncate_text(header, width).ljust(width) for (_, header, _), width in zip(columns, widths)]
+    header_line = " | ".join(header_parts)
+    separator = "-+-".join("-" * width for width in widths)
+
+    safe_secho(header_line, bold=True)
+    safe_secho(separator)
+    for row in display_rows:
+        safe_echo(" | ".join(row))
+
+
+def _export_history_csv(entries: list[dict[str, Any]]) -> None:
+    fieldnames = [
+        "video_id",
+        "url",
+        "title",
+        "status",
+        "started_at",
+        "finished_at",
+        "file_path",
+        "error",
+        "playlist_id",
+        "playlist_title",
+        "retry_count",
+        "last_action",
+    ]
+
+    header_buffer = io.StringIO()
+    header_writer = csv.DictWriter(header_buffer, fieldnames=fieldnames, extrasaction="ignore")
+    header_writer.writeheader()
+    safe_echo(header_buffer.getvalue().strip("\r\n"))
+
+    for entry in entries:
+        row_buffer = io.StringIO()
+        row_writer = csv.DictWriter(row_buffer, fieldnames=fieldnames, extrasaction="ignore")
+        sanitized = {key: ("" if entry.get(key) is None else entry.get(key)) for key in fieldnames}
+        row_writer.writerow(sanitized)
+        safe_echo(row_buffer.getvalue().strip("\r\n"))
+
+
+history_app = typer.Typer(
+    name="history",
+    help="Просмотр и экспорт истории загрузок",
+    add_completion=False,
+    invoke_without_command=True,
+)
+
+
+@history_app.callback()
+def history_root(
+    ctx: typer.Context,
+    status: Optional[list[str]] = typer.Option(None, "--status", "-s", help="Фильтр по статусу (можно несколько)"),
+    limit: Optional[int] = typer.Option(20, "--limit", "-n", help="Максимум записей (0 — без ограничений)"),
+    since: Optional[str] = typer.Option(None, "--since", help="Показывать записи, созданные после указанной даты"),
+    playlist: Optional[str] = typer.Option(None, "--playlist", help="ID плейлиста для фильтрации"),
+) -> None:
+    filters = _collect_history_filters(status, limit, since, playlist)
+    ctx.ensure_object(dict)
+    ctx.obj["history_filters"] = filters
+
+    if ctx.invoked_subcommand is None:
+        entries = _load_history_entries(filters)
+        _print_history_table(entries)
+
+
+@history_app.command("show")
+def history_show(video_id: str = typer.Argument(..., help="Идентификатор видео для просмотра")) -> None:
+    cfg = load_config()
+    init_db(cfg.history_db)
+    ensure_schema()
+
+    candidate = _extract_video_id(video_id) or video_id
+    entry = fetch_download(video_id=candidate)
+    if entry is None and candidate != video_id:
+        entry = fetch_download(url=video_id)
+
+    if not entry:
+        safe_secho("✗ Запись не найдена", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    _print_history_card(entry)
+
+
+@history_app.command("export")
+def history_export(
+    ctx: typer.Context,
+    format: str = typer.Option(..., "--format", "-f", help="Формат экспорта: jsonl или csv"),
+) -> None:
+    filters = (ctx.obj or {}).get("history_filters", {})
+    entries = _load_history_entries(filters)
+    fmt = format.lower()
+
+    if fmt == "jsonl":
+        for entry in entries:
+            safe_echo(json.dumps(entry, ensure_ascii=False))
+    elif fmt == "csv":
+        _export_history_csv(entries)
+    else:
+        raise typer.BadParameter("Поддерживаемые форматы: jsonl, csv", param_name="format")
+
+
 app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
+app.add_typer(history_app, name="history")
 
 
 def _looks_like_playlist_url(url: str) -> bool:
