@@ -334,7 +334,6 @@ class Downloader:
 
     def get_info(self, url: str) -> dict[str, Any]:
         """Получить метаданные по URL без скачивания."""
-        # Строим опции из конфигурации по умолчанию, но принудительно без скачивания
         base_opts = DownloadOptions(
             url=url,
             output_dir=self.config.output,
@@ -352,10 +351,50 @@ class Downloader:
             playlist=False,
         )
         ydl_opts = self.build_ydl_opts(base_opts)
-        # Без скачивания
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
-            info = ydl.extract_info(url, download=False)
-        return info  # type: ignore[no-any-return]
+
+        attempt = 0
+        max_attempts = max(1, int(base_opts.retry))
+        delay = max(0.0, float(base_opts.retry_delay))
+        last_err: Optional[BaseException] = None
+
+        while attempt < max_attempts:
+            attempt += 1
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
+                    info = ydl.extract_info(url, download=False)
+                return info  # type: ignore[no-any-return]
+            except Exception as exc:  # noqa: BLE001
+                last_err = exc
+                is_network = self._looks_like_network_issue(exc)
+                if attempt >= max_attempts:
+                    if is_network:
+                        raise NetworkUnavailableError(str(exc), original=exc) from exc
+                    raise
+
+                if is_network:
+                    self.logger.warning(
+                        "сетевая ошибка при получении информации (попытка %d/%d): %s; повтор через %.1f с",
+                        attempt,
+                        max_attempts,
+                        exc,
+                        delay,
+                    )
+                else:
+                    self.logger.warning(
+                        "ошибка при получении информации (попытка %d/%d): %s; повтор через %.1f с",
+                        attempt,
+                        max_attempts,
+                        exc,
+                        delay,
+                    )
+
+                if delay > 0:
+                    time.sleep(delay)
+                delay *= 2.0
+
+        if last_err is not None:
+            raise last_err
+        raise RuntimeError("не удалось получить информацию")
 
     def download(self, opts: DownloadOptions) -> list[Path]:
         """Скачать видео/аудио по DownloadOptions.

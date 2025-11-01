@@ -581,6 +581,37 @@ def cmd_download(
         # Запустить загрузку последовательно
         dl = Downloader(cfg, logger, verbose=verbose)
 
+        def fetch_info_with_prompt(
+            target_url: str,
+            *,
+            title_hint: Optional[str] = None,
+            allow_skip: bool = False,
+            skip_message: Optional[str] = None,
+        ) -> Optional[dict[str, Any]]:
+            while True:
+                try:
+                    return dl.get_info(target_url)
+                except NetworkUnavailableError as net_err:
+                    decision = _prompt_network_recovery(
+                        net_err,
+                        context=target_url,
+                        title_hint=title_hint,
+                    )
+                    if decision == "retry":
+                        continue
+                    if decision == "skip" and allow_skip:
+                        if skip_message:
+                            safe_secho(skip_message, fg=typer.colors.YELLOW)
+                        else:
+                            hint = title_hint or target_url
+                            safe_secho(
+                                f"[SKIP] {hint} — пропущено после сетевой ошибки",
+                                fg=typer.colors.YELLOW,
+                            )
+                        return None
+                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                    raise typer.Exit(1) from net_err
+
         def prompt_history_decision(
             *,
             video_id: Optional[str],
@@ -719,7 +750,15 @@ def cmd_download(
                     safe_echo("Это может занять некоторое время для больших плейлистов.")
                     safe_echo("═" * 60)
                     try:
-                        info = dl.get_info(one_url)
+                        info = fetch_info_with_prompt(
+                            one_url,
+                            title_hint="Плейлист",
+                            allow_skip=True,
+                            skip_message="[SKIP] Плейлист пропущен после сетевой ошибки",
+                        )
+                        if info is None:
+                            failed += 1
+                            continue
                         entries = info.get("entries") or []
                         if info.get("id"):
                             history_video_id = str(info.get("id"))
@@ -746,7 +785,19 @@ def cmd_download(
                                 first_entry = entries[0]
                                 # Если в первом элементе нет форматов, запросим отдельной загрузкой
                                 first_url = ia.get_entry_url(first_entry)
-                                first_info = dl.get_info(first_url) if first_url else {}
+                                first_info = (
+                                    fetch_info_with_prompt(
+                                        first_url,
+                                        title_hint="Первое видео плейлиста",
+                                        allow_skip=True,
+                                        skip_message="[SKIP] Пропуск анализа первого видео плейлиста из-за сетевой ошибки",
+                                    )
+                                    if first_url
+                                    else {}
+                                )
+                                if first_url and first_info is None:
+                                    failed += 1
+                                    first_info = {}
                                 height_to_ext, available_heights = ia.collect_available_heights(
                                     (first_info.get("formats") or [])
                                 )
@@ -861,9 +912,20 @@ def cmd_download(
                                         safe_secho(f"[WARN] Пропуск: не удалось получить URL для элемента #{idx}", fg=typer.colors.YELLOW)
                                         continue
                                     # Получить полную информацию для подбора качества
-                                    entry_info = dl.get_info(entry_url)
+                                    entry_title_hint = entry.get("title", f"Видео {idx}")
+                                    entry_info = fetch_info_with_prompt(
+                                        entry_url,
+                                        title_hint=entry_title_hint,
+                                        allow_skip=True,
+                                        skip_message=(
+                                            f"[SKIP] {entry_title_hint} — пропущено из-за сетевой ошибки при анализе"
+                                        ),
+                                    )
+                                    if entry_info is None:
+                                        failed += 1
+                                        continue
                                     entry_id = entry_info.get("id", entry.get("id", f"{idx}"))
-                                    entry_title = entry_info.get("title", entry.get("title", f"Видео {idx}"))
+                                    entry_title = entry_info.get("title", entry_title_hint)
                                     entry_fmts = entry_info.get("formats") or []
 
                                     # Если выбран аудио-только (target_height == -1)
@@ -1006,7 +1068,15 @@ def cmd_download(
                     safe_secho("⏳ Получение информации о видео...", fg=typer.colors.CYAN, bold=True)
                     safe_echo("═" * 60)
                     try:
-                        info = dl.get_info(one_url)
+                        info = fetch_info_with_prompt(
+                            one_url,
+                            title_hint="Видео",
+                            allow_skip=True,
+                            skip_message="[SKIP] Видео пропущено после сетевой ошибки",
+                        )
+                        if info is None:
+                            failed += 1
+                            continue
                         video_id = info.get("id", "unknown")
                         if info.get("id"):
                             history_video_id = str(info.get("id"))
@@ -1124,7 +1194,15 @@ def cmd_download(
             if pause_controller and playlist and not interactive:
                 # Получить информацию о плейлисте
                 try:
-                    info = dl.get_info(one_url)
+                    info = fetch_info_with_prompt(
+                        one_url,
+                        title_hint="Плейлист",
+                        allow_skip=True,
+                        skip_message="[SKIP] Плейлист пропущен после сетевой ошибки",
+                    )
+                    if info is None:
+                        failed += 1
+                        continue
                     entries = info.get("entries") or []
                     if entries:
                         safe_secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
@@ -1370,8 +1448,20 @@ def cmd_info(
     try:
         cfg = load_config()
         dl = Downloader(cfg, logger)
-        info = dl.get_info(url)
-        
+        while True:
+            try:
+                info = dl.get_info(url)
+                break
+            except NetworkUnavailableError as net_err:
+                decision = _prompt_network_recovery(net_err, context=url)
+                if decision == "retry":
+                    continue
+                if decision == "skip":
+                    safe_secho("Информация не получена из-за сетевой ошибки", fg=typer.colors.YELLOW)
+                    sys.exit(2)
+                safe_secho("✗ Прервано по запросу пользователя", fg=typer.colors.RED)
+                sys.exit(1)
+
         if json_output:
             safe_echo(json.dumps(info, indent=2, ensure_ascii=False))
         else:
