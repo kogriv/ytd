@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import logging
+import socket
+import ssl
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 import yt_dlp as yt_dlp  # type: ignore
+from yt_dlp.networking.exceptions import TransportError
 
 from .history import record_event
+from .exceptions import NetworkUnavailableError
 from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 
@@ -330,7 +334,6 @@ class Downloader:
 
     def get_info(self, url: str) -> dict[str, Any]:
         """Получить метаданные по URL без скачивания."""
-        # Строим опции из конфигурации по умолчанию, но принудительно без скачивания
         base_opts = DownloadOptions(
             url=url,
             output_dir=self.config.output,
@@ -348,10 +351,50 @@ class Downloader:
             playlist=False,
         )
         ydl_opts = self.build_ydl_opts(base_opts)
-        # Без скачивания
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
-            info = ydl.extract_info(url, download=False)
-        return info  # type: ignore[no-any-return]
+
+        attempt = 0
+        max_attempts = max(1, int(base_opts.retry))
+        delay = max(0.0, float(base_opts.retry_delay))
+        last_err: Optional[BaseException] = None
+
+        while attempt < max_attempts:
+            attempt += 1
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
+                    info = ydl.extract_info(url, download=False)
+                return info  # type: ignore[no-any-return]
+            except Exception as exc:  # noqa: BLE001
+                last_err = exc
+                is_network = self._looks_like_network_issue(exc)
+                if attempt >= max_attempts:
+                    if is_network:
+                        raise NetworkUnavailableError(str(exc), original=exc) from exc
+                    raise
+
+                if is_network:
+                    self.logger.warning(
+                        "сетевая ошибка при получении информации (попытка %d/%d): %s; повтор через %.1f с",
+                        attempt,
+                        max_attempts,
+                        exc,
+                        delay,
+                    )
+                else:
+                    self.logger.warning(
+                        "ошибка при получении информации (попытка %d/%d): %s; повтор через %.1f с",
+                        attempt,
+                        max_attempts,
+                        exc,
+                        delay,
+                    )
+
+                if delay > 0:
+                    time.sleep(delay)
+                delay *= 2.0
+
+        if last_err is not None:
+            raise last_err
+        raise RuntimeError("не удалось получить информацию")
 
     def download(self, opts: DownloadOptions) -> list[Path]:
         """Скачать видео/аудио по DownloadOptions.
@@ -423,6 +466,7 @@ class Downloader:
                 return list(self._finished_files)
             except Exception as e:  # noqa: BLE001 — намеренно широкое перехватывание для ретраев
                 last_err = e
+                is_network_issue = self._looks_like_network_issue(e)
                 self._record_history(
                     history_info,
                     opts,
@@ -432,15 +476,26 @@ class Downloader:
                 )
                 if attempt >= max(1, int(opts.retry)):
                     self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
+                    if is_network_issue:
+                        raise NetworkUnavailableError(str(e), original=e) from e
                     raise
                 else:
-                    self.logger.warning(
-                        "ошибка (попытка %d/%d): %s; повтор через %.1f с",
-                        attempt,
-                        int(opts.retry),
-                        e,
-                        delay,
-                    )
+                    if is_network_issue:
+                        self.logger.warning(
+                            "сетевая ошибка (попытка %d/%d): %s; повтор через %.1f с",
+                            attempt,
+                            int(opts.retry),
+                            e,
+                            delay,
+                        )
+                    else:
+                        self.logger.warning(
+                            "ошибка (попытка %d/%d): %s; повтор через %.1f с",
+                            attempt,
+                            int(opts.retry),
+                            e,
+                            delay,
+                        )
                     if delay > 0:
                         time.sleep(delay)
                     delay *= 2.0  # экспоненциальная задержка
@@ -449,3 +504,49 @@ class Downloader:
         if last_err:
             raise last_err
         return list(self._finished_files)
+
+    @staticmethod
+    def _looks_like_network_issue(exc: BaseException) -> bool:
+        """Попытаться определить, что ошибка связана с сетью."""
+
+        for cause in Downloader._iter_exception_chain(exc):
+            if isinstance(
+                cause,
+                (
+                    NetworkUnavailableError,
+                    TransportError,
+                    TimeoutError,
+                    socket.timeout,
+                    ssl.SSLError,
+                    ConnectionError,
+                ),
+            ):
+                return True
+            if isinstance(cause, OSError) and getattr(cause, "errno", None) in {101, 110, 111, 113}:
+                return True
+
+        lowered_chain = " ".join(str(cause).lower() for cause in Downloader._iter_exception_chain(exc))
+        keywords = (
+            "timed out",
+            "handshake",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "ssl",
+            "resolve",
+            "proxy",
+        )
+        return any(keyword in lowered_chain for keyword in keywords)
+
+    @staticmethod
+    def _iter_exception_chain(exc: BaseException) -> Iterator[BaseException]:
+        seen: set[int] = set()
+        current: Optional[BaseException] = exc
+        while current is not None and id(current) not in seen:
+            yield current
+            seen.add(id(current))
+            next_exc = current.__cause__ or current.__context__
+            if isinstance(next_exc, BaseException):
+                current = next_exc
+            else:
+                break
