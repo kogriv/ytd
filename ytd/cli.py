@@ -15,6 +15,7 @@ import typer
 
 from .config import load_config, merge_cli_overrides
 from .downloader import Downloader
+from .exceptions import NetworkUnavailableError
 from .history.storage import (
     ensure_schema,
     init_db,
@@ -69,6 +70,41 @@ def safe_echo(message: object = "", *args: Any, **kwargs: Any) -> None:
         typer.echo(message, *args, **kwargs)
     except UnicodeEncodeError:
         typer.echo(_sanitize_console_text(message), *args, **kwargs)
+
+
+def _prompt_network_recovery(
+    error: NetworkUnavailableError,
+    *,
+    context: Optional[str] = None,
+    title_hint: Optional[str] = None,
+) -> str:
+    safe_echo()
+    safe_secho("⚠ Потеряно подключение к сети", fg=typer.colors.RED, bold=True)
+    if title_hint:
+        safe_echo(f"  Объект: {title_hint}")
+    if context:
+        safe_echo(f"  URL: {context}")
+    safe_echo(f"  Детали: {_sanitize_console_text(error)}")
+    safe_echo("Возможные причины: отключён VPN/прокси, нет доступа в интернет, блокировка API.")
+
+    if not sys.stdin.isatty():
+        safe_secho("Терминал не интерактивный — остановка загрузки.", fg=typer.colors.RED)
+        return "abort"
+
+    safe_echo("После устранения проблемы выберите действие:")
+    safe_echo("  1) Повторить попытку")
+    safe_echo("  2) Пропустить этот элемент")
+    safe_echo("  3) Завершить программу")
+
+    while True:
+        choice = typer.prompt("Ваш выбор", default="1").strip().lower()
+        if choice in ("", "1", "r", "retry", "повтор", "п"):
+            return "retry"
+        if choice in ("2", "s", "skip", "пропустить", "п2"):
+            return "skip"
+        if choice in ("3", "q", "quit", "в", "выход", "abort"):
+            return "abort"
+        safe_secho("Введите 1, 2 или 3.", fg=typer.colors.YELLOW)
 
 
 def _initialize_history(cfg: AppConfig, logger: Optional[Any] = None) -> bool:
@@ -545,11 +581,43 @@ def cmd_download(
         # Запустить загрузку последовательно
         dl = Downloader(cfg, logger, verbose=verbose)
 
+        def fetch_info_with_prompt(
+            target_url: str,
+            *,
+            title_hint: Optional[str] = None,
+            allow_skip: bool = False,
+            skip_message: Optional[str] = None,
+        ) -> Optional[dict[str, Any]]:
+            while True:
+                try:
+                    return dl.get_info(target_url)
+                except NetworkUnavailableError as net_err:
+                    decision = _prompt_network_recovery(
+                        net_err,
+                        context=target_url,
+                        title_hint=title_hint,
+                    )
+                    if decision == "retry":
+                        continue
+                    if decision == "skip" and allow_skip:
+                        if skip_message:
+                            safe_secho(skip_message, fg=typer.colors.YELLOW)
+                        else:
+                            hint = title_hint or target_url
+                            safe_secho(
+                                f"[SKIP] {hint} — пропущено после сетевой ошибки",
+                                fg=typer.colors.YELLOW,
+                            )
+                        return None
+                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                    raise typer.Exit(1) from net_err
+
         def prompt_history_decision(
             *,
             video_id: Optional[str],
             current_url: str,
             title_hint: Optional[str] = None,
+            default_output_dir: Optional[Path] = None,
         ) -> HistoryDecision:
             if not history_available:
                 return HistoryDecision(proceed=True)
@@ -582,7 +650,10 @@ def cmd_download(
                         increment_retry=True,
                     )
                 elif choice.strip() == "3":
-                    default_dir = Path(entry.get("file_path") or cfg.output)
+                    default_dir = Path(
+                        entry.get("file_path")
+                        or (default_output_dir or cfg.output)
+                    )
                     new_dir_str = typer.prompt(
                         "Введите путь к новой папке",
                         default=str(default_dir),
@@ -644,9 +715,33 @@ def cmd_download(
                 safe_secho("Загрузка пропущена по истории", fg=typer.colors.CYAN)
             return decision
 
+        preflight_history_decisions: list[HistoryDecision] = []
+        if history_available:
+            filtered_urls: list[str] = []
+            for original_url in urls:
+                decision = prompt_history_decision(
+                    video_id=_extract_video_id(original_url),
+                    current_url=original_url,
+                    default_output_dir=cfg.output,
+                )
+                if not decision.proceed:
+                    continue
+                filtered_urls.append(original_url)
+                preflight_history_decisions.append(decision)
+            urls = filtered_urls
+            if not urls:
+                safe_secho(
+                    "[OK] Все запрошенные элементы уже скачаны — новых задач нет",
+                    fg=typer.colors.CYAN,
+                )
+                raise typer.Exit(code=0)
+
+        if not preflight_history_decisions and urls:
+            preflight_history_decisions = [HistoryDecision(proceed=True) for _ in urls]
+
         total_files = 0
         failed = 0
-        
+
         # Инициализировать контроллер пауз если включен режим паузы между видео
         # (либо через CLI флаг, либо через конфиг)
         pause_controller: Optional[PauseController] = None
@@ -662,12 +757,18 @@ def cmd_download(
                 fg=typer.colors.CYAN
             )
         
-        for one_url in urls:
+        for url_index, one_url in enumerate(urls):
+            preflight_decision = (
+                preflight_history_decisions[url_index]
+                if url_index < len(preflight_history_decisions)
+                else HistoryDecision(proceed=True)
+            )
+            current_output_dir = preflight_decision.new_output or cfg.output
             chosen_format: Optional[str] = None
             chosen_label: str = "Лучшее доступное качество"
             file_prefix: Optional[str] = None
             quality_suffix: Optional[str] = None
-            overwrite: bool = False
+            overwrite: bool = preflight_decision.overwrite
             custom_name: Optional[str] = None
             # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
             skip_post_processing: bool = False
@@ -683,7 +784,15 @@ def cmd_download(
                     safe_echo("Это может занять некоторое время для больших плейлистов.")
                     safe_echo("═" * 60)
                     try:
-                        info = dl.get_info(one_url)
+                        info = fetch_info_with_prompt(
+                            one_url,
+                            title_hint="Плейлист",
+                            allow_skip=True,
+                            skip_message="[SKIP] Плейлист пропущен после сетевой ошибки",
+                        )
+                        if info is None:
+                            failed += 1
+                            continue
                         entries = info.get("entries") or []
                         if info.get("id"):
                             history_video_id = str(info.get("id"))
@@ -710,7 +819,19 @@ def cmd_download(
                                 first_entry = entries[0]
                                 # Если в первом элементе нет форматов, запросим отдельной загрузкой
                                 first_url = ia.get_entry_url(first_entry)
-                                first_info = dl.get_info(first_url) if first_url else {}
+                                first_info = (
+                                    fetch_info_with_prompt(
+                                        first_url,
+                                        title_hint="Первое видео плейлиста",
+                                        allow_skip=True,
+                                        skip_message="[SKIP] Пропуск анализа первого видео плейлиста из-за сетевой ошибки",
+                                    )
+                                    if first_url
+                                    else {}
+                                )
+                                if first_url and first_info is None:
+                                    failed += 1
+                                    first_info = {}
                                 height_to_ext, available_heights = ia.collect_available_heights(
                                     (first_info.get("formats") or [])
                                 )
@@ -731,7 +852,9 @@ def cmd_download(
 
                                 # Перезапись для плейлиста целиком
                                 overwrite_all = ia.ask_overwrite_all()
-                                
+                                if preflight_decision.overwrite:
+                                    overwrite_all = True
+
                                 # Показать итоговую маску и подтвердить
                                 example_title = sanitize_filename((first_info or {}).get("title") or entries[0].get("title", "Видео"))
                                 example_id = (first_info or {}).get("id") or entries[0].get("id", "ID")
@@ -749,7 +872,7 @@ def cmd_download(
                                     safe_secho("Загрузка отменена", fg=typer.colors.YELLOW)
                                     continue
 
-                                existing_map, missing_indices = ia.analyze_playlist_progress(cfg.output, entries)
+                                existing_map, missing_indices = ia.analyze_playlist_progress(current_output_dir, entries)
                                 indices_to_download: Optional[set[int]] = None
 
                                 delete_existing = False
@@ -825,9 +948,20 @@ def cmd_download(
                                         safe_secho(f"[WARN] Пропуск: не удалось получить URL для элемента #{idx}", fg=typer.colors.YELLOW)
                                         continue
                                     # Получить полную информацию для подбора качества
-                                    entry_info = dl.get_info(entry_url)
+                                    entry_title_hint = entry.get("title", f"Видео {idx}")
+                                    entry_info = fetch_info_with_prompt(
+                                        entry_url,
+                                        title_hint=entry_title_hint,
+                                        allow_skip=True,
+                                        skip_message=(
+                                            f"[SKIP] {entry_title_hint} — пропущено из-за сетевой ошибки при анализе"
+                                        ),
+                                    )
+                                    if entry_info is None:
+                                        failed += 1
+                                        continue
                                     entry_id = entry_info.get("id", entry.get("id", f"{idx}"))
-                                    entry_title = entry_info.get("title", entry.get("title", f"Видео {idx}"))
+                                    entry_title = entry_info.get("title", entry_title_hint)
                                     entry_fmts = entry_info.get("formats") or []
 
                                     # Если выбран аудио-только (target_height == -1)
@@ -857,7 +991,7 @@ def cmd_download(
                                     # Сформировать опции загрузки для одного видео
                                     single_opts = DownloadOptions(
                                         url=entry_url,
-                                        output_dir=cfg.output,
+                                        output_dir=current_output_dir,
                                         audio_only=cfg.audio_only,
                                         audio_format=cfg.audio_format,  # type: ignore[arg-type]
                                         video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -881,6 +1015,7 @@ def cmd_download(
                                         video_id=str(entry.get("id")) if entry.get("id") else None,
                                         current_url=entry_url,
                                         title_hint=entry_title,
+                                        default_output_dir=single_opts.output_dir,
                                     )
                                     if not decision.proceed:
                                         continue
@@ -889,21 +1024,63 @@ def cmd_download(
                                     if decision.overwrite:
                                         single_opts.overwrite = True
 
-                                    try:
-                                        safe_secho(f"  ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
-                                        files = dl.download(single_opts)
-                                        if not dry_run:
-                                            total_files += len(files)
-                                        safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов", 
-                                                   fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
-                                        if not dry_run and not files:
+                                    files: list[Path] = []
+                                    download_failed = False
+                                    skipped_due_to_network = False
+                                    first_attempt = True
+                                    while True:
+                                        if first_attempt:
+                                            safe_secho(
+                                                f"  ⏳ Загрузка: {entry_title[:60]}...",
+                                                fg=typer.colors.CYAN,
+                                            )
+                                            first_attempt = False
+                                        else:
+                                            safe_secho(
+                                                f"  ↻ Повтор: {entry_title[:60]}...",
+                                                fg=typer.colors.CYAN,
+                                            )
+                                        try:
+                                            files = dl.download(single_opts)
+                                            break
+                                        except KeyboardInterrupt:
+                                            raise
+                                        except NetworkUnavailableError as net_err:
+                                            decision = _prompt_network_recovery(
+                                                net_err,
+                                                context=entry_url,
+                                                title_hint=entry_title,
+                                            )
+                                            if decision == "retry":
+                                                continue
+                                            if decision == "skip":
+                                                failed += 1
+                                                skipped_due_to_network = True
+                                                safe_secho(
+                                                    f"  ⚠ [SKIP] {entry_title} — пропущено после сетевой ошибки",
+                                                    fg=typer.colors.YELLOW,
+                                                )
+                                                break
+                                            safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                                            raise typer.Exit(1) from net_err
+                                        except Exception:
                                             failed += 1
-                                    except KeyboardInterrupt:
-                                        raise
-                                    except Exception:
+                                            download_failed = True
+                                            logger.exception("Ошибка загрузки %s", entry_url)
+                                            safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                            break
+
+                                    if skipped_due_to_network or download_failed:
+                                        continue
+
+                                    if not dry_run:
+                                        total_files += len(files)
+                                    safe_secho(
+                                        f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                        fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW,
+                                    )
+                                    if not dry_run and not files:
                                         failed += 1
-                                        logger.exception("Ошибка загрузки %s", entry_url)
-                                        safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                                     
                                     # Проверить, запрошена ли пауза после этого видео
                                     if pause_controller and pause_controller.is_pause_requested():
@@ -928,7 +1105,15 @@ def cmd_download(
                     safe_secho("⏳ Получение информации о видео...", fg=typer.colors.CYAN, bold=True)
                     safe_echo("═" * 60)
                     try:
-                        info = dl.get_info(one_url)
+                        info = fetch_info_with_prompt(
+                            one_url,
+                            title_hint="Видео",
+                            allow_skip=True,
+                            skip_message="[SKIP] Видео пропущено после сетевой ошибки",
+                        )
+                        if info is None:
+                            failed += 1
+                            continue
                         video_id = info.get("id", "unknown")
                         if info.get("id"):
                             history_video_id = str(info.get("id"))
@@ -1009,7 +1194,7 @@ def cmd_download(
                             safe_echo(f"Будет использовано: {name_with_suffix}")
                         
                         # ШАГ 3: Проверка существующих файлов
-                        existing = find_existing_files(cfg.output, video_id)
+                        existing = find_existing_files(current_output_dir, video_id)
                         if existing:
                             safe_echo("\n" + "═" * 60)
                             safe_secho("⚠ ВНИМАНИЕ: Найдены существующие файлы этого видео:", fg=typer.colors.YELLOW)
@@ -1046,7 +1231,15 @@ def cmd_download(
             if pause_controller and playlist and not interactive:
                 # Получить информацию о плейлисте
                 try:
-                    info = dl.get_info(one_url)
+                    info = fetch_info_with_prompt(
+                        one_url,
+                        title_hint="Плейлист",
+                        allow_skip=True,
+                        skip_message="[SKIP] Плейлист пропущен после сетевой ошибки",
+                    )
+                    if info is None:
+                        failed += 1
+                        continue
                     entries = info.get("entries") or []
                     if entries:
                         safe_secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
@@ -1057,11 +1250,10 @@ def cmd_download(
                                 continue
                             
                             entry_title = entry.get("title", f"Видео {idx}")
-                            safe_secho(f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...", fg=typer.colors.CYAN)
                             
                             single_opts = DownloadOptions(
                                 url=entry_url,
-                                output_dir=cfg.output,
+                                output_dir=current_output_dir,
                                 audio_only=cfg.audio_only,
                                 audio_format=cfg.audio_format,  # type: ignore[arg-type]
                                 video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -1085,6 +1277,7 @@ def cmd_download(
                                 video_id=str(entry.get("id")) if entry.get("id") else None,
                                 current_url=entry_url,
                                 title_hint=entry_title,
+                                default_output_dir=single_opts.output_dir,
                             )
                             if not decision.proceed:
                                 continue
@@ -1093,20 +1286,65 @@ def cmd_download(
                             if decision.overwrite:
                                 single_opts.overwrite = True
 
-                            try:
-                                files = dl.download(single_opts)
-                                if not dry_run:
-                                    total_files += len(files)
-                                safe_secho(f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
-                                           fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW)
-                                if not dry_run and not files:
+                            files: list[Path] = []
+                            download_failed = False
+                            skipped_due_to_network = False
+                            first_attempt = True
+
+                            while True:
+                                if first_attempt:
+                                    safe_secho(
+                                        f"[{idx}/{len(entries)}] ⏳ Загрузка: {entry_title[:60]}...",
+                                        fg=typer.colors.CYAN,
+                                    )
+                                    first_attempt = False
+                                else:
+                                    safe_secho(
+                                        f"[{idx}/{len(entries)}] ↻ Повтор: {entry_title[:60]}...",
+                                        fg=typer.colors.CYAN,
+                                    )
+
+                                try:
+                                    files = dl.download(single_opts)
+                                    break
+                                except KeyboardInterrupt:
+                                    raise
+                                except NetworkUnavailableError as net_err:
+                                    decision = _prompt_network_recovery(
+                                        net_err,
+                                        context=entry_url,
+                                        title_hint=entry_title,
+                                    )
+                                    if decision == "retry":
+                                        continue
+                                    if decision == "skip":
+                                        failed += 1
+                                        skipped_due_to_network = True
+                                        safe_secho(
+                                            f"  ⚠ [SKIP] {entry_title} — пропущено после сетевой ошибки",
+                                            fg=typer.colors.YELLOW,
+                                        )
+                                        break
+                                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                                    raise typer.Exit(1) from net_err
+                                except Exception:
                                     failed += 1
-                            except KeyboardInterrupt:
-                                raise
-                            except Exception:
+                                    download_failed = True
+                                    logger.exception("Ошибка загрузки %s", entry_url)
+                                    safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
+                                    break
+
+                            if skipped_due_to_network or download_failed:
+                                continue
+
+                            if not dry_run:
+                                total_files += len(files)
+                            safe_secho(
+                                f"  ✓ [OK] {entry_title}" if (dry_run or files) else f"  ⚠ [WARN] {entry_title} — нет файлов",
+                                fg=typer.colors.GREEN if (dry_run or files) else typer.colors.YELLOW,
+                            )
+                            if not dry_run and not files:
                                 failed += 1
-                                logger.exception("Ошибка загрузки %s", entry_url)
-                                safe_secho(f"[ERROR] {entry_title}", fg=typer.colors.RED)
                             
                             # Проверить паузу после видео
                             if pause_controller.is_pause_requested():
@@ -1119,7 +1357,7 @@ def cmd_download(
             
             opts = DownloadOptions(
                 url=one_url,
-                output_dir=cfg.output,
+                output_dir=current_output_dir,
                 audio_only=cfg.audio_only,
                 audio_format=cfg.audio_format,  # type: ignore[arg-type]
                 video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -1138,10 +1376,13 @@ def cmd_download(
                 quality_suffix=quality_suffix if not custom_name else None,
                 overwrite=overwrite,
             )
-            decision = prompt_history_decision(
-                video_id=history_video_id,
-                current_url=one_url,
-            )
+            decision = preflight_decision
+            if decision is None:
+                decision = prompt_history_decision(
+                    video_id=history_video_id,
+                    current_url=one_url,
+                    default_output_dir=current_output_dir,
+                )
             if not decision.proceed:
                 continue
             if decision.new_output:
@@ -1150,29 +1391,57 @@ def cmd_download(
                 overwrite = True
                 opts.overwrite = True
 
-            try:
-                # Показать индикатор начала загрузки
+            files: list[Path] = []
+            download_failed = False
+            skipped_due_to_network = False
+            first_attempt = True
+
+            while True:
                 if not interactive:
-                    safe_secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
-                
-                files = dl.download(opts)
-                if not dry_run:
-                    total_files += len(files)
-                
-                # Цветной вывод результата
-                if dry_run or files:
-                    safe_secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
-                else:
-                    safe_secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
-                
-                if not dry_run and not files:
+                    if first_attempt:
+                        safe_secho(f"\n⏳ Загрузка: {one_url}", fg=typer.colors.CYAN)
+                    else:
+                        safe_secho(f"\n↻ Повтор: {one_url}", fg=typer.colors.CYAN)
+
+                try:
+                    files = dl.download(opts)
+                    break
+                except KeyboardInterrupt:
+                    raise
+                except NetworkUnavailableError as net_err:
+                    decision = _prompt_network_recovery(net_err, context=one_url)
+                    if decision == "retry":
+                        continue
+                    if decision == "skip":
+                        failed += 1
+                        skipped_due_to_network = True
+                        safe_secho(f"[SKIP] {one_url} — пропущено после сетевой ошибки", fg=typer.colors.YELLOW)
+                        break
+                    safe_secho("✗ Остановка по запросу пользователя", fg=typer.colors.RED)
+                    raise typer.Exit(1) from net_err
+                except Exception as e:  # noqa: BLE001
                     failed += 1
-            except KeyboardInterrupt:
-                raise
-            except Exception as e:  # noqa: BLE001
+                    download_failed = True
+                    logger.exception("Ошибка загрузки %s", one_url)
+                    safe_secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
+                    break
+                finally:
+                    first_attempt = False
+
+            if skipped_due_to_network or download_failed:
+                continue
+
+            if not dry_run:
+                total_files += len(files)
+
+            # Цветной вывод результата
+            if dry_run or files:
+                safe_secho(f"✓ [OK] {one_url}", fg=typer.colors.GREEN)
+            else:
+                safe_secho(f"⚠ [WARN] {one_url} — нет файлов", fg=typer.colors.YELLOW)
+
+            if not dry_run and not files:
                 failed += 1
-                logger.exception("Ошибка загрузки %s", one_url)
-                safe_secho(f"[ERROR] {one_url} — {e}", fg=typer.colors.RED)
         
         # Отключить контроллер пауз после завершения всех загрузок
         if pause_controller:
@@ -1220,8 +1489,20 @@ def cmd_info(
     try:
         cfg = load_config()
         dl = Downloader(cfg, logger)
-        info = dl.get_info(url)
-        
+        while True:
+            try:
+                info = dl.get_info(url)
+                break
+            except NetworkUnavailableError as net_err:
+                decision = _prompt_network_recovery(net_err, context=url)
+                if decision == "retry":
+                    continue
+                if decision == "skip":
+                    safe_secho("Информация не получена из-за сетевой ошибки", fg=typer.colors.YELLOW)
+                    sys.exit(2)
+                safe_secho("✗ Прервано по запросу пользователя", fg=typer.colors.RED)
+                sys.exit(1)
+
         if json_output:
             safe_echo(json.dumps(info, indent=2, ensure_ascii=False))
         else:
