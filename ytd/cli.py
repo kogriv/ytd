@@ -617,6 +617,7 @@ def cmd_download(
             video_id: Optional[str],
             current_url: str,
             title_hint: Optional[str] = None,
+            default_output_dir: Optional[Path] = None,
         ) -> HistoryDecision:
             if not history_available:
                 return HistoryDecision(proceed=True)
@@ -649,7 +650,10 @@ def cmd_download(
                         increment_retry=True,
                     )
                 elif choice.strip() == "3":
-                    default_dir = Path(entry.get("file_path") or cfg.output)
+                    default_dir = Path(
+                        entry.get("file_path")
+                        or (default_output_dir or cfg.output)
+                    )
                     new_dir_str = typer.prompt(
                         "Введите путь к новой папке",
                         default=str(default_dir),
@@ -711,9 +715,33 @@ def cmd_download(
                 safe_secho("Загрузка пропущена по истории", fg=typer.colors.CYAN)
             return decision
 
+        preflight_history_decisions: list[HistoryDecision] = []
+        if history_available:
+            filtered_urls: list[str] = []
+            for original_url in urls:
+                decision = prompt_history_decision(
+                    video_id=_extract_video_id(original_url),
+                    current_url=original_url,
+                    default_output_dir=cfg.output,
+                )
+                if not decision.proceed:
+                    continue
+                filtered_urls.append(original_url)
+                preflight_history_decisions.append(decision)
+            urls = filtered_urls
+            if not urls:
+                safe_secho(
+                    "[OK] Все запрошенные элементы уже скачаны — новых задач нет",
+                    fg=typer.colors.CYAN,
+                )
+                raise typer.Exit(code=0)
+
+        if not preflight_history_decisions and urls:
+            preflight_history_decisions = [HistoryDecision(proceed=True) for _ in urls]
+
         total_files = 0
         failed = 0
-        
+
         # Инициализировать контроллер пауз если включен режим паузы между видео
         # (либо через CLI флаг, либо через конфиг)
         pause_controller: Optional[PauseController] = None
@@ -729,12 +757,18 @@ def cmd_download(
                 fg=typer.colors.CYAN
             )
         
-        for one_url in urls:
+        for url_index, one_url in enumerate(urls):
+            preflight_decision = (
+                preflight_history_decisions[url_index]
+                if url_index < len(preflight_history_decisions)
+                else HistoryDecision(proceed=True)
+            )
+            current_output_dir = preflight_decision.new_output or cfg.output
             chosen_format: Optional[str] = None
             chosen_label: str = "Лучшее доступное качество"
             file_prefix: Optional[str] = None
             quality_suffix: Optional[str] = None
-            overwrite: bool = False
+            overwrite: bool = preflight_decision.overwrite
             custom_name: Optional[str] = None
             # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
             skip_post_processing: bool = False
@@ -818,7 +852,9 @@ def cmd_download(
 
                                 # Перезапись для плейлиста целиком
                                 overwrite_all = ia.ask_overwrite_all()
-                                
+                                if preflight_decision.overwrite:
+                                    overwrite_all = True
+
                                 # Показать итоговую маску и подтвердить
                                 example_title = sanitize_filename((first_info or {}).get("title") or entries[0].get("title", "Видео"))
                                 example_id = (first_info or {}).get("id") or entries[0].get("id", "ID")
@@ -836,7 +872,7 @@ def cmd_download(
                                     safe_secho("Загрузка отменена", fg=typer.colors.YELLOW)
                                     continue
 
-                                existing_map, missing_indices = ia.analyze_playlist_progress(cfg.output, entries)
+                                existing_map, missing_indices = ia.analyze_playlist_progress(current_output_dir, entries)
                                 indices_to_download: Optional[set[int]] = None
 
                                 delete_existing = False
@@ -955,7 +991,7 @@ def cmd_download(
                                     # Сформировать опции загрузки для одного видео
                                     single_opts = DownloadOptions(
                                         url=entry_url,
-                                        output_dir=cfg.output,
+                                        output_dir=current_output_dir,
                                         audio_only=cfg.audio_only,
                                         audio_format=cfg.audio_format,  # type: ignore[arg-type]
                                         video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -979,6 +1015,7 @@ def cmd_download(
                                         video_id=str(entry.get("id")) if entry.get("id") else None,
                                         current_url=entry_url,
                                         title_hint=entry_title,
+                                        default_output_dir=single_opts.output_dir,
                                     )
                                     if not decision.proceed:
                                         continue
@@ -1157,7 +1194,7 @@ def cmd_download(
                             safe_echo(f"Будет использовано: {name_with_suffix}")
                         
                         # ШАГ 3: Проверка существующих файлов
-                        existing = find_existing_files(cfg.output, video_id)
+                        existing = find_existing_files(current_output_dir, video_id)
                         if existing:
                             safe_echo("\n" + "═" * 60)
                             safe_secho("⚠ ВНИМАНИЕ: Найдены существующие файлы этого видео:", fg=typer.colors.YELLOW)
@@ -1216,7 +1253,7 @@ def cmd_download(
                             
                             single_opts = DownloadOptions(
                                 url=entry_url,
-                                output_dir=cfg.output,
+                                output_dir=current_output_dir,
                                 audio_only=cfg.audio_only,
                                 audio_format=cfg.audio_format,  # type: ignore[arg-type]
                                 video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -1240,6 +1277,7 @@ def cmd_download(
                                 video_id=str(entry.get("id")) if entry.get("id") else None,
                                 current_url=entry_url,
                                 title_hint=entry_title,
+                                default_output_dir=single_opts.output_dir,
                             )
                             if not decision.proceed:
                                 continue
@@ -1319,7 +1357,7 @@ def cmd_download(
             
             opts = DownloadOptions(
                 url=one_url,
-                output_dir=cfg.output,
+                output_dir=current_output_dir,
                 audio_only=cfg.audio_only,
                 audio_format=cfg.audio_format,  # type: ignore[arg-type]
                 video_format=cfg.video_format,  # type: ignore[arg-type]
@@ -1338,10 +1376,13 @@ def cmd_download(
                 quality_suffix=quality_suffix if not custom_name else None,
                 overwrite=overwrite,
             )
-            decision = prompt_history_decision(
-                video_id=history_video_id,
-                current_url=one_url,
-            )
+            decision = preflight_decision
+            if decision is None:
+                decision = prompt_history_decision(
+                    video_id=history_video_id,
+                    current_url=one_url,
+                    default_output_dir=current_output_dir,
+                )
             if not decision.proceed:
                 continue
             if decision.new_output:
