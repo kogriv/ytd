@@ -2285,3 +2285,48 @@ yt_dlp.utils.DownloadError: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to 
 2025-10-31 14:29:08 | WARNING | ошибка (попытка 1/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 5.0 с
 2025-10-31 14:29:19 | WARNING | ошибка (попытка 2/3): [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies; повтор через 10.0 с
 2025-10-31 14:29:33 | WARNING | Не удалось обработать плейлист: [0;31mERROR:[0m [youtube] S3M3D4T8NOs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies — продолжим с настройками по умолчанию
+2025-11-01 12:13:53 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:13:53 | INFO | Название: Лекция №13. Линейная зависимость.  Ранг.
+2025-11-01 12:13:53 | INFO | Канал: Дистанционные занятия МФТИ
+2025-11-01 12:13:53 | INFO | Длительность: 1:21:58
+2025-11-01 12:13:53 | INFO | Просмотров: 3 714
+2025-11-01 12:13:53 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:15:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\13_Лекция №13. Линейная зависимость.  Ранг. [lAtItb5zVjA]_720p.f135.mp4
+2025-11-01 12:15:55 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\13_Лекция №13. Линейная зависимость.  Ранг. [lAtItb5zVjA]_720p.f140.m4a
+2025-11-01 12:16:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:16:13 | INFO | Название: Лекция №14. Теорема о ранге матриц
+2025-11-01 12:16:13 | INFO | Канал: Дистанционные занятия МФТИ
+2025-11-01 12:16:13 | INFO | Длительность: 1:22:22
+2025-11-01 12:16:13 | INFO | Просмотров: 4 684
+2025-11-01 12:16:13 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:17:47 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\14_Лекция №14. Теорема о ранге матриц [jIBL3vM2pIs]_720p.f135.mp4
+2025-11-01 12:18:13 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\14_Лекция №14. Теорема о ранге матриц [jIBL3vM2pIs]_720p.f140.m4a
+2025-11-01 12:18:30 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:18:30 | INFO | Название: Лекция №15. Невырожденные матрицы
+2025-11-01 12:18:30 | INFO | Канал: Дистанционные занятия МФТИ
+2025-11-01 12:18:30 | INFO | Длительность: 1:17:46
+2025-11-01 12:18:30 | INFO | Просмотров: 3 035
+2025-11-01 12:18:30 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-01 12:20:58 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\15_Лекция №15. Невырожденные матрицы [Y_gwIpupEdc]_720p.f136.mp4
+2025-11-01 12:21:30 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\15_Лекция №15. Невырожденные матрицы [Y_gwIpupEdc]_720p.f140.m4a
+2025-11-02 10:48:41 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-02 10:48:41 | INFO | Название: Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ.
+2025-11-02 10:48:41 | INFO | Канал: Holdik Live
+2025-11-02 10:48:41 | INFO | Длительность: 17:42
+2025-11-02 10:48:41 | INFO | Просмотров: 1 096 629
+2025-11-02 10:48:41 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-02 10:50:08 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_720p.f136.mp4
+2025-11-02 10:50:14 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\01_Как собрать Кубик Рубика 3х3. 1 часть - КРЕСТ. [6aJ5Bpqzb1s]_720p.f140.m4a
+2025-11-02 10:53:10 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-02 10:53:10 | INFO | Название: Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ.
+2025-11-02 10:53:10 | INFO | Канал: Holdik Live
+2025-11-02 10:53:10 | INFO | Длительность: 23:03
+2025-11-02 10:53:10 | INFO | Просмотров: 959 480
+2025-11-02 10:53:10 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-02 10:54:22 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs]_720p.f136.mp4
+2025-11-02 10:54:28 | INFO | сохранено: C:\Users\Ivan\Documents\pro\ytd\downloads\02_Как собрать Кубик Рубика 3х3. 2 часть - УГЛЫ. [JiJ3f8m8Tzs]_720p.f140-1.m4a
+2025-11-03 18:17:52 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-11-03 18:17:52 | INFO | Название: 12 Сингулярное разложение матрицы
+2025-11-03 18:17:52 | INFO | Канал: Donbass Data Science
+2025-11-03 18:17:52 | INFO | Длительность: 1:47:22
+2025-11-03 18:17:52 | INFO | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
