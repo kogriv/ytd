@@ -60,6 +60,9 @@ class AppConfig:
     pause_between_videos: bool = False
     pause_key: str = "p"
     resume_key: str = "r"
+    # Настройки удобства CLI
+    interactive_by_default: bool = False
+    auto_detect_playlists: bool = True
 
 
 @dataclass(slots=True)
