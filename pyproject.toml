@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ytd"
 version = "0.1.0"
-description = "Простой CLI-загрузчик YouTube на Python (yt-dlp, Typer, rich)."
+description = "Простой CLI-загрузчик видео с поддержкой площадок yt-dlp (YouTube, VK и др.)."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
