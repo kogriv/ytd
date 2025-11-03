@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from contextlib import closing
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable, Optional
+from urllib.parse import parse_qsl, urlparse, urlunparse
 
 from ..types import DownloadEvent
 from ..utils import ensure_dir, save_metadata_jsonl
@@ -107,8 +109,10 @@ def _normalize_path(value: Any) -> Optional[str]:
 def record_event(event: DownloadEvent) -> None:
     """Записать или обновить событие загрузки в истории."""
     ensure_schema()
+    normalized_id = normalize_history_id(event.video_id) or normalize_history_id(event.url)
+    fallback_id = event.video_id or event.url
     payload = {
-        "video_id": event.video_id,
+        "video_id": normalized_id or fallback_id,
         "url": event.url,
         "title": event.title,
         "status": event.status,
@@ -231,13 +235,13 @@ def import_from_jsonl(path: Path | str) -> int:
                 if not isinstance(data, dict):
                     continue
 
-                video_id = _as_str(
+                raw_video_id = _as_str(
                     data.get("id")
                     or data.get("video_id")
                     or data.get("display_id")
                     or data.get("url")
                 )
-                if not video_id:
+                if not raw_video_id:
                     continue
 
                 url = _as_str(
@@ -246,7 +250,11 @@ def import_from_jsonl(path: Path | str) -> int:
                     or data.get("url")
                 )
                 if not url:
-                    url = video_id
+                    url = raw_video_id
+
+                normalized_id = normalize_history_id(raw_video_id) or normalize_history_id(url)
+                if not normalized_id:
+                    normalized_id = raw_video_id
 
                 title = _as_str(data.get("title"))
                 status = _as_str(data.get("status")) or "finished"
@@ -282,7 +290,7 @@ def import_from_jsonl(path: Path | str) -> int:
                         break
 
                 row = {
-                    "video_id": video_id,
+                    "video_id": normalized_id,
                     "url": url,
                     "title": title,
                     "status": status,
@@ -445,3 +453,82 @@ def list_downloads(
     with closing(get_connection()) as conn:
         rows = conn.execute(query, params).fetchall()
         return [_row_to_dict(row) for row in rows if row is not None]
+
+
+_YT_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+_YT_VIDEO_ID_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"[?&]v=([A-Za-z0-9_-]{11})"),
+    re.compile(r"youtu\.be/([A-Za-z0-9_-]{11})"),
+    re.compile(r"youtube\.com/(?:shorts|embed|live)/([A-Za-z0-9_-]{11})"),
+)
+
+
+def _extract_youtube_id(candidate: str) -> Optional[str]:
+    if not candidate:
+        return None
+    stripped = candidate.strip()
+    if _YT_ID_RE.fullmatch(stripped):
+        return stripped
+    for pattern in _YT_VIDEO_ID_PATTERNS:
+        match = pattern.search(stripped)
+        if match:
+            return match.group(1)
+    return None
+
+
+def _normalize_url(candidate: str) -> Optional[str]:
+    if not candidate:
+        return None
+
+    trimmed = candidate.strip()
+    if not trimmed:
+        return None
+
+    guess = trimmed
+    if "://" not in guess and "." in guess:
+        guess = f"https://{guess}"
+
+    try:
+        parsed = urlparse(guess)
+    except Exception:
+        return None
+
+    if not parsed.netloc:
+        return None
+
+    scheme = parsed.scheme or "https"
+    netloc = parsed.netloc.lower()
+    path = re.sub(r"/+", "/", parsed.path or "") or "/"
+    query_items = parse_qsl(parsed.query, keep_blank_values=True)
+    if query_items:
+        query = "&".join(
+            f"{key}={value}" for key, value in sorted(query_items, key=lambda item: (item[0], item[1]))
+        )
+    else:
+        query = ""
+
+    normalized = urlunparse((scheme, netloc, path, "", query, ""))
+    if normalized.endswith("?"):
+        normalized = normalized[:-1]
+    return normalized
+
+
+def normalize_history_id(value: Optional[str]) -> Optional[str]:
+    """Преобразовать идентификатор/URL в универсальный ключ для истории."""
+
+    if value in {None, ""}:
+        return None
+
+    candidate = str(value).strip()
+    if not candidate:
+        return None
+
+    yt_id = _extract_youtube_id(candidate)
+    if yt_id:
+        return f"yt:{yt_id}"
+
+    normalized_url = _normalize_url(candidate)
+    if normalized_url:
+        return normalized_url
+
+    return candidate

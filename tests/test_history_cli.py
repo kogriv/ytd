@@ -61,6 +61,15 @@ def populated_history(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
             playlist_id="PL-002",
             playlist_title="Сборник 2",
         ),
+        DownloadEvent(
+            video_id="https://vk.com/video-12345_67890",
+            url="https://vk.com/video-12345_67890",
+            title="VK Видео",
+            status="finished",
+            started_at=datetime(2024, 3, 4, 11, 0, 0),
+            finished_at=datetime(2024, 3, 4, 11, 15, 0),
+            file_path=tmp_path / "vk.mp4",
+        ),
     ]
 
     for event in events:
@@ -71,23 +80,25 @@ def test_history_list_with_filters(runner: CliRunner, populated_history: None) -
     result = runner.invoke(app, ["history", "--status", "finished", "--limit", "1"])
 
     assert result.exit_code == 0, result.stdout
-    assert "ccc33333333" in result.stdout
-    assert "aaa11111111" not in result.stdout
+    assert "https://vk.com/video-12345_67890" in result.stdout
+    assert "yt:ccc33333333" not in result.stdout
+    assert "yt:aaa11111111" not in result.stdout
 
 
 def test_history_list_since_and_playlist(runner: CliRunner, populated_history: None) -> None:
     since_result = runner.invoke(app, ["history", "--since", "2024-03-02T00:00:00"])
 
     assert since_result.exit_code == 0
-    assert "aaa11111111" not in since_result.stdout
-    assert "bbb22222222" in since_result.stdout
-    assert "ccc33333333" in since_result.stdout
+    assert "yt:aaa11111111" not in since_result.stdout
+    assert "yt:bbb22222222" in since_result.stdout
+    assert "yt:ccc33333333" in since_result.stdout
+    assert "https://vk.com/video-12345_67890" in since_result.stdout
 
     playlist_result = runner.invoke(app, ["history", "--playlist", "PL-001"])
 
     assert playlist_result.exit_code == 0
-    assert "aaa11111111" in playlist_result.stdout
-    assert "bbb22222222" not in playlist_result.stdout
+    assert "yt:aaa11111111" in playlist_result.stdout
+    assert "yt:bbb22222222" not in playlist_result.stdout
 
 
 def test_history_show_displays_details(runner: CliRunner, populated_history: None) -> None:
@@ -105,7 +116,11 @@ def test_history_export_jsonl(runner: CliRunner, populated_history: None) -> Non
     lines = [line for line in result.stdout.strip().splitlines() if line]
     parsed = [json.loads(line) for line in lines]
 
-    assert {item["video_id"] for item in parsed} == {"aaa11111111", "ccc33333333"}
+    assert {item["video_id"] for item in parsed} == {
+        "yt:aaa11111111",
+        "yt:ccc33333333",
+        "https://vk.com/video-12345_67890",
+    }
     assert all(item["status"] == "finished" for item in parsed)
 
 
@@ -117,5 +132,13 @@ def test_history_export_csv(runner: CliRunner, populated_history: None) -> None:
     rows = list(reader)
 
     assert len(rows) == 2
-    assert rows[0]["video_id"] == "ccc33333333"
-    assert rows[1]["video_id"] == "bbb22222222"
+    assert rows[0]["video_id"] == "https://vk.com/video-12345_67890"
+    assert rows[1]["video_id"] == "yt:ccc33333333"
+
+
+def test_history_lists_normalized_identifiers(runner: CliRunner, populated_history: None) -> None:
+    result = runner.invoke(app, ["history"])
+
+    assert result.exit_code == 0
+    assert "yt:aaa11111111" in result.stdout
+    assert "https://vk.com/video-12345_67890" in result.stdout

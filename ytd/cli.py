@@ -23,6 +23,7 @@ from .history.storage import (
     update_download,
     list_downloads,
     import_from_jsonl,
+    normalize_history_id,
 )
 from .logging import setup_logging
 from .types import AppConfig, DownloadOptions
@@ -146,19 +147,11 @@ class HistoryDecision:
     increment_retry: bool = False
 
 
-_YT_VIDEO_ID_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"[?&]v=([A-Za-z0-9_-]{11})"),
-    re.compile(r"youtu\.be/([A-Za-z0-9_-]{11})"),
-    re.compile(r"youtube\.com/(?:shorts|embed|live)/([A-Za-z0-9_-]{11})"),
-)
-
-
-def _extract_video_id(candidate: str) -> Optional[str]:
-    for pattern in _YT_VIDEO_ID_PATTERNS:
-        match = pattern.search(candidate)
-        if match:
-            return match.group(1)
-    return None
+def _history_identifier(candidate: Optional[str]) -> Optional[str]:
+    if not candidate:
+        return None
+    normalized = normalize_history_id(candidate)
+    return normalized
 
 
 def _print_history_card(entry: Mapping[str, Any]) -> None:
@@ -258,7 +251,7 @@ def _print_history_table(entries: list[dict[str, Any]]) -> None:
         return
 
     columns: list[tuple[str, str, int]] = [
-        ("video_id", "Видео ID", 12),
+        ("video_id", "ID/Ссылка", 40),
         ("status", "Статус", 10),
         ("title", "Название", 32),
         ("finished_at", "Завершено", 19),
@@ -343,7 +336,7 @@ def history_root(
 
 
 @history_app.command("show")
-def history_show(video_id: str = typer.Argument(..., help="Идентификатор видео для просмотра")) -> None:
+def history_show(video_id: str = typer.Argument(..., help="Идентификатор или ссылка для просмотра")) -> None:
     cfg = load_config()
     if not cfg.history_enabled:
         safe_secho("История отключена в конфигурации.", fg=typer.colors.YELLOW)
@@ -353,9 +346,16 @@ def history_show(video_id: str = typer.Argument(..., help="Идентифика�
         safe_secho("Не удалось инициализировать базу истории.", fg=typer.colors.RED)
         raise typer.Exit(code=1)
 
-    candidate = _extract_video_id(video_id) or video_id
-    entry = fetch_download(video_id=candidate)
-    if entry is None and candidate != video_id:
+    normalized = _history_identifier(video_id)
+    entry = None
+
+    if normalized:
+        entry = fetch_download(video_id=normalized)
+
+    if entry is None:
+        entry = fetch_download(video_id=video_id)
+
+    if entry is None:
         entry = fetch_download(url=video_id)
 
     if not entry:
@@ -383,7 +383,7 @@ def history_export(
         raise typer.BadParameter("Поддерживаемые форматы: jsonl, csv", param_name="format")
 
 
-app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик YouTube на базе yt-dlp")
+app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик видео на базе yt-dlp")
 app.add_typer(history_app, name="history")
 
 
@@ -720,7 +720,7 @@ def cmd_download(
             filtered_urls: list[str] = []
             for original_url in urls:
                 decision = prompt_history_decision(
-                    video_id=_extract_video_id(original_url),
+                    video_id=_history_identifier(original_url),
                     current_url=original_url,
                     default_output_dir=cfg.output,
                 )
@@ -772,7 +772,7 @@ def cmd_download(
             custom_name: Optional[str] = None
             # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
             skip_post_processing: bool = False
-            history_video_id: Optional[str] = _extract_video_id(one_url)
+            history_video_id: Optional[str] = _history_identifier(one_url)
             
             if interactive:
                 if len(urls) > 1:
@@ -795,7 +795,9 @@ def cmd_download(
                             continue
                         entries = info.get("entries") or []
                         if info.get("id"):
-                            history_video_id = str(info.get("id"))
+                            resolved_id = _history_identifier(str(info.get("id")))
+                            if resolved_id:
+                                history_video_id = resolved_id
                         
                         if not entries:
                             safe_secho("[WARN] Плейлист пуст, интерактивный режим отключён", fg=typer.colors.YELLOW)
@@ -1116,7 +1118,9 @@ def cmd_download(
                             continue
                         video_id = info.get("id", "unknown")
                         if info.get("id"):
-                            history_video_id = str(info.get("id"))
+                            resolved_id = _history_identifier(str(info.get("id")))
+                            if resolved_id:
+                                history_video_id = resolved_id
                         video_title = info.get("title", "unknown")
                         
                         fmts = info.get("formats") or []
@@ -1273,8 +1277,11 @@ def cmd_download(
                                 overwrite=overwrite,
                             )
                             
+                            entry_history_id = (
+                                _history_identifier(str(entry.get("id"))) if entry.get("id") else None
+                            )
                             decision = prompt_history_decision(
-                                video_id=str(entry.get("id")) if entry.get("id") else None,
+                                video_id=entry_history_id,
                                 current_url=entry_url,
                                 title_hint=entry_title,
                                 default_output_dir=single_opts.output_dir,

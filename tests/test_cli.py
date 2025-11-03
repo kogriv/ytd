@@ -224,4 +224,4 @@ def test_cli_no_command_shows_help(runner: CliRunner):
     # no_args_is_help=True в Typer возвращает exit_code=2 (не ошибка, но показ help)
     # https://github.com/tiangolo/typer/issues/18
     assert result.exit_code in (0, 2)
-    assert "Простой загрузчик YouTube" in result.stdout or "download" in result.stdout
+    assert "Простой загрузчик видео" in result.stdout or "download" in result.stdout
