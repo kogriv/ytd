@@ -383,7 +383,11 @@ def history_export(
         raise typer.BadParameter("Поддерживаемые форматы: jsonl, csv", param_name="format")
 
 
-app = typer.Typer(no_args_is_help=True, add_completion=False, help="Простой загрузчик видео на базе yt-dlp")
+app = typer.Typer(
+    no_args_is_help=True,
+    add_completion=False,
+    help="Простой загрузчик видео с площадок, поддерживаемых yt-dlp",
+)
 app.add_typer(history_app, name="history")
 
 

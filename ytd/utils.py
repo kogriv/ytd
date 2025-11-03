@@ -167,7 +167,7 @@ def find_existing_files(output_dir: Path, video_id: str) -> list[Path]:
     
     Args:
         output_dir: Папка для поиска
-        video_id: ID видео YouTube (обязательно)
+        video_id: Уникальный ID объекта на площадке (например, YouTube, VK)
     
     Returns:
         Список найденных файлов с этим video_id
