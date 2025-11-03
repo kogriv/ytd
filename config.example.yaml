@@ -51,3 +51,9 @@ pause_key: p
 
 # Клавиша для возобновления после паузы
 resume_key: r
+
+# Включить интерактивный выбор качества по умолчанию для одиночного URL
+interactive_by_default: false
+
+# Автоматически распознавать плейлисты по URL без флага --playlist
+auto_detect_playlists: true

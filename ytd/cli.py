@@ -502,6 +502,9 @@ def cmd_download(
         # Применить оверрайды
         cfg = merge_cli_overrides(cfg, cli_overrides)
 
+        if not interactive and getattr(cfg, "interactive_by_default", False):
+            interactive = True
+
         history_available = _initialize_history(cfg, logger)
         
         # Источник ссылок: позиционный аргумент и/или файл со списком
@@ -529,10 +532,22 @@ def cmd_download(
                 safe_secho("Нужно указать URL или --urls-file", fg=typer.colors.RED)
             raise typer.Exit(code=2)
 
+        auto_playlist_enabled = getattr(cfg, "auto_detect_playlists", True)
+        playlist_candidates = [u for u in urls if _looks_like_playlist_url(u)]
+
         selected_playlist_url: Optional[str] = None
-        if interactive and playlist:
-            playlist_candidates = [u for u in urls if _looks_like_playlist_url(u)]
-            if len(playlist_candidates) > 1:
+        use_playlist_interactive = interactive and (
+            playlist or (auto_playlist_enabled and bool(playlist_candidates))
+        )
+
+        if use_playlist_interactive:
+            if not playlist_candidates:
+                safe_secho(
+                    "Флаг --playlist указан, но ни одна ссылка не похожа на плейлист.",
+                    fg=typer.colors.YELLOW,
+                )
+                use_playlist_interactive = False
+            elif len(playlist_candidates) > 1:
                 safe_echo()
                 safe_secho(
                     "Найдено несколько плейлистов в списке ссылок.",
@@ -750,7 +765,12 @@ def cmd_download(
         # (либо через CLI флаг, либо через конфиг)
         pause_controller: Optional[PauseController] = None
         use_pause = pause_between or cfg.pause_between_videos
-        if use_pause and (playlist or interactive):
+        enable_pause = use_pause and (
+            interactive
+            or playlist
+            or (auto_playlist_enabled and bool(playlist_candidates))
+        )
+        if enable_pause:
             pause_controller = PauseController(
                 pause_key=cfg.pause_key or "p",
                 resume_key=cfg.resume_key or "r"
@@ -777,11 +797,17 @@ def cmd_download(
             # Флаг, чтобы пропустить общий путь после интерактивной поштучной обработки плейлиста
             skip_post_processing: bool = False
             history_video_id: Optional[str] = _history_identifier(one_url)
-            
+
+            looks_like_playlist = _looks_like_playlist_url(one_url)
+            effective_playlist = (
+                bool(playlist_items)
+                or (playlist and looks_like_playlist)
+                or (auto_playlist_enabled and looks_like_playlist)
+            )
             if interactive:
                 if len(urls) > 1:
                     safe_secho("[WARN] Диалоговый выбор качества поддерживается только для одного URL. Флаг --interactive будет проигнорирован.", fg=typer.colors.YELLOW)
-                elif playlist:
+                elif effective_playlist:
                     # ПЛЕЙЛИСТ В ИНТЕРАКТИВНОМ РЕЖИМЕ
                     safe_echo("\n" + "═" * 60)
                     safe_secho("⏳ Получение информации о плейлисте...", fg=typer.colors.CYAN, bold=True)
@@ -1254,7 +1280,7 @@ def cmd_download(
                 final_name_template = custom_name
             
             # Если включен режим пауз и это плейлист (не интерактивный) — загружаем поштучно
-            if pause_controller and playlist and not interactive:
+            if pause_controller and effective_playlist and not interactive:
                 # Получить информацию о плейлисте
                 try:
                     info = fetch_info_with_prompt(
@@ -1407,7 +1433,7 @@ def cmd_download(
                 retry_delay=cfg.retry_delay,
                 save_metadata=cfg.save_metadata,
                 dry_run=dry_run,
-                playlist=playlist,
+                playlist=effective_playlist,
                 playlist_items=playlist_items,
                 custom_format=chosen_format,
                 file_prefix=file_prefix,

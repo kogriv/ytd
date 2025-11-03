@@ -24,6 +24,8 @@ def test_load_config_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert cfg.save_metadata == tmp_path / "data" / "meta.jsonl"
     assert cfg.history_enabled is True
     assert cfg.history_db == tmp_path / "data" / "history.db"
+    assert cfg.interactive_by_default is False
+    assert cfg.auto_detect_playlists is True
     # Директории должны быть созданы
     assert (tmp_path / "downloads").is_dir()
     assert (tmp_path / "data").is_dir()
@@ -48,6 +50,8 @@ retry_delay: 1.5
 save_metadata: ./info/meta.jsonl
 history_enabled: false
 history_db: ./storage/custom-history.db
+ interactive_by_default: true
+ auto_detect_playlists: false
 """,
         encoding="utf-8",
     )
@@ -67,6 +71,8 @@ history_db: ./storage/custom-history.db
     assert cfg.save_metadata == tmp_path / "info" / "meta.jsonl"
     assert cfg.history_enabled is False
     assert cfg.history_db == tmp_path / "storage" / "custom-history.db"
+    assert cfg.interactive_by_default is True
+    assert cfg.auto_detect_playlists is False
     # Папки созданы
     assert (tmp_path / "dl").is_dir()
     assert (tmp_path / "info").is_dir()
@@ -83,6 +89,8 @@ def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("YTD_SUBTITLES", "ru,en")
     monkeypatch.setenv("YTD_AUDIO_ONLY", "true")
     monkeypatch.setenv("YTD_HISTORY_ENABLED", "false")
+    monkeypatch.setenv("YTD_INTERACTIVE_BY_DEFAULT", "true")
+    monkeypatch.setenv("YTD_AUTO_DETECT_PLAYLISTS", "0")
 
     cfg = load_config()
 
@@ -91,6 +99,8 @@ def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert cfg.subtitles == ["ru", "en"]
     assert cfg.audio_only is True
     assert cfg.history_enabled is False
+    assert cfg.interactive_by_default is True
+    assert cfg.auto_detect_playlists is False
 
 
 def test_merge_cli_overrides(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
