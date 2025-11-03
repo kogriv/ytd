@@ -28,6 +28,8 @@ _ENV_MAP: dict[str, str] = {
     "pause_between_videos": "YTD_PAUSE_BETWEEN_VIDEOS",
     "pause_key": "YTD_PAUSE_KEY",
     "resume_key": "YTD_RESUME_KEY",
+    "interactive_by_default": "YTD_INTERACTIVE_BY_DEFAULT",
+    "auto_detect_playlists": "YTD_AUTO_DETECT_PLAYLISTS",
 }
 
 
@@ -74,7 +76,7 @@ def _apply_env_overrides(base: AppConfig) -> AppConfig:
                     updates[field] = float(raw)
                 except ValueError:
                     continue
-            elif field in {"audio_only", "history_enabled"}:
+            elif field in {"audio_only", "history_enabled", "pause_between_videos", "interactive_by_default", "auto_detect_playlists"}:
                 updates[field] = _parse_bool(raw)
             else:
                 updates[field] = raw
