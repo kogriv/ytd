@@ -463,6 +463,13 @@ def prompt_playlist_resume(
 
 def get_entry_url(entry: dict[str, Any]) -> Optional[str]:
     """Получить URL конкретного видео из элемента плейлиста."""
-    return entry.get("webpage_url") or entry.get("url") or (
-        f"https://www.youtube.com/watch?v={entry.get('id')}" if entry.get("id") else None
+
+    candidates = (
+        entry.get("original_url"),
+        entry.get("webpage_url"),
+        entry.get("url"),
     )
+    for candidate in candidates:
+        if candidate:
+            return str(candidate)
+    return None

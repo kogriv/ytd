@@ -820,7 +820,16 @@ def cmd_download(
                                 # Для простоты берём форматы первого видео как базу
                                 first_entry = entries[0]
                                 # Если в первом элементе нет форматов, запросим отдельной загрузкой
+                                first_entry_title = first_entry.get("title", "Первое видео")
                                 first_url = ia.get_entry_url(first_entry)
+                                if not first_url:
+                                    safe_secho(
+                                        f"[WARN] Не удалось определить URL первого видео плейлиста ({first_entry_title})",
+                                        fg=typer.colors.YELLOW,
+                                    )
+                                    safe_echo(
+                                        "      Поля original_url/webpage_url/url отсутствуют. Анализ форматов может быть неполным.",
+                                    )
                                 first_info = (
                                     fetch_info_with_prompt(
                                         first_url,
@@ -944,13 +953,22 @@ def cmd_download(
                                             )
                                         continue
 
+                                    entry_title_hint = entry.get("title", f"Видео {idx}")
                                     safe_secho(f"[{idx}/{len(entries)}] Обработка...", fg=typer.colors.CYAN)
                                     entry_url = ia.get_entry_url(entry)
                                     if not entry_url:
-                                        safe_secho(f"[WARN] Пропуск: не удалось получить URL для элемента #{idx}", fg=typer.colors.YELLOW)
+                                        safe_secho(
+                                            f"[WARN] Пропуск: элемент #{idx} ({entry_title_hint}) не содержит URL",
+                                            fg=typer.colors.YELLOW,
+                                        )
+                                        safe_echo(
+                                            "      yt-dlp не вернул поля original_url/webpage_url/url.",
+                                        )
+                                        safe_echo(
+                                            "      Проверьте доступ к источнику (например, VK) или обновите yt-dlp.",
+                                        )
                                         continue
                                     # Получить полную информацию для подбора качества
-                                    entry_title_hint = entry.get("title", f"Видео {idx}")
                                     entry_info = fetch_info_with_prompt(
                                         entry_url,
                                         title_hint=entry_title_hint,
@@ -1248,13 +1266,22 @@ def cmd_download(
                     if entries:
                         safe_secho(f"▶ Плейлист: {len(entries)} видео", fg=typer.colors.GREEN)
                         for idx, entry in enumerate(entries, start=1):
+                            entry_title = entry.get("title", f"Видео {idx}")
+
                             entry_url = ia.get_entry_url(entry)
                             if not entry_url:
-                                safe_secho(f"[WARN] Пропуск элемента #{idx}", fg=typer.colors.YELLOW)
+                                safe_secho(
+                                    f"[WARN] Пропуск: элемент #{idx} ({entry_title}) не содержит URL",
+                                    fg=typer.colors.YELLOW,
+                                )
+                                safe_echo(
+                                    "      yt-dlp не вернул поля original_url/webpage_url/url.",
+                                )
+                                safe_echo(
+                                    "      Проверьте доступ к источнику (например, VK) или обновите yt-dlp.",
+                                )
                                 continue
-                            
-                            entry_title = entry.get("title", f"Видео {idx}")
-                            
+
                             single_opts = DownloadOptions(
                                 url=entry_url,
                                 output_dir=current_output_dir,
