@@ -1,6 +1,10 @@
 # Пример конфигурационного файла ytd
-# Разместите этот файл как ~/.config/ytd/config.yaml (Linux/macOS)
-# или %APPDATA%\ytd\config.yaml (Windows)
+# Скопируйте его как ./ytd.config.yaml рядом с местом запуска ytd
+# или задайте путь через переменную окружения YTD_CONFIG.
+# Если хотите хранить файл в ~/.config/ytd/config.yaml или %APPDATA%\ytd\config.yaml,
+# экспортируйте переменную окружения:
+#   Linux/macOS: export YTD_CONFIG=~/.config/ytd/config.yaml
+#   Windows PowerShell: $env:YTD_CONFIG = "$Env:APPDATA\\ytd\\config.yaml"
 
 # Папка для сохранения загруженных файлов
 output: downloads
