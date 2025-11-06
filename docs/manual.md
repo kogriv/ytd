@@ -199,39 +199,108 @@ ytd info URL --json > info.json
 
 ## 5. Конфигурация и переменные окружения
 
-Файл конфигурации: `ytd.config.yaml` (в текущем каталоге проекта) позволяет задать значения по умолчанию.
+### 5.1 Приоритет и поиск конфигурации
 
-Пример:
+`ytd` собирает итоговую конфигурацию из четырёх источников. Приоритет от самого высокого к самому низкому:
 
-```yaml
-output: ./downloads
-quality: best
-video_format: mp4
-audio_only: false
-audio_format: m4a
-name_template: "%(title)s [%(id)s].%(ext)s"
-subtitles: []
-proxy: null
-retry: 3
-retry_delay: 5
-save_metadata: ./data/meta.jsonl
+1. **Флаги CLI** (например, `--interactive` или `--output`).
+2. **Переменные окружения** `YTD_*`.
+3. **Файл** `ytd.config.yaml`.
+4. **Встроенные значения** из `AppConfig`.
+
+Поиск файла происходит строго в следующем порядке:
+
+1. Путь, явно переданный в `load_config(path)` из кода.
+2. Переменная окружения `YTD_CONFIG`.
+3. Файл `./ytd.config.yaml` в каталоге запуска команды `ytd`.
+
+Если ничего не найдено, используются дефолты и `interactive_by_default` останется `False`.
+
+### 5.2 Как подготовить `ytd.config.yaml`
+
+1. Скопируйте `config.example.yaml` в нужное место и переименуйте в `ytd.config.yaml`.
+2. Удалите лишнее, оставьте только используемые поля. Минимальный пример:
+
+   ```yaml
+   # ytd.config.yaml
+   output: ./downloads
+   interactive_by_default: true
+   history_enabled: true
+   pause_between_videos: false
+   auto_detect_playlists: true
+   ```
+
+3. Проверьте, что файл лежит там, где его найдёт приложение (см. порядок выше) или задайте путь через `YTD_CONFIG=/полный/путь/ytd.config.yaml` перед запуском.
+4. Запустите `ytd download URL --dry-run` и убедитесь, что интерактивный режим активировался без флага `--interactive`.
+
+> ⚠️ Файлы `config.yaml` или `config.yml` рядом с проектом **не читаются**. Используйте имя `ytd.config.yaml` или `YTD_CONFIG`.
+
+### 5.3 Переменные окружения
+
+Любой параметр можно переопределить переменной окружения. Основные ключи:
+
+| Ключ YAML             | Переменная           | Формат значения                          |
+|----------------------|----------------------|------------------------------------------|
+| `output`             | `YTD_OUTPUT`         | Путь (относительный или абсолютный)      |
+| `quality`            | `YTD_QUALITY`        | `best`, `1080p`, `720p`, `audio` и т.д.  |
+| `video_format`       | `YTD_VIDEO_FORMAT`   | `mp4`, `webm`                            |
+| `audio_only`         | `YTD_AUDIO_ONLY`     | `true` / `false`                         |
+| `audio_format`       | `YTD_AUDIO_FORMAT`   | `m4a`, `mp3`, `opus`                     |
+| `name_template`      | `YTD_NAME_TEMPLATE`  | Любая строка-шаблон yt-dlp               |
+| `subtitles`          | `YTD_SUBTITLES`      | Список через запятую (например `ru,en`)  |
+| `proxy`              | `YTD_PROXY`          | URL прокси                               |
+| `retry`              | `YTD_RETRY`          | Целое число                              |
+| `retry_delay`        | `YTD_RETRY_DELAY`    | Число (секунды)                          |
+| `save_metadata`      | `YTD_SAVE_METADATA`  | Путь к JSONL                             |
+| `history_enabled`    | `YTD_HISTORY_ENABLED`| `true` / `false`                         |
+| `history_db`         | `YTD_HISTORY_DB`     | Путь к SQLite                            |
+| `pause_between_videos` | `YTD_PAUSE_BETWEEN_VIDEOS` | `true` / `false`                  |
+| `interactive_by_default` | `YTD_INTERACTIVE_BY_DEFAULT` | `true` / `false`              |
+| `auto_detect_playlists` | `YTD_AUTO_DETECT_PLAYLISTS` | `true` / `false`               |
+
+Примеры применения:
+
+```bash
+# Linux/macOS
+YTD_INTERACTIVE_BY_DEFAULT=1 YTD_OUTPUT=~/Downloads ytd download --urls-file urls.txt
 ```
 
-Переменные окружения (приоритет выше конфига, ниже флагов CLI):
+```powershell
+# Windows PowerShell
+$env:YTD_INTERACTIVE_BY_DEFAULT = "true"
+$env:YTD_OUTPUT = "C:\\Video"
+ytd download --urls-file urls.txt
+```
 
-- `YTD_OUTPUT`
-- `YTD_QUALITY`
-- `YTD_VIDEO_FORMAT`
-- `YTD_AUDIO_ONLY`
-- `YTD_AUDIO_FORMAT`
-- `YTD_NAME_TEMPLATE`
-- `YTD_SUBTITLES` (через пробел)
-- `YTD_PROXY`
-- `YTD_RETRY`
-- `YTD_RETRY_DELAY`
-- `YTD_SAVE_METADATA`
+### 5.4 Использование `.env`
 
-Приоритет значений: CLI > ENV > файл конфигурации > значения по умолчанию.
+Пример файла:
+
+```dotenv
+# .env
+YTD_OUTPUT=~/Downloads/ytd
+YTD_INTERACTIVE_BY_DEFAULT=true
+YTD_HISTORY_ENABLED=true
+```
+
+Само приложение `.env` не читает — загрузите переменные одним из способов:
+
+- **Bash/zsh:** `set -a; source .env; set +a; ytd download URL`
+- **PowerShell:**
+
+  ```powershell
+  Get-Content .env | ForEach-Object {
+      if ($_ -match "^#" -or [string]::IsNullOrWhiteSpace($_)) { return }
+      $name, $value = $_.Split('=', 2)
+      Set-Item -Path "Env:$name" -Value $value
+  }
+  ytd download URL
+  ```
+
+- **python-dotenv:** `python -m dotenv run -- ytd download URL`
+
+Этот подход удобен, когда нужно быстро поменять каталог загрузки или включить интерактив по умолчанию без редактирования YAML.
+
 
 ### О формате имён файлов и video ID
 

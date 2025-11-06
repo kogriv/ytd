@@ -63,7 +63,77 @@
 - **Сухой прогон без скачивания**:
   - `ytd download URL --interactive --dry-run`
 - **Показать информацию о видео или плейлисте**:
+
   - `ytd info URL`
+
+---
+
+## Настройка конфигурации: пошаговая инструкция
+
+Чтобы включить интерактивный режим по умолчанию, изменить папку загрузок или задать другие параметры, создайте собственный файл конфигурации и (при необходимости) подключите переменные окружения.
+
+### 1. Где искать и как загрузить `config`
+
+`ytd` ищет файл строго в одном из следующих мест (в указанном порядке):
+
+1. Путь, который вы передали функции `load_config` из кода (обычно не используется вручную).
+2. Переменная окружения `YTD_CONFIG` — укажите абсолютный или относительный путь к YAML-файлу.
+3. Файл `./ytd.config.yaml` в каталоге, из которого запускается команда `ytd`.
+
+Если ни один из вариантов не найден, используются встроенные значения по умолчанию, и настройки вроде `interactive_by_default: true` проигнорируются. Поэтому убедитесь, что файл действительно попадает в одну из перечисленных точек поиска.
+
+### 2. Создайте свой `ytd.config.yaml`
+
+1. Скопируйте `config.example.yaml` в выбранное место и переименуйте в `ytd.config.yaml`.
+2. Оставьте только нужные поля и задайте значения. Минимальный пример:
+
+   ```yaml
+   # ytd.config.yaml в каталоге запуска
+   output: ./downloads
+   interactive_by_default: true
+   pause_between_videos: false
+   history_enabled: true
+   ```
+
+3. Запустите `ytd` снова. При корректном подключении вы увидите, что интерактив включился даже без флага `--interactive`.
+
+> ⚠️ Файл рядом с проектом `config.yaml` или `config.yml` **не** будет считан. Используйте именно `ytd.config.yaml` или переменную `YTD_CONFIG`.
+
+### 3. Использование переменных окружения и `.env`
+
+* Любой параметр из конфигурации можно переопределить переменной окружения. Имена совпадают с ключами, но в верхнем регистре и с префиксом `YTD_` (например, `YTD_OUTPUT`, `YTD_INTERACTIVE_BY_DEFAULT`). Приоритет: CLI > переменные окружения > файл > значения по умолчанию.
+* В Linux/macOS задайте переменные перед командой:
+
+  ```bash
+  YTD_INTERACTIVE_BY_DEFAULT=1 YTD_OUTPUT=~/Downloads ytd download URL
+  ```
+
+* На Windows (PowerShell):
+
+  ```powershell
+  $env:YTD_INTERACTIVE_BY_DEFAULT = "true"
+  $env:YTD_OUTPUT = "C:\Video"
+  ytd download URL
+  ```
+
+#### Пример `.env`
+
+Формат файла:
+
+```dotenv
+# .env
+YTD_OUTPUT=~/Downloads/ytd
+YTD_INTERACTIVE_BY_DEFAULT=true
+YTD_HISTORY_ENABLED=true
+```
+
+`ytd` не подхватывает `.env` автоматически — подключите его через оболочку или сторонний инструмент:
+
+- Bash/zsh: `set -a; source .env; set +a; ytd download URL`
+- PowerShell: `Get-Content .env | ForEach-Object { if ($_ -match "^#" -or [string]::IsNullOrWhiteSpace($_)) { return } $name, $value = $_.Split('=', 2); Set-Item -Path "Env:$name" -Value $value } ; ytd download URL`
+- Или используйте `python -m dotenv run -- ytd download URL`, если установлен пакет `python-dotenv`.
+
+Такой подход удобен, когда нужно временно переключить папку загрузок или включить интерактив без редактирования YAML.
 
 ## Журнал загрузок
 
