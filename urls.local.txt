@@ -8,10 +8,13 @@
 # https://www.youtube.com/watch?v=JiJ3f8m8Tzs&list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj&index=2
 
 # Сингулярное разложение матрицы
-https://vkvideo.ru/video-174257110_456239052?linked=1&t=1h19m50s
+# https://vkvideo.ru/video-174257110_456239052?linked=1&t=1h19m50s
+
+# Gaining buy-in: A guide to successful AI integration in development
+# https://www.youtube.com/watch?v=dHUu99nvKRY
 
 # Обучение сборки Кубика Рубика 3х3:
-# https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
+https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
 
 # 1 курс. Линейная алгебра. Кожевников
 # https://www.youtube.com/playlist?list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW
