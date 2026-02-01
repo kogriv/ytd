@@ -14,7 +14,7 @@
 # https://www.youtube.com/watch?v=dHUu99nvKRY
 
 # Обучение сборки Кубика Рубика 3х3:
-https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
+# https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
 
 # 1 курс. Линейная алгебра. Кожевников
 # https://www.youtube.com/playlist?list=PLGtDJ4vL9gwnyDxf56IHxITz5_SQyo4fW
@@ -30,3 +30,9 @@ https://www.youtube.com/playlist?list=PLesrOB93Z5pivUrgxwyaFcFghCk8d1kmj
 
 # Лекции по курсу "Педагогика и психология", Фокина А. В
 # https://www.youtube.com/playlist?list=PLthfp5exSWEqCRffNXE_oBRKh1N9oToev
+
+# Логарифмы с Нуля, Что Такое Логарифм? + ДЗ (ЕГЭ 2025 Математика Профиль и База, 10 и 11 класс)
+# https://www.youtube.com/watch?v=iGLQTAsWZ3Q&list=PL0vppe68ibwEVyg5QBMqHPhSvGFA-tBP_&index=5
+
+# Логарифмы-1. Уравнения: от базы до олимпиад
+https://www.youtube.com/watch?v=H_8UEGg2QTE&list=PL0vppe68ibwEVyg5QBMqHPhSvGFA-tBP_&index=1

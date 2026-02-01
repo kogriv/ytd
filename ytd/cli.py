@@ -450,7 +450,7 @@ def cmd_download(
     dry_run: bool = typer.Option(False, "--dry-run", help="Только показать действия"),
     playlist: bool = typer.Option(False, "--playlist", help="Обработать плейлист целиком"),
     playlist_items: Optional[str] = typer.Option(None, "--playlist-items", help="Номера видео в плейлисте (например '1-3' или '1,3,5')"),
-    interactive: bool = typer.Option(False, "--interactive", "-i", help="Диалоговый выбор качества перед загрузкой (для одного URL)"),
+    interactive: bool = typer.Option(True, "--interactive/--no-interactive", "-i/-I", help="Диалоговый выбор качества перед загрузкой (включено по умолчанию)"),
     pause_between: bool = typer.Option(False, "--pause-between", help="Включить возможность паузы между видео в плейлисте (нажмите 'p' для паузы, 'r' для возобновления)", rich_help_panel="Дополнительно"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Подробные логи (DEBUG)"),
 ):
@@ -805,9 +805,7 @@ def cmd_download(
                 or (auto_playlist_enabled and looks_like_playlist)
             )
             if interactive:
-                if len(urls) > 1:
-                    safe_secho("[WARN] Диалоговый выбор качества поддерживается только для одного URL. Флаг --interactive будет проигнорирован.", fg=typer.colors.YELLOW)
-                elif effective_playlist:
+                if effective_playlist:
                     # ПЛЕЙЛИСТ В ИНТЕРАКТИВНОМ РЕЖИМЕ
                     safe_echo("\n" + "═" * 60)
                     safe_secho("⏳ Получение информации о плейлисте...", fg=typer.colors.CYAN, bold=True)
@@ -830,7 +828,104 @@ def cmd_download(
                                 history_video_id = resolved_id
                         
                         if not entries:
-                            safe_secho("[WARN] Плейлист пуст, интерактивный режим отключён", fg=typer.colors.YELLOW)
+                            safe_secho("[INFO] Плейлист пуст или это одиночное видео. Переходим в режим одиночного видео.", fg=typer.colors.CYAN)
+                            # Обработать как одиночное видео - используем info как информацию о видео
+                            video_id = info.get("id", "unknown")
+                            video_title = info.get("title", "unknown")
+                            
+                            fmts = info.get("formats") or []
+                            # Собираем уникальные высоты и предпочтительный контейнер
+                            height_to_ext, available_heights = ia.collect_available_heights(fmts)
+                            
+                            # Построить меню качества
+                            quality_options = ia.build_quality_options(height_to_ext, available_heights)
+                            
+                            # Показать меню и получить выбор
+                            safe_echo("\n" + "═" * 60)
+                            safe_echo("ШАГ 1: Выберите качество")
+                            safe_echo("═" * 60)
+                            chosen_label, chosen_format, _ = ia.show_quality_menu(quality_options)
+                            
+                            # Определить суффикс качества
+                            default_suffix = extract_quality_suffix(chosen_format, chosen_label)
+                            
+                            # Построить предлагаемое имя файла
+                            safe_title = sanitize_filename(video_title)
+                            # Определить вероятное расширение
+                            if "audio" in chosen_label.lower():
+                                ext_hint = "m4a"
+                            else:
+                                # Извлечь из формата или использовать дефолт
+                                ext_match = re.search(r'ext=(\w+)', chosen_format)
+                                ext_hint = ext_match.group(1) if ext_match else "mp4"
+                            
+                            # ШАГ 2: Настройка имени файла
+                            safe_echo("\n" + "═" * 60)
+                            safe_echo("ШАГ 2: Настройка имени файла")
+                            safe_echo("═" * 60)
+                            safe_echo(f"Название: {safe_title} [{video_id}]")
+                            safe_echo(f"Расширение: .{ext_hint}")
+                            safe_echo(f"Предложенный суффикс качества: {default_suffix}")
+                            
+                            # Спросить про суффикс качества
+                            safe_echo("\nДобавить суффикс качества к имени файла?")
+                            safe_echo(f"  1) Да, добавить '{default_suffix}'")
+                            safe_echo("  2) Да, но указать свой суффикс")
+                            safe_echo("  3) Нет, без суффикса")
+                            
+                            suffix_choice = typer.prompt("Выберите вариант", default="1")
+                            
+                            if suffix_choice == "2":
+                                custom_suffix = typer.prompt("Введите суффикс (например, '_720p' или '_hd')", default=default_suffix)
+                                quality_suffix = custom_suffix if custom_suffix else None
+                            elif suffix_choice == "3":
+                                quality_suffix = None
+                            else:
+                                quality_suffix = default_suffix
+                            
+                            # Построить полное имя с суффиксом (если есть)
+                            name_with_suffix = f"{safe_title} [{video_id}]{quality_suffix or ''}.{ext_hint}"
+                            
+                            safe_echo(f"\nИтоговое имя: {name_with_suffix}")
+                            safe_echo("\nДополнительные опции:")
+                            safe_echo("  1) Использовать как есть")
+                            safe_echo("  2) Добавить префикс (например, '01_')")
+                            safe_echo("  3) Изменить имя полностью")
+                            
+                            name_choice = typer.prompt("Выберите действие", default="1")
+                            
+                            if name_choice == "2":
+                                prefix = typer.prompt("Введите префикс (например, '01_')", default="")
+                                if prefix:
+                                    file_prefix = prefix
+                                    safe_echo(f"Итоговое имя: {prefix}{name_with_suffix}")
+                            elif name_choice == "3":
+                                new_name = typer.prompt("Введите полное имя файла (с расширением)", default=name_with_suffix)
+                                custom_name = sanitize_filename(new_name)
+                                quality_suffix = None  # Отключить автосуффикс если полное имя задано
+                                safe_echo(f"Итоговое имя: {custom_name}")
+                            else:
+                                safe_echo(f"Будет использовано: {name_with_suffix}")
+                            
+                            # ШАГ 3: Проверка существующих файлов
+                            existing = find_existing_files(current_output_dir, video_id)
+                            if existing:
+                                safe_echo("\n" + "═" * 60)
+                                safe_secho("⚠ ВНИМАНИЕ: Найдены существующие файлы этого видео:", fg=typer.colors.YELLOW)
+                                safe_echo("═" * 60)
+                                for i, ex_file in enumerate(existing, start=1):
+                                    size_mb = ex_file.stat().st_size / (1024 * 1024)
+                                    safe_echo(f"  {i}) {ex_file.name} ({size_mb:.1f} МБ)")
+                                
+                                overwrite_choice = typer.prompt(
+                                    "\nПерезаписать существующие файлы? (y/n)",
+                                    default="n"
+                                )
+                                if overwrite_choice.lower() in ("y", "yes", "д", "да"):
+                                    overwrite = True
+                                    safe_secho("✓ Существующие файлы будут перезаписаны", fg=typer.colors.GREEN)
+                                else:
+                                    safe_secho("✓ Загрузка будет пропущена, если файл уже существует", fg=typer.colors.CYAN)
                         else:
                             # Показать информацию о плейлисте
                             ia.show_playlist_info(info)
