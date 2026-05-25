@@ -11,4 +11,8 @@ class NetworkUnavailableError(RuntimeError):
         self.original = original
 
 
-__all__ = ["NetworkUnavailableError"]
+class IntraVideoPauseRequested(Exception):
+    """Raised from a progress hook when the user requests an intra-video pause."""
+
+
+__all__ = ["NetworkUnavailableError", "IntraVideoPauseRequested"]

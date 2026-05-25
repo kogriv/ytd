@@ -30,6 +30,10 @@ subtitles: []
 # URL прокси-сервера (опционально)
 # proxy: "http://proxy.example.com:8080"
 
+# Cookies для обхода anti-bot (YouTube и др.)
+# cookies_file: ./cookies.txt
+# cookies_from_browser: firefox
+
 # Количество попыток при ошибках
 retry: 3
 
@@ -56,8 +60,14 @@ pause_key: p
 # Клавиша для возобновления после паузы
 resume_key: r
 
-# Включить интерактивный выбор качества по умолчанию для одиночного URL
+# Пауза внутри текущего файла (CLI: --intra-video-pause)
+intra_video_pause: false
+
+# Включить интерактивный выбор качества по умолчанию (можно переопределить --interactive / --no-interactive)
 interactive_by_default: false
 
 # Автоматически распознавать плейлисты по URL без флага --playlist
 auto_detect_playlists: true
+
+# Отключить progress bar yt-dlp (обход OSError [Errno 22] в Windows-консоли)
+no_progress: false

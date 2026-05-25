@@ -51,6 +51,14 @@
   ytd download PLAYLIST_URL --pause-between
   ```
 
+- **Пауза внутри текущего файла** (`intra_video_pause: true` или `--intra-video-pause`):
+
+  ```powershell
+  ytd download VIDEO_URL --intra-video-pause
+  ```
+
+  Нажмите `p` во время загрузки — файл прервётся; `r` — продолжение с частичного файла.
+
 - **Просмотр информации без скачивания:**
 
   ```powershell
@@ -255,8 +263,10 @@ ytd info URL --json > info.json
 | `history_enabled`    | `YTD_HISTORY_ENABLED`| `true` / `false`                         |
 | `history_db`         | `YTD_HISTORY_DB`     | Путь к SQLite                            |
 | `pause_between_videos` | `YTD_PAUSE_BETWEEN_VIDEOS` | `true` / `false`                  |
+| `intra_video_pause`    | `YTD_INTRA_VIDEO_PAUSE`    | `true` / `false`                  |
 | `interactive_by_default` | `YTD_INTERACTIVE_BY_DEFAULT` | `true` / `false`              |
 | `auto_detect_playlists` | `YTD_AUTO_DETECT_PLAYLISTS` | `true` / `false`               |
+| `no_progress`           | `YTD_NO_PROGRESS`           | `true` / `false` (без progress bar) |
 
 Примеры применения:
 
@@ -638,6 +648,7 @@ ytd download PLAYLIST_URL --interactive --dry-run
 - "ffmpeg не найден": установите ffmpeg в систему или добавьте в PATH. yt-dlp вызывает ffmpeg для mux/конвертации.
 - Медленная скорость/ограничения: повторите загрузку (повторы включены), используйте прокси, попробуйте позже.
 - Проблемы с Unicode в PowerShell: убедитесь, что шрифт и кодировка консоли поддерживают UTF‑8; избегайте конвейеров, которые ломают кодировку.
+- **`OSError [Errno 22] Invalid argument` на Windows** при загрузке: ошибка flush progress bar yt-dlp в консоли. ytd автоматически повторит загрузку без прогресс-бара; для постоянного отключения добавьте в `ytd.config.yaml`: `no_progress: true` или `$env:YTD_NO_PROGRESS = "true"`.
 - Ошибка по отдельному видео в плейлисте: утилита продолжит остальные; общий код возврата может быть 2.
 - Повторная загрузка существующего файла: используйте `--interactive` для проверки и выбора перезаписи, или удалите старый файл вручную.
 

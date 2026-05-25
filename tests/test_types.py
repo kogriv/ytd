@@ -1,7 +1,8 @@
 from pathlib import Path
+
 import pytest
 
-from ytd.types import DownloadOptions, AppConfig
+from ytd.types import AppConfig, DownloadOptions
 
 
 def test_download_options_defaults():
@@ -84,4 +85,4 @@ def test_slots_prevent_new_attributes():
     opts = DownloadOptions(url="u")
     with pytest.raises(AttributeError):
         # slots запрещают добавление новых атрибутов
-        setattr(opts, "new_field", 123)
+        opts.new_field = 123

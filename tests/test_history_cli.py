@@ -10,7 +10,7 @@ import pytest
 from typer.testing import CliRunner
 
 from ytd.cli import app
-from ytd.history import init_db, ensure_schema, record_event
+from ytd.history import ensure_schema, init_db, record_event
 from ytd.types import DownloadEvent
 
 

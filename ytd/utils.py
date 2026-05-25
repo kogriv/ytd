@@ -4,8 +4,13 @@ import json
 import os
 import re
 import shutil
+import time
+from collections.abc import Callable, Mapping
+from functools import wraps
 from pathlib import Path
-from typing import Any, Mapping, Callable, Optional
+from typing import Any, TypeVar
+
+F = TypeVar("F", bound=Callable[..., Any])
 
 
 def ensure_dir(path: Path) -> None:
@@ -111,21 +116,33 @@ def sanitize_filename(name: str) -> str:
     return safe
 
 
-def retry(retries: int = 3, delay: float = 1.0, backoff: float = 2.0) -> Callable:
-    """Декоратор повторов с экспоненциальной задержкой.
+def retry(retries: int = 3, delay: float = 1.0, backoff: float = 2.0) -> Callable[[F], F]:
+    """Декоратор повторов с экспоненциальной задержкой."""
 
-    Пример:
-        @retry(3, 1.0, 2.0)
-        def fetch(): ...
-    """
-    def decorator(func: Callable) -> Callable:
-        # TODO: обертка с попытками и задержками (пока не требуется)
-        return func
+    if retries < 1:
+        raise ValueError("retries must be >= 1")
+
+    def decorator(func: F) -> F:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            attempt = 0
+            wait = delay
+            while True:
+                try:
+                    return func(*args, **kwargs)
+                except Exception:
+                    attempt += 1
+                    if attempt >= retries:
+                        raise
+                    time.sleep(wait)
+                    wait *= backoff
+
+        return wrapper  # type: ignore[return-value]
 
     return decorator
 
 
-def find_ffmpeg() -> Optional[Path]:
+def find_ffmpeg() -> Path | None:
     """Попытаться найти ffmpeg.
 
     Порядок:
@@ -224,9 +241,9 @@ def extract_quality_suffix(format_choice: str, format_label: str) -> str:
 
 def find_best_quality_match(
     available_heights: list[int],
-    target_height: Optional[int],
+    target_height: int | None,
     strategy: str = "econom",
-) -> Optional[int]:
+) -> int | None:
     """Найти наилучшее соответствие качества для видео.
 
     Стратегии:

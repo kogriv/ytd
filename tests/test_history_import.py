@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from ytd.history.storage import init_db, ensure_schema, import_from_jsonl, list_downloads
+from ytd.history.storage import ensure_schema, import_from_jsonl, init_db, list_downloads
 
 
 @pytest.fixture

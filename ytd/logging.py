@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional, Union
 import logging
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 from .utils import ensure_dir
 
 
-def _coerce_level(level: Union[str, int]) -> int:
+def _coerce_level(level: str | int) -> int:
     if isinstance(level, int):
         return level
     try:
@@ -17,7 +16,7 @@ def _coerce_level(level: Union[str, int]) -> int:
         return logging.INFO
 
 
-def setup_logging(level: Union[str, int] = "INFO", log_file: Optional[Path] = Path("logs/ytd.log")) -> logging.Logger:
+def setup_logging(level: str | int = "INFO", log_file: Path | None = Path("logs/ytd.log")) -> logging.Logger:
     """Настроить логгер приложения (консоль + файл с ротацией по размеру).
 
     Особенности:

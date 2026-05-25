@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
@@ -50,8 +49,8 @@ retry_delay: 1.5
 save_metadata: ./info/meta.jsonl
 history_enabled: false
 history_db: ./storage/custom-history.db
- interactive_by_default: true
- auto_detect_playlists: false
+interactive_by_default: true
+auto_detect_playlists: false
 """,
         encoding="utf-8",
     )
@@ -101,6 +100,35 @@ def test_env_overrides_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert cfg.history_enabled is False
     assert cfg.interactive_by_default is True
     assert cfg.auto_detect_playlists is False
+
+
+def test_env_cookies_overrides(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("YTD_COOKIES_FILE", str(tmp_path / "cookies.txt"))
+    monkeypatch.setenv("YTD_COOKIES_FROM_BROWSER", "firefox")
+
+    cfg = load_config()
+
+    assert cfg.cookies_file == tmp_path / "cookies.txt"
+    assert cfg.cookies_from_browser == "firefox"
+
+
+def test_invalid_proxy_raises(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="прокси"):
+        merge_cli_overrides(load_config(), {"proxy": "ftp://bad-proxy"})
+
+
+def test_invalid_quality_raises(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="quality"):
+        merge_cli_overrides(load_config(), {"quality": "4k"})
+
+
+def test_invalid_browser_raises(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(ValueError, match="cookies_from_browser"):
+        merge_cli_overrides(load_config(), {"cookies_from_browser": "internet-explorer"})
 
 
 def test_merge_cli_overrides(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

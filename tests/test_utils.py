@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ytd.utils import sanitize_filename, save_metadata_jsonl
+import pytest
+
+from ytd.utils import retry, sanitize_filename, save_metadata_jsonl
 
 
 def test_sanitize_filename_basic_cases():
@@ -42,3 +44,18 @@ def test_save_metadata_jsonl_appends(tmp_path: Path):
     parsed = [json.loads(l) for l in lines]
     assert parsed[0]["id"] == "1"
     assert parsed[1]["id"] == "2"
+
+
+def test_retry_decorator_retries_then_succeeds(monkeypatch: pytest.MonkeyPatch) -> None:
+    attempts = {"count": 0}
+
+    @retry(retries=3, delay=0, backoff=1)
+    def flaky() -> str:
+        attempts["count"] += 1
+        if attempts["count"] < 3:
+            raise RuntimeError("temporary")
+        return "ok"
+
+    monkeypatch.setattr("ytd.utils.time.sleep", lambda _: None)
+    assert flaky() == "ok"
+    assert attempts["count"] == 3

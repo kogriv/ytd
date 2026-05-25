@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from types import SimpleNamespace
-from pathlib import Path
 import time as _time
+from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -14,7 +14,7 @@ class FakeYDL:
     """Простая заглушка для yt_dlp.YoutubeDL с минимально нужным API."""
 
     failures: int = 0  # количество последовательных сбоев перед успехом
-    instances: list["FakeYDL"] = []
+    instances: list[FakeYDL] = []
 
     def __init__(self, params: dict):
         self.params = params
@@ -43,7 +43,13 @@ class FakeYDL:
                 .replace("%(ext)s", info["ext"])  # noqa: P103
             )
             for h in hooks:
-                h({"status": "finished", "filename": out})
+                h(
+                    {
+                        "status": "finished",
+                        "filename": out,
+                        "info_dict": info,
+                    }
+                )
         return info
 
     def prepare_filename(self, info):
@@ -115,6 +121,115 @@ def test_build_ydl_opts_video_quality_720p_mp4(tmp_path: Path):
     fmt = ydl_opts["format"]
     assert "height<=720" in fmt
     assert "ext=mp4" in fmt
+
+
+def test_build_ydl_opts_cookies_file(tmp_path: Path):
+    cookies_path = tmp_path / "cookies.txt"
+    cookies_path.write_text("# Netscape HTTP Cookie File\n", encoding="utf-8")
+
+    cfg = AppConfig()
+    dl = Downloader(cfg)
+    opts = DownloadOptions(
+        url="https://example/video",
+        output_dir=tmp_path,
+        cookies_file=cookies_path,
+        cookies_from_browser="firefox",
+    )
+
+    ydl_opts = dl.build_ydl_opts(opts)
+    assert ydl_opts["cookiefile"] == str(cookies_path)
+    assert "cookiesfrombrowser" not in ydl_opts
+
+
+def test_build_ydl_opts_cookies_from_browser(tmp_path: Path):
+    cfg = AppConfig()
+    dl = Downloader(cfg)
+    opts = DownloadOptions(
+        url="https://example/video",
+        output_dir=tmp_path,
+        cookies_from_browser="chrome",
+    )
+
+    ydl_opts = dl.build_ydl_opts(opts)
+    assert ydl_opts["cookiesfrombrowser"] == ("chrome",)
+
+
+def test_build_ydl_opts_no_progress(tmp_path: Path) -> None:
+    cfg = AppConfig(no_progress=True)
+    dl = Downloader(cfg)
+    opts = DownloadOptions(url="https://example/video", output_dir=tmp_path)
+
+    ydl_opts = dl.build_ydl_opts(opts)
+
+    assert ydl_opts["noprogress"] is True
+
+
+def test_is_progress_flush_error_detects_errno_22() -> None:
+    assert Downloader._is_progress_flush_error(OSError(22, "Invalid argument")) is True
+    assert Downloader._is_progress_flush_error(RuntimeError("network error")) is False
+
+
+def test_download_retries_without_progress_on_windows_errno_22(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    attempts = {"count": 0}
+
+    class FlushFailYDL(FakeYDL):
+        def extract_info(self, url: str, download: bool = False):
+            attempts["count"] += 1
+            if download and attempts["count"] == 1:
+                raise OSError(22, "Invalid argument")
+            return super().extract_info(url, download)
+
+    monkeypatch.setattr(
+        "ytd.downloader.yt_dlp",
+        SimpleNamespace(YoutubeDL=FlushFailYDL),
+        raising=True,
+    )
+    FakeYDL.instances.clear()
+
+    def always_retry_without_progress(self, exc: BaseException) -> bool:
+        return self._is_progress_flush_error(exc)
+
+    monkeypatch.setattr(Downloader, "_should_retry_without_progress", always_retry_without_progress)
+
+    cfg = AppConfig(output=tmp_path, history_enabled=False, no_progress=False)
+    dl = Downloader(cfg)
+    dopts = DownloadOptions(url="https://example/video", output_dir=tmp_path, retry=1)
+
+    files = dl.download(dopts)
+
+    assert attempts["count"] == 2
+    assert len(files) == 1
+    assert FakeYDL.instances[0].params["noprogress"] is False
+    assert FakeYDL.instances[1].params["noprogress"] is True
+
+
+def test_download_uses_single_extract_info_call(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    calls: list[tuple[str, bool]] = []
+
+    class CountingFakeYDL(FakeYDL):
+        def extract_info(self, url: str, download: bool = False):
+            calls.append((url, download))
+            return super().extract_info(url, download)
+
+    monkeypatch.setattr(
+        "ytd.downloader.yt_dlp",
+        SimpleNamespace(YoutubeDL=CountingFakeYDL),
+        raising=True,
+    )
+    FakeYDL.failures = 0
+    CountingFakeYDL.failures = 0
+
+    cfg = AppConfig(output=tmp_path, history_enabled=False)
+    dl = Downloader(cfg)
+    dopts = DownloadOptions(url="https://example/video", output_dir=tmp_path, retry=1)
+
+    files = dl.download(dopts)
+
+    assert len(files) == 1
+    assert calls == [("https://example/video", True)]
 
 
 def test_download_dry_run_calls_extract_info(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):

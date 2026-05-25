@@ -11,7 +11,6 @@ venv/
 ENV/
 env/
 venv_ytd/
-.python-version
 
 # Editors/IDE
 .vscode/
@@ -34,9 +33,9 @@ htmlcov/
 .pytype/
 
 # Logs
-# logs/
+logs/*.log
+*.log
 !logs/.gitkeep
-#*.log
 
 # Data and downloads
 data/

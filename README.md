@@ -10,7 +10,8 @@
 
 ## Стек технологий
 
-- Python 3.11+
+- Python 3.14+
+- uv (управление зависимостями и `.venv`)
 - yt-dlp (скачивание видео/аудио)
 - Typer (CLI), rich (отформатированный вывод)
 - PyYAML (конфигурация)
@@ -25,12 +26,13 @@
 ├─ README.md
 ├─ .gitignore
 ├─ ytd/
-│  ├─ cli.py
+│  ├─ cli.py                 # Typer-команды (тонкий слой)
+│  ├─ workflows/             # download_command, playlist, network, history prompts
+│  ├─ interactive.py
 │  ├─ downloader.py
 │  ├─ config.py
-│  ├─ logging.py
-│  ├─ utils.py
-│  └─ types.py
+│  ├─ history/
+│  └─ ...
 ├─ tests/
 ├─ data/
 │  └─ .gitkeep
@@ -50,9 +52,10 @@
   - Работает для YouTube, VK и других площадок, которые поддерживает yt-dlp
 - **Загрузка списка ссылок из файла** (одна строка — один URL, `#` — комментарии):
   - `ytd download --urls-file urls.local.txt`
-- **Интерактивный выбор качества** (если не включён по умолчанию):
-  - `ytd download URL --interactive`
-  - Чтобы не передавать флаг каждый раз, добавьте `interactive_by_default: true` в конфиг `config.yaml`
+- **Интерактивный выбор качества** (по умолчанию выключен; см. `interactive_by_default` в конфиге):
+  - `ytd download URL --interactive` — принудительно включить
+  - `ytd download URL --no-interactive` — принудительно выключить
+  - Чтобы не передавать флаг каждый раз, добавьте `interactive_by_default: true` в `ytd.config.yaml`
 - **Только аудио m4a с пользовательским шаблоном имени**:
   - `ytd download URL --audio-only --audio-format m4a -o ./downloads --name "%(title)s [%(id)s]"`
 - **Часть плейлиста или заданная нумерация**:
@@ -60,6 +63,9 @@
 - **Пауза между элементами плейлиста** (также настраивается в конфиге `pause_between_videos: true`):
   - `ytd download PLAYLIST_URL --pause-between`
   - Нажмите `p` во время загрузки для паузы, `r` (или Enter) — для продолжения
+- **Пауза внутри текущего файла** (`intra_video_pause: true` или `--intra-video-pause`):
+  - `ytd download URL --intra-video-pause`
+  - `p` прерывает загрузку; `r` продолжает с места остановки (частичный файл + `continuedl`)
 - **Сухой прогон без скачивания**:
   - `ytd download URL --interactive --dry-run`
 - **Показать информацию о видео или плейлисте**:
@@ -142,7 +148,7 @@ YTD_HISTORY_ENABLED=true
   - `ytd history show <ID>` — карточка отдельной записи
   - `ytd history export --format jsonl|csv` — экспорт истории в stdout
 - При первом создании базы, если файл метаданных (`save_metadata`, JSONL) уже существует, ytd импортирует прежние записи автоматически.
-- Управление включением журнала и путями осуществляется в конфиге (`config.yaml`):
+- Управление включением журнала и путями — в `ytd.config.yaml` (см. [docs/usage.md](docs/usage.md)):
   - `history_enabled`: включить/отключить журнал полностью
   - `history_db`: путь к SQLite-файлу
   - `save_metadata`: путь к JSONL для хранения метаданных (используется и для начального импорта)

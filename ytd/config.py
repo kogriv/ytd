@@ -1,15 +1,29 @@
 from __future__ import annotations
 
 import os
-from dataclasses import replace, asdict
+from dataclasses import asdict, replace
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 
-from .types import AppConfig
+from .types import (
+    VALID_AUDIO_FORMAT,
+    VALID_BROWSER_COOKIE_SOURCES,
+    VALID_QUALITY,
+    VALID_VIDEO_FORMAT,
+    AppConfig,
+)
 from .utils import ensure_dir
 
+
+def _validate_choice(field: str, value: str, allowed: frozenset[str]) -> str:
+    normalized = value.strip().lower()
+    if normalized not in allowed:
+        allowed_list = ", ".join(sorted(allowed))
+        raise ValueError(f"Недопустимое значение {field}: {value!r}. Допустимо: {allowed_list}")
+    return normalized
 
 _ENV_MAP: dict[str, str] = {
     "output": "YTD_OUTPUT",
@@ -20,6 +34,8 @@ _ENV_MAP: dict[str, str] = {
     "name_template": "YTD_NAME_TEMPLATE",
     "subtitles": "YTD_SUBTITLES",
     "proxy": "YTD_PROXY",
+    "cookies_file": "YTD_COOKIES_FILE",
+    "cookies_from_browser": "YTD_COOKIES_FROM_BROWSER",
     "retry": "YTD_RETRY",
     "retry_delay": "YTD_RETRY_DELAY",
     "save_metadata": "YTD_SAVE_METADATA",
@@ -28,9 +44,23 @@ _ENV_MAP: dict[str, str] = {
     "pause_between_videos": "YTD_PAUSE_BETWEEN_VIDEOS",
     "pause_key": "YTD_PAUSE_KEY",
     "resume_key": "YTD_RESUME_KEY",
+    "intra_video_pause": "YTD_INTRA_VIDEO_PAUSE",
     "interactive_by_default": "YTD_INTERACTIVE_BY_DEFAULT",
     "auto_detect_playlists": "YTD_AUTO_DETECT_PLAYLISTS",
+    "no_progress": "YTD_NO_PROGRESS",
 }
+
+
+def _validate_proxy_url(value: str) -> str:
+    parsed = urlparse(value.strip())
+    if parsed.scheme not in {"http", "https", "socks4", "socks5", "socks5h"}:
+        raise ValueError(
+            f"Неподдерживаемая схема прокси: {parsed.scheme!r}. "
+            "Используйте http, https, socks4, socks5 или socks5h."
+        )
+    if not parsed.netloc:
+        raise ValueError("URL прокси должен содержать хост, например http://127.0.0.1:8080")
+    return value.strip()
 
 
 def _parse_bool(val: str) -> bool:
@@ -64,6 +94,8 @@ def _apply_env_overrides(base: AppConfig) -> AppConfig:
             raw = os.environ[env_name]
             if field in {"output", "save_metadata"}:
                 updates[field] = raw
+            elif field == "cookies_file":
+                updates[field] = raw
             elif field == "subtitles":
                 updates[field] = [s for s in [p.strip() for p in raw.split(",")] if s]
             elif field in {"retry"}:
@@ -76,7 +108,7 @@ def _apply_env_overrides(base: AppConfig) -> AppConfig:
                     updates[field] = float(raw)
                 except ValueError:
                     continue
-            elif field in {"audio_only", "history_enabled", "pause_between_videos", "interactive_by_default", "auto_detect_playlists"}:
+            elif field in {"audio_only", "history_enabled", "pause_between_videos", "intra_video_pause", "interactive_by_default", "auto_detect_playlists", "no_progress"}:
                 updates[field] = _parse_bool(raw)
             else:
                 updates[field] = raw
@@ -94,6 +126,26 @@ def _normalize_types(updates: dict[str, Any]) -> dict[str, Any]:
         out["save_metadata"] = Path(out["save_metadata"]).expanduser()
     if "history_db" in out and isinstance(out["history_db"], str):
         out["history_db"] = Path(out["history_db"]).expanduser()
+    if "cookies_file" in out and isinstance(out["cookies_file"], str):
+        out["cookies_file"] = Path(out["cookies_file"]).expanduser()
+    if "proxy" in out and isinstance(out["proxy"], str) and out["proxy"].strip():
+        out["proxy"] = _validate_proxy_url(out["proxy"])
+    if "quality" in out and isinstance(out["quality"], str):
+        out["quality"] = _validate_choice("quality", out["quality"], VALID_QUALITY)
+    if "audio_format" in out and isinstance(out["audio_format"], str):
+        out["audio_format"] = _validate_choice("audio_format", out["audio_format"], VALID_AUDIO_FORMAT)
+    if "video_format" in out and isinstance(out["video_format"], str):
+        out["video_format"] = _validate_choice("video_format", out["video_format"], VALID_VIDEO_FORMAT)
+    if "cookies_from_browser" in out and isinstance(out["cookies_from_browser"], str):
+        browser = out["cookies_from_browser"].strip()
+        if not browser:
+            out["cookies_from_browser"] = None
+        else:
+            out["cookies_from_browser"] = _validate_choice(
+                "cookies_from_browser",
+                browser,
+                VALID_BROWSER_COOKIE_SOURCES,
+            )
     return out
 
 
@@ -116,7 +168,7 @@ def _normalize_and_prepare(cfg: AppConfig) -> AppConfig:
     return replace(cfg, output=output, save_metadata=save_meta, history_db=history_db)
 
 
-def load_config(config_path: Optional[Path] = None) -> AppConfig:
+def load_config(config_path: Path | None = None) -> AppConfig:
     """Загрузить конфигурацию из файла/ENV и вернуть объект AppConfig.
 
     Приоритет источников: CLI (накладывается отдельно) > ENV > файл > дефолты.

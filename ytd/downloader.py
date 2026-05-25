@@ -5,15 +5,17 @@ import socket
 import ssl
 import sys
 import time
-from datetime import datetime
+from collections.abc import Iterable, Iterator
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Optional
+from typing import Any
 
 import yt_dlp as yt_dlp  # type: ignore
 from yt_dlp.networking.exceptions import TransportError
 
-from .history import record_event
-from .exceptions import NetworkUnavailableError
+from .exceptions import IntraVideoPauseRequested, NetworkUnavailableError
+from .history.storage import HistoryStore, get_default_store
+from .pause import PauseController
 from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 
@@ -21,11 +23,24 @@ from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 class Downloader:
     """Обёртка над yt-dlp с удобными дефолтами и логированием."""
 
-    def __init__(self, config: AppConfig, logger: Optional[logging.Logger] = None, verbose: bool = False) -> None:
+    def __init__(
+        self,
+        config: AppConfig,
+        logger: logging.Logger | None = None,
+        verbose: bool = False,
+        *,
+        history_store: HistoryStore | None = None,
+        pause_controller: PauseController | None = None,
+    ) -> None:
         self.config = config
         self.logger = logger or logging.getLogger("ytd")
         self.verbose = verbose
-        self._finished_files: list[Path] = []
+        self.history_store = history_store
+        self.pause_controller = pause_controller
+        self._active_pause_controller: PauseController | None = None
+        self._finished_files: dict[str, Path] = {}
+        self._current_opts: DownloadOptions | None = None
+        self._incremental_history = False
 
     def _iter_entries(self, info: Any) -> list[dict[str, Any]]:
         """Преобразовать ответ yt-dlp в список записей для истории."""
@@ -45,23 +60,68 @@ class Downloader:
             return [info]
         return []
 
+    @staticmethod
+    def _entry_history_keys(entry: dict[str, Any], fallback_url: str | None = None) -> list[str]:
+        keys: list[str] = []
+        for field in ("id", "display_id", "url", "webpage_url", "original_url"):
+            value = entry.get(field)
+            if value not in {None, ""}:
+                keys.append(str(value))
+        if fallback_url:
+            keys.append(fallback_url)
+        deduped: list[str] = []
+        seen: set[str] = set()
+        for key in keys:
+            if key not in seen:
+                seen.add(key)
+                deduped.append(key)
+        return deduped
+
+    @classmethod
+    def _resolve_entry_file_path(
+        cls,
+        entry: dict[str, Any],
+        opts: DownloadOptions,
+        file_paths: dict[str, Path] | None,
+    ) -> Path | None:
+        if not file_paths:
+            return None
+        for key in cls._entry_history_keys(entry, opts.url):
+            if key in file_paths:
+                return file_paths[key]
+        return None
+
+    def _store_finished_file(self, path: Path, entry: dict[str, Any]) -> None:
+        for key in self._entry_history_keys(entry):
+            self._finished_files[key] = path
+
+    def _finished_paths(self) -> list[Path]:
+        seen: set[Path] = set()
+        ordered: list[Path] = []
+        for path in self._finished_files.values():
+            if path in seen:
+                continue
+            seen.add(path)
+            ordered.append(path)
+        return ordered
+
     def _build_events(
         self,
         info: Any,
         opts: DownloadOptions,
         *,
         status: str,
-        started_at: Optional[datetime] = None,
-        finished_at: Optional[datetime] = None,
-        file_paths: Optional[list[Path]] = None,
-        error: Optional[str] = None,
+        started_at: datetime | None = None,
+        finished_at: datetime | None = None,
+        file_paths: dict[str, Path] | None = None,
+        error: str | None = None,
     ) -> list[DownloadEvent]:
         """Сформировать DownloadEvent по данным yt-dlp."""
 
         entries = self._iter_entries(info)
 
-        playlist_id: Optional[str] = None
-        playlist_title: Optional[str] = None
+        playlist_id: str | None = None
+        playlist_title: str | None = None
         if isinstance(info, dict) and info.get("entries"):
             raw_playlist_id = info.get("id") or info.get("playlist_id")
             raw_playlist_title = info.get("title") or info.get("playlist_title")
@@ -80,7 +140,7 @@ class Downloader:
             ]
 
         out: list[DownloadEvent] = []
-        for idx, entry in enumerate(entries):
+        for entry in entries:
             video_id = entry.get("id") or entry.get("url") or opts.url
             if not video_id:
                 continue
@@ -94,10 +154,7 @@ class Downloader:
             entry_playlist_id = entry.get("playlist_id") or playlist_id
             entry_playlist_title = entry.get("playlist_title") or playlist_title
 
-            resolved_path: Optional[Path] = None
-            if file_paths:
-                if idx < len(file_paths):
-                    resolved_path = Path(file_paths[idx])
+            resolved_path = self._resolve_entry_file_path(entry, opts, file_paths)
 
             event = DownloadEvent(
                 video_id=str(video_id),
@@ -120,10 +177,10 @@ class Downloader:
         opts: DownloadOptions,
         *,
         status: str,
-        started_at: Optional[datetime] = None,
-        finished_at: Optional[datetime] = None,
-        file_paths: Optional[list[Path]] = None,
-        error: Optional[str] = None,
+        started_at: datetime | None = None,
+        finished_at: datetime | None = None,
+        file_paths: dict[str, Path] | None = None,
+        error: str | None = None,
     ) -> None:
         """Безопасно записать события загрузки в историю."""
 
@@ -143,12 +200,34 @@ class Downloader:
             error=error,
         )
 
+        store = self.history_store
+        if store is None:
+            try:
+                store = get_default_store()
+            except RuntimeError:
+                return
+
         for event in events:
             try:
-                record_event(event)
+                store.record_event(event)
             except Exception as history_err:  # noqa: BLE001
                 self.logger.debug("не удалось записать историю: %s", history_err)
                 break
+
+    def _record_finished_hook_entry(self, entry: dict[str, Any], path: Path) -> None:
+        if not getattr(self.config, "history_enabled", True):
+            return
+        opts = self._current_opts
+        if opts is None or opts.dry_run:
+            return
+        self._incremental_history = True
+        self._record_history(
+            entry,
+            opts,
+            status="success",
+            finished_at=datetime.now(UTC),
+            file_paths={key: path for key in self._entry_history_keys(entry, opts.url)},
+        )
 
     # ---------------------- internal helpers ----------------------
     def _print_file_info(self, info: dict[str, Any]) -> None:
@@ -199,21 +278,35 @@ class Downloader:
         self.logger.info(border)
     
     def _progress_hook(self, d: dict[str, Any]) -> None:
+        try:
+            self._handle_progress_hook(d)
+        except OSError as exc:
+            self.logger.debug("progress hook: OSError при выводе: %s", exc)
+
+    def _handle_progress_hook(self, d: dict[str, Any]) -> None:
         status = d.get("status")
         if status == "downloading":
-            # Только DEBUG-уровень для деталей скачивания (не будет в консоли)
+            controller = self._active_pause_controller
+            if controller is not None:
+                controller.check_intra_video_pause_in_hook()
             p = d.get("_percent_str") or d.get("downloaded_bytes")
             self.logger.debug("downloading: %s", p)
         elif status == "finished":
             fn = d.get("filename")
             if fn:
-                self._finished_files.append(Path(fn))
+                path = Path(fn)
+                info_dict = d.get("info_dict")
+                if isinstance(info_dict, dict):
+                    self._store_finished_file(path, info_dict)
+                    self._record_finished_hook_entry(info_dict, path)
+                else:
+                    self._finished_files[str(path)] = path
             self.logger.info("сохранено: %s", fn)
         elif status == "error":
             self.logger.error("ошибка загрузки: %s", d)
 
     # ---------------------- public API ----------------------
-    def build_ydl_opts(self, opts: DownloadOptions) -> dict[str, Any]:
+    def build_ydl_opts(self, opts: DownloadOptions, *, no_progress: bool | None = None) -> dict[str, Any]:
         """Собрать словарь опций для YoutubeDL из DownloadOptions.
 
         Здесь применяются пресеты качества/форматов и имя файла.
@@ -248,6 +341,7 @@ class Downloader:
             # "logger": self.logger,
             "progress_hooks": [self._progress_hook],
             "retries": opts.retry,
+            "continuedl": True,
             # Оставим выбор фрагментов по умолчанию, чтобы не создавать конкурентность
             "concurrent_fragment_downloads": 1,
         }
@@ -261,19 +355,27 @@ class Downloader:
             ydl_opts["playlist_items"] = opts.playlist_items
         
         # Настройка вывода в зависимости от verbose режима
-        if self.verbose:
+        disable_progress = self.config.no_progress if no_progress is None else no_progress
+        if disable_progress:
+            ydl_opts["noprogress"] = True
+        elif self.verbose:
             # Подробный режим: показываем все логи yt-dlp
             ydl_opts["quiet"] = False
             ydl_opts["no_warnings"] = False
             ydl_opts["noprogress"] = False
         else:
-            # Краткий режим: только прогресс-бар и критичные сообщения
+            # Краткий режим: только progress-бар и критичные сообщения
             ydl_opts["quiet"] = True  # Подавляем большинство сообщений
             ydl_opts["no_warnings"] = True  # Убираем предупреждения
             ydl_opts["noprogress"] = False  # Но оставляем прогресс-бар
 
         if opts.proxy:
             ydl_opts["proxy"] = opts.proxy
+
+        if opts.cookies_file:
+            ydl_opts["cookiefile"] = str(Path(opts.cookies_file).expanduser())
+        elif opts.cookies_from_browser:
+            ydl_opts["cookiesfrombrowser"] = (opts.cookies_from_browser.strip(),)
 
         # Субтитры
         if opts.subtitles:
@@ -306,7 +408,7 @@ class Downloader:
             ]
         else:
             ext = opts.video_format
-            max_h: Optional[int] = None
+            max_h: int | None = None
             if opts.quality in ("1080p", "720p"):
                 max_h = int(opts.quality.replace("p", ""))
             # Подбор сопоставимого аудио по контейнеру
@@ -344,6 +446,8 @@ class Downloader:
             name_template=self.config.name_template,
             subtitles=self.config.subtitles,
             proxy=self.config.proxy,
+            cookies_file=self.config.cookies_file,
+            cookies_from_browser=self.config.cookies_from_browser,
             retry=self.config.retry,
             retry_delay=self.config.retry_delay,
             save_metadata=self.config.save_metadata,
@@ -355,7 +459,7 @@ class Downloader:
         attempt = 0
         max_attempts = max(1, int(base_opts.retry))
         delay = max(0.0, float(base_opts.retry_delay))
-        last_err: Optional[BaseException] = None
+        last_err: BaseException | None = None
 
         while attempt < max_attempts:
             attempt += 1
@@ -396,90 +500,140 @@ class Downloader:
             raise last_err
         raise RuntimeError("не удалось получить информацию")
 
-    def download(self, opts: DownloadOptions) -> list[Path]:
+    def download(
+        self,
+        opts: DownloadOptions,
+        *,
+        pause_controller: PauseController | None = None,
+    ) -> list[Path]:
         """Скачать видео/аудио по DownloadOptions.
 
         Возвращает список путей к сохранённым файлам (для плейлистов — несколько).
         """
-        ydl_opts = self.build_ydl_opts(opts)
-        attempt = 0
-        delay = max(0.0, float(opts.retry_delay))
-        last_err: Optional[BaseException] = None
-        self._finished_files = []
+        active_pause = pause_controller if pause_controller is not None else self.pause_controller
+        self._active_pause_controller = active_pause
 
-        while attempt < max(1, int(opts.retry)):
-            attempt += 1
-            history_info: Optional[dict[str, Any]] = None
-            try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
-                    # Сначала получим информацию без скачивания для вывода метаданных
-                    if not opts.dry_run:
-                        info_preview = ydl.extract_info(opts.url, download=False)
-                        if info_preview:
-                            self._print_file_info(info_preview)
-                        history_info = info_preview if isinstance(info_preview, dict) else None
+        try:
+            return self._download_with_retries(opts)
+        finally:
+            self._active_pause_controller = None
+
+    def _download_with_retries(self, opts: DownloadOptions) -> list[Path]:
+        while True:
+            attempt = 0
+            delay = max(0.0, float(opts.retry_delay))
+            last_err: BaseException | None = None
+            self._finished_files = {}
+            self._incremental_history = False
+            self._current_opts = opts
+            suppress_progress = self.config.no_progress
+            progress_retry_used = False
+            intra_pause_restart = False
+
+            while attempt < max(1, int(opts.retry)):
+                attempt += 1
+                ydl_opts = self.build_ydl_opts(opts, no_progress=suppress_progress)
+                history_info: dict[str, Any] | None = None
+                try:
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
+                        if opts.dry_run:
+                            ydl.extract_info(opts.url, download=False)
+                            return []
+
+                        self._record_history(
+                            {
+                                "id": opts.url,
+                                "webpage_url": opts.url,
+                                "title": None,
+                            },
+                            opts,
+                            status="in_progress",
+                            started_at=datetime.now(UTC),
+                        )
+
+                        info = ydl.extract_info(opts.url, download=True)
+                        history_info = info if isinstance(info, dict) else None
+
+                        if isinstance(info, dict):
+                            self._print_file_info(info)
+
+                        if not self._finished_files and info:
+                            try:
+                                if isinstance(info, dict) and info.get("entries"):
+                                    for entry in info.get("entries") or []:
+                                        if not isinstance(entry, dict):
+                                            continue
+                                        fn = ydl.prepare_filename(entry)
+                                        if fn:
+                                            self._store_finished_file(Path(fn), entry)
+                                else:
+                                    fn = ydl.prepare_filename(info)
+                                    if fn:
+                                        path = Path(fn)
+                                        if isinstance(info, dict):
+                                            self._store_finished_file(path, info)
+                                        else:
+                                            self._finished_files[str(path)] = path
+                            except Exception:
+                                pass
+
+                        if opts.save_metadata:
+                            try:
+                                if isinstance(info, dict) and info.get("entries"):
+                                    for entry in info.get("entries") or []:
+                                        if isinstance(entry, dict):
+                                            save_metadata_jsonl(entry, opts.save_metadata)
+                                elif isinstance(info, dict):
+                                    save_metadata_jsonl(info, opts.save_metadata)
+                            except Exception as meta_err:
+                                self.logger.warning("не удалось сохранить метаданные: %s", meta_err)
+
+                    if not self._incremental_history:
                         self._record_history(
                             history_info,
                             opts,
-                            status="in_progress",
-                            started_at=datetime.utcnow(),
+                            status="success",
+                            finished_at=datetime.now(UTC),
+                            file_paths=dict(self._finished_files),
                         )
 
-                    # extract_info управляет и скачиванием, и dry-run через download=False
-                    info = ydl.extract_info(opts.url, download=not opts.dry_run)
-                    # при dry-run файлов нет — просто выходим
-                    if opts.dry_run:
-                        return []
+                    return self._finished_paths()
+                except Exception as e:  # noqa: BLE001
+                    if self._find_intra_video_pause(e) and self._active_pause_controller is not None:
+                        self._active_pause_controller.wait_if_paused()
+                        intra_pause_restart = True
+                        break
 
-                    if isinstance(info, dict):
-                        history_info = info
+                    if (
+                        not suppress_progress
+                        and not progress_retry_used
+                        and self._should_retry_without_progress(e)
+                    ):
+                        self.logger.warning(
+                            "ошибка progress bar (OSError 22), повтор без прогресс-бара; "
+                            "для постоянного отключения задайте no_progress: true в конфиге"
+                        )
+                        suppress_progress = True
+                        progress_retry_used = True
+                        attempt -= 1
+                        self._finished_files = {}
+                        self._incremental_history = False
+                        continue
 
-                    # Если хуки не отработали (напр., старые версии), попробуем подготовить имя
-                    if not self._finished_files and info:
-                        try:
-                            fn = ydl.prepare_filename(info)
-                            if fn:
-                                self._finished_files.append(Path(fn))
-                        except Exception:
-                            pass
-
-                    # Сохранение метаданных (по каждой записи)
-                    if opts.save_metadata:
-                        try:
-                            if isinstance(info, dict) and info.get("entries"):
-                                for entry in info.get("entries") or []:
-                                    if isinstance(entry, dict):
-                                        save_metadata_jsonl(entry, opts.save_metadata)
-                            elif isinstance(info, dict):
-                                save_metadata_jsonl(info, opts.save_metadata)
-                        except Exception as meta_err:  # не ломаем загрузку из-за метаданных
-                            self.logger.warning("не удалось сохранить метаданные: %s", meta_err)
-
-                self._record_history(
-                    history_info,
-                    opts,
-                    status="success",
-                    finished_at=datetime.utcnow(),
-                    file_paths=list(self._finished_files),
-                )
-
-                return list(self._finished_files)
-            except Exception as e:  # noqa: BLE001 — намеренно широкое перехватывание для ретраев
-                last_err = e
-                is_network_issue = self._looks_like_network_issue(e)
-                self._record_history(
-                    history_info,
-                    opts,
-                    status="failed",
-                    finished_at=datetime.utcnow(),
-                    error=str(e),
-                )
-                if attempt >= max(1, int(opts.retry)):
-                    self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
-                    if is_network_issue:
-                        raise NetworkUnavailableError(str(e), original=e) from e
-                    raise
-                else:
+                    last_err = e
+                    is_network_issue = self._looks_like_network_issue(e)
+                    self._record_history(
+                        history_info,
+                        opts,
+                        status="failed",
+                        finished_at=datetime.now(UTC),
+                        error=str(e),
+                    )
+                    if attempt >= max(1, int(opts.retry)):
+                        self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
+                        if is_network_issue:
+                            raise NetworkUnavailableError(str(e), original=e) from e
+                        raise
                     if is_network_issue:
                         self.logger.warning(
                             "сетевая ошибка (попытка %d/%d): %s; повтор через %.1f с",
@@ -498,12 +652,31 @@ class Downloader:
                         )
                     if delay > 0:
                         time.sleep(delay)
-                    delay *= 2.0  # экспоненциальная задержка
+                    delay *= 2.0
 
-        # Если почему-то вышли из цикла без возврата/исключения
-        if last_err:
-            raise last_err
-        return list(self._finished_files)
+            if intra_pause_restart:
+                continue
+
+            if last_err:
+                raise last_err
+            return self._finished_paths()
+
+    def _find_intra_video_pause(self, exc: BaseException) -> IntraVideoPauseRequested | None:
+        for cause in self._iter_exception_chain(exc):
+            if isinstance(cause, IntraVideoPauseRequested):
+                return cause
+        return None
+
+    def _should_retry_without_progress(self, exc: BaseException) -> bool:
+        return sys.platform == "win32" and self._is_progress_flush_error(exc)
+
+    @staticmethod
+    def _is_progress_flush_error(exc: BaseException) -> bool:
+        """Определить OSError [Errno 22] от flush progress bar yt-dlp."""
+        for cause in Downloader._iter_exception_chain(exc):
+            if isinstance(cause, OSError) and cause.errno == 22:
+                return True
+        return False
 
     @staticmethod
     def _looks_like_network_issue(exc: BaseException) -> bool:
@@ -541,7 +714,7 @@ class Downloader:
     @staticmethod
     def _iter_exception_chain(exc: BaseException) -> Iterator[BaseException]:
         seen: set[int] = set()
-        current: Optional[BaseException] = exc
+        current: BaseException | None = exc
         while current is not None and id(current) not in seen:
             yield current
             seen.add(id(current))

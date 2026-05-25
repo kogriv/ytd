@@ -3,18 +3,17 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Optional
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import typer
 
-from .cli import safe_echo, safe_secho
-
+from .console import safe_echo, safe_secho
 from .utils import (
     extract_quality_suffix,
-    sanitize_filename,
     find_existing_files,
-    find_best_quality_match,
+    sanitize_filename,
 )
 
 
@@ -44,13 +43,13 @@ def build_quality_options(
     height_to_ext: dict[int, str],
     available_heights: list[int],
     max_options: int = 8
-) -> list[tuple[str, str, Optional[int]]]:
+) -> list[tuple[str, str, int | None]]:
     """Построить список опций качества для меню.
     
     Returns:
         List of (label, format_string, target_height)
     """
-    options: list[tuple[str, str, Optional[int]]] = []
+    options: list[tuple[str, str, int | None]] = []
     
     # Лучшее доступное
     options.append(("Лучшее доступное качество", "bestvideo+bestaudio/best", None))
@@ -73,7 +72,7 @@ def build_quality_options(
     return options
 
 
-def show_quality_menu(options: list[tuple[str, str, Optional[int]]]) -> tuple[str, str, Optional[int]]:
+def show_quality_menu(options: list[tuple[str, str, int | None]]) -> tuple[str, str, int | None]:
     """Показать меню выбора качества и вернуть выбранный вариант.
     
     Returns:
@@ -98,7 +97,7 @@ def show_quality_menu(options: list[tuple[str, str, Optional[int]]]) -> tuple[st
         return options[0]
 
 
-def configure_filename_suffix(default_suffix: str) -> Optional[str]:
+def configure_filename_suffix(default_suffix: str) -> str | None:
     """Диалог настройки суффикса качества для имени файла."""
     safe_echo("\nДобавить суффикс качества к имени файла?")
     safe_echo(f"  1) Да, добавить '{default_suffix}'")
@@ -116,7 +115,7 @@ def configure_filename_suffix(default_suffix: str) -> Optional[str]:
         return default_suffix
 
 
-def configure_filename_prefix() -> tuple[Optional[str], bool, Optional[str]]:
+def configure_filename_prefix() -> tuple[str | None, bool, str | None]:
     """Диалог настройки префикса для имени файла.
     
     Returns:
@@ -137,6 +136,87 @@ def configure_filename_prefix() -> tuple[Optional[str], bool, Optional[str]]:
         return (None, True, None)  # custom_name будет установлено в вызывающем коде
     else:
         return (None, False, None)
+
+
+@dataclass
+class SingleVideoSetupResult:
+    chosen_format: str | None
+    chosen_label: str
+    quality_suffix: str | None
+    file_prefix: str | None
+    custom_name: str | None
+    overwrite: bool
+
+
+def run_single_video_interactive_setup(
+    info: dict[str, Any],
+    output_dir: Path,
+    *,
+    initial_overwrite: bool = False,
+) -> SingleVideoSetupResult:
+    """Интерактивный выбор качества, имени файла и перезаписи для одного видео."""
+
+    video_id = info.get("id", "unknown")
+    video_title = info.get("title", "unknown")
+    fmts = info.get("formats") or []
+    height_to_ext, available_heights = collect_available_heights(fmts)
+    quality_options = build_quality_options(height_to_ext, available_heights)
+
+    safe_echo("\n" + "═" * 60)
+    safe_echo("ШАГ 1: Выберите качество")
+    safe_echo("═" * 60)
+    chosen_label, chosen_format, _ = show_quality_menu(quality_options)
+
+    default_suffix = extract_quality_suffix(chosen_format, chosen_label)
+    safe_title = sanitize_filename(video_title)
+    if "audio" in chosen_label.lower():
+        ext_hint = "m4a"
+    else:
+        ext_match = re.search(r"ext=(\w+)", chosen_format or "")
+        ext_hint = ext_match.group(1) if ext_match else "mp4"
+
+    safe_echo("\n" + "═" * 60)
+    safe_echo("ШАГ 2: Настройка имени файла")
+    safe_echo("═" * 60)
+    safe_echo(f"Название: {safe_title} [{video_id}]")
+    safe_echo(f"Расширение: .{ext_hint}")
+    safe_echo(f"Предложенный суффикс качества: {default_suffix}")
+
+    quality_suffix = configure_filename_suffix(default_suffix)
+    name_with_suffix = f"{safe_title} [{video_id}]{quality_suffix or ''}.{ext_hint}"
+
+    safe_echo(f"\nИтоговое имя: {name_with_suffix}")
+    file_prefix: str | None = None
+    custom_name: str | None = None
+
+    prefix, custom_name_used, _ = configure_filename_prefix()
+    if prefix:
+        file_prefix = prefix
+        safe_echo(f"Итоговое имя: {prefix}{name_with_suffix}")
+    elif custom_name_used:
+        new_name = typer.prompt(
+            "Введите полное имя файла (с расширением)",
+            default=name_with_suffix,
+        )
+        custom_name = sanitize_filename(new_name)
+        quality_suffix = None
+        safe_echo(f"Итоговое имя: {custom_name}")
+    else:
+        safe_echo(f"Будет использовано: {name_with_suffix}")
+
+    overwrite = initial_overwrite
+    existing = find_existing_files(output_dir, video_id)
+    if existing:
+        overwrite = check_existing_files_dialog(output_dir, video_id) or overwrite
+
+    return SingleVideoSetupResult(
+        chosen_format=chosen_format,
+        chosen_label=chosen_label,
+        quality_suffix=quality_suffix,
+        file_prefix=file_prefix,
+        custom_name=custom_name,
+        overwrite=overwrite,
+    )
 
 
 def check_existing_files_dialog(output_dir: Path, video_id: str) -> bool:
@@ -190,7 +270,7 @@ def show_playlist_info(playlist_info: dict[str, Any]) -> None:
     safe_echo("═" * 60)
 
 
-def choose_playlist_mode() -> Optional[int]:
+def choose_playlist_mode() -> int | None:
     """Выбрать режим настройки плейлиста.
     
     Returns:
@@ -265,7 +345,7 @@ def configure_quality_fallback() -> str:
 
 def show_unified_settings_summary(
     quality_label: str,
-    quality_suffix: Optional[str],
+    quality_suffix: str | None,
     prefix_template: str,
     strategy: str,
     example_title: str,
@@ -294,7 +374,7 @@ def show_unified_settings_summary(
     prefix_part = prefix_template.replace("{N:02d}", "01").replace("{N:03d}", "001").replace("{N}", "1")
     example_name = f"{prefix_part}{example_title} [{example_id}]{suffix_part}.mp4"
     
-    safe_echo(f"\nПример имени файла:")
+    safe_echo("\nПример имени файла:")
     safe_echo(f"  {example_name}")
     
     confirm = typer.prompt("\nНачать загрузку? (y/n)", default="y")
@@ -461,7 +541,7 @@ def prompt_playlist_resume(
         safe_secho("Введите 1, 2 или 3", fg=typer.colors.RED)
 
 
-def get_entry_url(entry: dict[str, Any]) -> Optional[str]:
+def get_entry_url(entry: dict[str, Any]) -> str | None:
     """Получить URL конкретного видео из элемента плейлиста."""
 
     candidates = (
