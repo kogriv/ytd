@@ -1,9 +1,9 @@
 # Бэклог исправлений ytd
 
-Status: maintenance complete (все BL-* done)  
+Status: Maintenance 1.1 — complete (BL-1xx … BL-10xx done); Maintenance 1.2 — открыт (BL-11xx todo)  
 Owner: @Ivan  
 Created: 2026-05-25  
-Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки синхронизированы)
+Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K по ревью 2026-08-31)
 
 ---
 
@@ -128,6 +128,28 @@ Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки си�
 
 ---
 
+## Спринт K — Maintenance 1.2 (открыт, 2026-08-31)
+
+Источник: [ревью 2026-08-31](./gaps/code_review_2026-08-31.md), дизайн решений — [design_2026-08-31.md](./design_2026-08-31.md).
+
+| ID | Задача | Gap | Priority | Status | Est |
+|----|--------|-----|----------|--------|-----|
+| BL-1101 | TTY-fallback в `wait_if_paused` до платформенной развилки | GAP-CR-026 | P0 | todo | S |
+| BL-1102 | Платформенно-независимые ассерты путей в тестах истории | GAP-CR-027 | P1 | todo | S |
+| BL-1103 | Матрица CI `ubuntu-latest` + `windows-latest` | GAP-CR-028 | P1 | todo | S |
+| BL-1104 | `pytest-timeout` и глобальный лимит на тест | GAP-CR-028 | P1 | todo | S |
+| BL-1105 | Декомпозиция `execute_download` на сценарии + `DownloadContext` | GAP-CR-029 | P2 | todo | L |
+| BL-1106 | Удалить мёртвую ветку повторного опроса истории | GAP-CR-030 | P2 | todo | S |
+| BL-1107 | Снять `urls.local.txt` с отслеживания, добавить `urls.example.txt` | GAP-CR-031 | P1 | todo | S |
+| BL-1108 | Привести раздел «Структура проекта» в README к факту | GAP-CR-032 | P3 | todo | S |
+| BL-1109 | Актуализировать `devplan.md` / `devplan_ru.md` | GAP-CR-033 | P3 | todo | M |
+
+Подробные задачи — в [Группе 11](#группа-11--maintenance-12-ревью-2026-08-31). Рекомендованный порядок и зависимости — в разделе «Порядок внедрения» дизайн-дока.
+
+Состояние на момент открытия спринта (Windows 11, Python 3.14): `ruff check .` — чисто; полный `pytest` **не завершается** (зависает на `tests/test_pause.py::test_wait_if_paused_clears_flag_with_prompt_fallback`); с `--deselect` этого теста — **93 passed, 1 failed, 2 skipped**.
+
+---
+
 ## Назначение документа
 
 Этот бэклог содержит **сгруппированные задачи** на исправление гэпов, выявленных в [архитектурном и кодовом ревью](./gaps/code_review_2026-05-25.md) от 2026-05-25, а также связанных пунктов из существующих gap-документов.
@@ -171,6 +193,7 @@ Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки си�
 | 8 | Документация | 2 | 0 | 1 | 1 | 0 |
 | 9 | Tooling и качество кода | 3 | 0 | 0 | 3 | 0 |
 | 10 | Отложенные фичи (legacy gaps) | 2 | 0 | 0 | 1 | 1 |
+| 11 | Maintenance 1.2 (ревью 2026-08-31) | 9 | 1 | 4 | 2 | 2 |
 
 ---
 
@@ -608,6 +631,169 @@ Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки си�
 
 ---
 
+## Группа 11 — Maintenance 1.2 (ревью 2026-08-31)
+
+Цель: восстановить достоверность прогона тестов на Windows, закрыть кроссплатформенный разрыв в CI, снять накопившийся долг по монолиту `execute_download` и расхождения документации.
+
+Дизайн решений по каждой задаче — [design_2026-08-31.md](./design_2026-08-31.md), разделы D-1 … D-7.
+
+### BL-1101 — TTY-fallback в `wait_if_paused` до платформенной развилки
+
+- **Gap:** [GAP-CR-026](./gaps/code_review_2026-08-31.md#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | **Design:** D-1
+- **Priority:** P0 | **Status:** todo | **Estimate:** S
+
+**Описание.** На Windows `wait_if_paused` уходит в бесконечный `msvcrt.kbhit()` при не-интерактивном stdin: проверка интерактивности есть только в Unix-ветке. Процесс зависает навсегда; полный `pytest` на Windows не завершается.
+
+**Шаги.**
+1. Поднять `if not self._stdin_is_interactive(): self._wait_for_resume_prompt(); return` в `wait_if_paused` — до развилки по `sys.platform`.
+2. Убрать ставшую избыточной проверку из `_wait_for_resume_unix`.
+3. В `_wait_for_resume_windows` заменить `threading.Event().wait(0.1)` на ожидание `self._stop_listener`, чтобы `disable()` разрывал цикл.
+4. Тесты: `test_wait_if_paused_uses_key_backend_on_tty`, `test_disable_interrupts_windows_wait` (skipif не-win32).
+
+**Критерии приёмки.**
+- При `sys.stdin.isatty() == False` цикл ожидания клавиши не запускается ни на одной платформе.
+- `tests/test_pause.py` полностью зелёный на Windows и Linux.
+- Полный `pytest` на Windows завершается без `--deselect`.
+
+---
+
+### BL-1102 — Платформенно-независимые ассерты путей в тестах истории
+
+- **Gap:** [GAP-CR-027](./gaps/code_review_2026-08-31.md#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | **Design:** D-2
+- **Priority:** P1 | **Status:** todo | **Estimate:** S
+
+**Описание.** `tests/test_history_import.py:46,52` сравнивают `file_path` со строкой с `/`, а `HistoryStore` сохраняет нативный путь ОС. На Windows тест падает. Продукт менять не нужно: нативное представление пути — намеренное.
+
+**Шаги.**
+1. Заменить `str.endswith(...)` на сравнение `Path(...) == Path(...)`.
+2. Добавить комментарий, почему нормализация в продукте остаётся нативной.
+3. Проверить остальные тесты на строковые сравнения путей (поиск `endswith("`, `in str(`) и починить аналогично.
+
+**Критерии приёмки.** `tests/test_history_import.py` зелёный на Windows и Linux; в `tests/` нет ассертов, завязанных на разделитель пути.
+
+---
+
+### BL-1103 — Матрица CI: ubuntu + windows
+
+- **Gap:** [GAP-CR-028](./gaps/code_review_2026-08-31.md#gap-cr-028--ci-не-покрывает-windows) | **Design:** D-3
+- **Priority:** P1 | **Status:** todo | **Estimate:** S
+- **Зависимости:** BL-1101, BL-1102, BL-1104 (иначе первая же Windows-сборка повиснет)
+
+**Описание.** CI выполняется только на `ubuntu-latest`, тогда как основная платформа разработки — Windows и в коде есть Windows-специфичные ветки. Два дефекта дошли до `main` именно из-за этого.
+
+**Шаги.**
+1. `strategy.matrix.os: [ubuntu-latest, windows-latest]`, `fail-fast: false` для тестовой джобы.
+2. Вынести `ruff check .` в отдельную джобу `lint` на ubuntu.
+3. Проверить зелёный прогон обеих джоб.
+
+**Критерии приёмки.** Джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные на PR и на push в `main`.
+
+---
+
+### BL-1104 — `pytest-timeout` и глобальный лимит на тест
+
+- **Gap:** [GAP-CR-028](./gaps/code_review_2026-08-31.md#gap-cr-028--ci-не-покрывает-windows) | **Design:** D-3
+- **Priority:** P1 | **Status:** todo | **Estimate:** S
+
+**Описание.** Зависший тест блокирует весь прогон и локально, и в CI. Нужен лимит, превращающий зависание в падение с трассировкой.
+
+**Шаги.**
+1. `pytest-timeout>=2.3` в `[dependency-groups] dev`.
+2. `[tool.pytest.ini_options]`: `timeout = 60`, `timeout_method = "thread"`.
+3. Обновить `uv.lock` (`uv sync`).
+
+**Критерии приёмки.** Искусственно зависший тест падает по таймауту за ≤ 60 с; штатный полный прогон (~40 с) не деградирует.
+
+---
+
+### BL-1105 — Декомпозиция `execute_download`
+
+- **Gap:** [GAP-CR-029](./gaps/code_review_2026-08-31.md#gap-cr-029--execute_download--новый-монолит) | **Design:** D-4
+- **Priority:** P2 | **Status:** todo | **Estimate:** L
+- **Зависимости:** BL-1103 (рефакторинг под защитой двухплатформенного CI)
+
+**Описание.** После BL-104 оркестрация переехала целиком в одну функцию на ~950 строк с семью вложенными замыканиями, захватывающими ~15 переменных. Ветки нельзя тестировать по отдельности; управляющий поток держится на флаге `skip_post_processing`.
+
+**Шаги (по одному коммиту на этап, зелёные тесты после каждого).**
+1. `workflows/context.py`: `DownloadContext`, `DownloadTotals` (+ `merge`, `exit_code`).
+2. `workflows/url_sources.py`, `workflows/info_fetch.py` — чтение `--urls-file`, автодетект/выбор плейлиста, `fetch_info`.
+3. `workflows/single_video.py`.
+4. `workflows/playlist_unified.py`, `workflows/playlist_per_video.py`.
+5. `workflows/playlist_batch.py` + `select_scenario`; удалить `skip_post_processing`.
+6. Свести `execute_download` к подготовке контекста и диспетчеру; обновить `DEVELOPMENT.md`.
+
+**Критерии приёмки.**
+- `execute_download` ≤ ~150 строк; ни один модуль `workflows/` не превышает ~300 строк.
+- Сценарии имеют единую сигнатуру `run(ctx, url, decision) -> DownloadTotals` и не используют замыкания над состоянием команды.
+- Флага `skip_post_processing` в коде нет; выбор сценария однозначен по построению.
+- `tests/test_playlist_regression.py`, `tests/test_cli.py`, `tests/test_interactive_config.py` проходят без изменений логики; exit-коды и итоговые сообщения не изменились.
+
+---
+
+### BL-1106 — Удалить мёртвую ветку повторного опроса истории
+
+- **Gap:** [GAP-CR-030](./gaps/code_review_2026-08-31.md#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | **Design:** D-5
+- **Priority:** P2 | **Status:** todo | **Estimate:** S
+- **Зависимости:** выполняется внутри BL-1105 (этапы 3–5), чтобы не править участок дважды
+
+**Описание.** `download_command.py:902-908`: `if decision is None` недостижимо — `preflight_decision` всегда заполнен. Решение зафиксировано: удалить ветку (повторный опрос был бы регрессом UX, а для элементов плейлиста уточнённый опрос уже выполняется в `process_playlist_entries`).
+
+**Шаги.**
+1. Удалить недостижимую ветку.
+2. Удалить `history_video_id` и его уточнения, если после этого переменная не используется на данном пути (проверка ruff `F841`).
+
+**Критерии приёмки.** Недостижимых веток в `execute_download` нет; `ruff check .` чист; тесты истории зелёные.
+
+---
+
+### BL-1107 — `urls.local.txt` вне репозитория
+
+- **Gap:** [GAP-CR-031](./gaps/code_review_2026-08-31.md#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | **Design:** D-6
+- **Priority:** P1 | **Status:** todo | **Estimate:** S
+
+**Описание.** Файл заявлен как локальный («не попадает в Git»), но отслеживается; правило в `.gitignore:68` закомментировано. В файле реальные ссылки пользователя.
+
+**Шаги.**
+1. `git rm --cached urls.local.txt` (файл остаётся на диске).
+2. Раскомментировать правило и расширить: `urls.local.txt`, `urls.*.local.txt`.
+3. Добавить `urls.example.txt` с синтетическими примерами.
+4. Упомянуть в README рядом с примером `--urls-file`, что рабочий файл локальный.
+5. [ ] Отдельное решение владельца: очищать ли историю коммитов (`git filter-repo` + force-push) — **по умолчанию не выполняется**.
+
+**Критерии приёмки.** `git ls-files urls.local.txt` пусто; локальный файл не отображается как untracked-шум; в репозитории есть `urls.example.txt`.
+
+---
+
+### BL-1108 — «Структура проекта» в README по факту
+
+- **Gap:** [GAP-CR-032](./gaps/code_review_2026-08-31.md#gap-cr-032--readme-описывает-несуществующие-каталоги) | **Design:** D-7
+- **Priority:** P3 | **Status:** todo | **Estimate:** S
+
+**Описание.** README перечисляет `data/.gitkeep` и `downloads/.gitkeep`, которых нет ни в дереве, ни в индексе. Каталоги создаются автоматически при первом запуске.
+
+**Шаги.** Обновить блок структуры; добавить примечание про автосоздание каталогов согласно `output` / `history_db` / `save_metadata`.
+
+**Критерии приёмки.** Структура в README совпадает с `git ls-files`; несуществующие каталоги не упоминаются как существующие.
+
+---
+
+### BL-1109 — Актуализировать devplan
+
+- **Gap:** [GAP-CR-033](./gaps/code_review_2026-08-31.md#gap-cr-033--devplanmd-устарели-относительно-реализации) | **Design:** D-7
+- **Priority:** P3 | **Status:** todo | **Estimate:** M
+
+**Описание.** `devplan.md` / `devplan_ru.md` (27.10.2025) в разделе «Ограничения сейчас» перечисляют как нереализованные: режим «каждое видео отдельно», возобновление загрузок, субтитры — всё это реализовано.
+
+**Шаги.**
+1. Переписать «Ограничения сейчас» под фактическое состояние.
+2. Обновить «Технический долг»: GAP-CR-029, GAP-CR-009, покрытие Windows.
+3. Дополнить «Реализовано» фичами Maintenance 1.1 (cookies, anti-bot hints, intra-video пауза, история SQLite, `no_progress`).
+4. Проставить дату актуализации в шапке обеих версий.
+
+**Критерии приёмки.** Ни одно «ограничение» не противоречит коду на `main`; EN- и RU-версии остаются построчно параллельными и правятся одним коммитом.
+
+---
+
 ## Матрица трассировки Gap → Backlog
 
 | Gap ID | Backlog задачи |
@@ -637,6 +823,16 @@ Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки си�
 | GAP-CR-023 | BL-701 |
 | GAP-CR-024 | BL-901, BL-902 |
 | GAP-CR-025 | BL-903 |
+| GAP-CR-026 | BL-1101 |
+| GAP-CR-027 | BL-1102 |
+| GAP-CR-028 | BL-1103, BL-1104 |
+| GAP-CR-029 | BL-1105 |
+| GAP-CR-030 | BL-1106 |
+| GAP-CR-031 | BL-1107 |
+| GAP-CR-032 | BL-1108 |
+| GAP-CR-033 | BL-1109 |
+
+GAP-CR-001 … GAP-CR-025 — ревью [2026-05-25](./gaps/code_review_2026-05-25.md); GAP-CR-026 … GAP-CR-033 — ревью [2026-08-31](./gaps/code_review_2026-08-31.md).
 
 ---
 
@@ -650,9 +846,25 @@ Last updated: 2026-05-25 (Maintenance 1.1 — бэклог и gap-доки си�
 
 ---
 
+## Чеклист закрытия (Definition of Done для релиза «Maintenance 1.2»)
+
+- [ ] P0: BL-1101 — status `done`
+- [ ] P1: BL-1102, BL-1103, BL-1104, BL-1107 — status `done`
+- [ ] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect`
+- [ ] `ruff check .` чист
+- [ ] CI: джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные
+- [ ] P2/P3: BL-1105, BL-1106, BL-1108, BL-1109 — `done` либо явно перенесены с обоснованием
+- [ ] `docs/gaps/code_review_2026-08-31.md`: статусы GAP-CR-026 … GAP-CR-033 обновлены
+- [ ] `docs/gaps/README.md`: индекс синхронизирован
+
+---
+
 ## Связанные документы
 
-- [Архитектурное и кодовое ревью (полный текст)](./gaps/code_review_2026-05-25.md)
+- [Анализ проекта 2026-08-31](./analysis_2026-08-31.md)
+- [Гэп-ревью 2026-08-31](./gaps/code_review_2026-08-31.md) — GAP-CR-026 … GAP-CR-033
+- [Дизайн исправлений 2026-08-31](./design_2026-08-31.md) — D-1 … D-7
+- [Архитектурное и кодовое ревью 2026-05-25 (полный текст)](./gaps/code_review_2026-05-25.md)
 - [Duplicate downloads + anti-bot](./gaps/doublesave_antibot_issue.md)
 - [Intra-video pause](./gaps/intravideo_pause_todo.md) — BL-1001 done
 - [Дорожная карта (devplan)](./devplan_ru.md)

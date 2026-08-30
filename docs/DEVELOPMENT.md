@@ -4,7 +4,8 @@
 
 - Актуальный README с кратким описанием и примерами использования: [../README.md](../README.md)
 - Бэклог и gap-ревью: [backlog.md](backlog.md), [gaps/code_review_2026-05-25.md](gaps/code_review_2026-05-25.md)
-- Дата обновления: 2026-05-25
+- Текущий цикл: [анализ 2026-08-31](analysis_2026-08-31.md), [гэпы 2026-08-31](gaps/code_review_2026-08-31.md), [дизайн исправлений](design_2026-08-31.md), спринт K в [backlog.md](backlog.md)
+- Дата обновления: 2026-08-31
 
 ---
 
@@ -16,6 +17,8 @@
 - Lint: **ruff** (`uv run ruff check .`), CI на GitHub Actions
 - Реализовано: одиночные видео, плейлисты, интерактив, история SQLite, cookies, anti-bot hints
 - Архитектура CLI: `ytd/workflows/` (`download_command`, `playlist_entries`, `network`, `history_prompts`)
+- Maintenance 1.2 (открыт 2026-08-31): 8 гэпов `GAP-CR-026` … `GAP-CR-033`, задачи BL-1101 … BL-1109
+- Известно на 2026-08-31: полный `pytest` на Windows зависает на `tests/test_pause.py::test_wait_if_paused_clears_flag_with_prompt_fallback` (BL-1101), падает `tests/test_history_import.py::test_import_from_jsonl_populates_history` (BL-1102); на Linux/CI прогон зелёный
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---
