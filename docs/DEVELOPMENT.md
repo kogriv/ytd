@@ -14,12 +14,13 @@
 - MVP: завершён (2025-10-26)
 - Python **3.14**, менеджер зависимостей **uv**, виртуальное окружение `.venv`
 - Тесты: **95+** unit ( `uv run pytest` ); интеграционные — при `YTD_IT_URL`
-- Lint: **ruff** (`uv run ruff check .`), CI на GitHub Actions
+- Lint: **ruff** (`uv run ruff check .`), CI на GitHub Actions: матрица `ubuntu-latest` + `windows-latest` (тесты) и отдельная джоба `lint`
 - Реализовано: одиночные видео, плейлисты, интерактив, история SQLite, cookies, anti-bot hints
 - Архитектура CLI: `ytd/workflows/` (`download_command`, `playlist_entries`, `network`, `history_prompts`)
 - Maintenance 1.2 (открыт 2026-08-31): 8 гэпов `GAP-CR-026` … `GAP-CR-033`, задачи BL-1101 … BL-1109
 - Блок 1 закрыт (2026-08-31): BL-1104 (`pytest-timeout`, `timeout = 60`), BL-1101 (TTY-fallback в `wait_if_paused`), BL-1102 (`Path`-ассерты), BL-1107 (`urls.local.txt` вне git). Полный `pytest` на Windows: **97 passed, 2 skipped** за ~33 с
-- В работе: BL-1103 (матрица CI ubuntu + windows), далее BL-1105/BL-1106 (декомпозиция `execute_download`), BL-1108/BL-1109 (документация)
+- Блок 2 закрыт (2026-08-31): BL-1103 — матрица CI; прогон зелёный на обеих платформах (ubuntu 96 passed / 3 skipped, windows 97 passed / 2 skipped, lint passed)
+- В работе: BL-1105/BL-1106 (декомпозиция `execute_download`), затем BL-1108/BL-1109 (документация)
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---

@@ -136,7 +136,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 |----|--------|-----|----------|--------|-----|
 | BL-1101 | TTY-fallback в `wait_if_paused` до платформенной развилки | GAP-CR-026 | P0 | **done** | S |
 | BL-1102 | Платформенно-независимые ассерты путей в тестах истории | GAP-CR-027 | P1 | **done** | S |
-| BL-1103 | Матрица CI `ubuntu-latest` + `windows-latest` | GAP-CR-028 | P1 | todo | S |
+| BL-1103 | Матрица CI `ubuntu-latest` + `windows-latest` | GAP-CR-028 | P1 | **done** | S |
 | BL-1104 | `pytest-timeout` и глобальный лимит на тест | GAP-CR-028 | P1 | **done** | S |
 | BL-1105 | Декомпозиция `execute_download` на сценарии + `DownloadContext` | GAP-CR-029 | P2 | todo | L |
 | BL-1106 | Удалить мёртвую ветку повторного опроса истории | GAP-CR-030 | P2 | todo | S |
@@ -148,7 +148,9 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 
 Состояние на момент открытия спринта (Windows 11, Python 3.14): `ruff check .` — чисто; полный `pytest` **не завершается** (зависает на `tests/test_pause.py::test_wait_if_paused_clears_flag_with_prompt_fallback`); с `--deselect` этого теста — **93 passed, 1 failed, 2 skipped**.
 
-Состояние после блока 1 (BL-1104 → BL-1101 → BL-1102, 2026-08-31): полный `pytest` на Windows завершается без `--deselect` — **97 passed, 2 skipped** за 32.7 с; `ruff check .` чисто. Осталось в спринте: BL-1103, BL-1105, BL-1106, BL-1108, BL-1109.
+Состояние после блока 1 (BL-1104 → BL-1101 → BL-1102, 2026-08-31): полный `pytest` на Windows завершается без `--deselect` — **97 passed, 2 skipped** за 32.7 с; `ruff check .` чисто.
+
+Состояние после блока 2 (BL-1103, 2026-08-31): CI зелёный на обеих платформах — `test (ubuntu-latest)` 96 passed / 3 skipped, `test (windows-latest)` 97 passed / 2 skipped, `lint` passed. Осталось в спринте: BL-1105, BL-1106, BL-1108, BL-1109.
 
 ---
 
@@ -682,7 +684,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 ### BL-1103 — Матрица CI: ubuntu + windows
 
 - **Gap:** [GAP-CR-028](./gaps/code_review_2026-08-31.md#gap-cr-028--ci-не-покрывает-windows) | **Design:** D-3
-- **Priority:** P1 | **Status:** todo | **Estimate:** S
+- **Priority:** P1 | **Status:** done (2026-08-31) | **Estimate:** S
 - **Зависимости:** BL-1101, BL-1102, BL-1104 (иначе первая же Windows-сборка повиснет)
 
 **Описание.** CI выполняется только на `ubuntu-latest`, тогда как основная платформа разработки — Windows и в коде есть Windows-специфичные ветки. Два дефекта дошли до `main` именно из-за этого.
@@ -693,6 +695,16 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 3. Проверить зелёный прогон обеих джоб.
 
 **Критерии приёмки.** Джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные на PR и на push в `main`.
+
+**Реализовано (2026-08-31).** Первый прогон матрицы (`33342899092`) — success:
+
+| Джоба | Результат | Время |
+|-------|-----------|-------|
+| `test (ubuntu-latest)` | 96 passed, 3 skipped за 31.4 с | 42 с |
+| `test (windows-latest)` | 97 passed, 2 skipped за 35.9 с | 57 с |
+| `lint` | All checks passed | 10 с |
+
+Расхождение в счётчиках ожидаемое: `test_wait_for_resume_windows_exits_when_listener_stopped` помечен `skipif(sys.platform != "win32")`, на Linux уходит в skip. Обе платформы собирают одинаковые 99 тестов; Windows-результат в CI совпал с локальным прогоном.
 
 ---
 
@@ -861,10 +873,10 @@ GAP-CR-001 … GAP-CR-025 — ревью [2026-05-25](./gaps/code_review_2026-05
 ## Чеклист закрытия (Definition of Done для релиза «Maintenance 1.2»)
 
 - [x] P0: BL-1101 — status `done`
-- [ ] P1: BL-1102 ✅, BL-1104 ✅, BL-1107 ✅, BL-1103 — осталось
-- [ ] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect` — Windows проверен локально (97 passed, 2 skipped); Linux подтверждается прогоном CI
+- [x] P1: BL-1102, BL-1103, BL-1104, BL-1107 — status `done`
+- [x] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect`
 - [x] `ruff check .` чист
-- [ ] CI: джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные
+- [x] CI: джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные
 - [ ] P2/P3: BL-1105, BL-1106, BL-1108, BL-1109 — `done` либо явно перенесены с обоснованием
 - [ ] `docs/gaps/code_review_2026-08-31.md`: статусы GAP-CR-026 … GAP-CR-033 обновлены
 - [ ] `docs/gaps/README.md`: индекс синхронизирован

@@ -23,7 +23,7 @@ Owner: @Ivan
 |----|----------|--------|------------------|--------|
 | [GAP-CR-026](#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | высокая | **fixed** | `wait_if_paused` вешает процесс на Windows без TTY | BL-1101 |
 | [GAP-CR-027](#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | средняя | **fixed** | Тест импорта истории завязан на POSIX-разделитель | BL-1102 |
-| [GAP-CR-028](#gap-cr-028--ci-не-покрывает-windows) | средняя | in_progress | CI не покрывает Windows | BL-1103, BL-1104 ✅ |
+| [GAP-CR-028](#gap-cr-028--ci-не-покрывает-windows) | средняя | **fixed** | CI не покрывает Windows | BL-1103, BL-1104 |
 | [GAP-CR-029](#gap-cr-029--execute_download--новый-монолит) | средняя | open | `execute_download` — новый монолит (999 строк) | BL-1105 |
 | [GAP-CR-030](#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | низкая | open | Мёртвая ветка повторного опроса истории | BL-1106 |
 | [GAP-CR-031](#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | средняя | **fixed** | `urls.local.txt` с личными ссылками в репозитории | BL-1107 |
@@ -137,8 +137,8 @@ E   +  where False = 'downloads\\first.mp4'.endswith('downloads/first.mp4')
 ## GAP-CR-028 — CI не покрывает Windows
 
 **Severity:** средняя
-**Status:** in_progress (BL-1104 done 2026-08-31; BL-1103 — матрица платформ — осталась)
-**Location:** `.github/workflows/test.yml:10`
+**Status:** fixed (2026-08-31, BL-1103 + BL-1104)
+**Location:** `.github/workflows/test.yml:10` — на момент обнаружения
 
 ### Описание
 
@@ -164,7 +164,9 @@ E   +  where False = 'downloads\\first.mp4'.endswith('downloads/first.mp4')
 
 **BL-1104 закрыт:** `pytest-timeout==2.4.0` в dev-группе, `timeout = 60` и `timeout_method = "thread"` в `[tool.pytest.ini_options]`. Механизм проверен на реальном зависании до исправления GAP-CR-026: прогон упал по таймауту с трассировкой, указывающей на конкретную строку цикла ожидания.
 
-**BL-1103 (матрица платформ) остаётся открытым.** Предусловия для его включения выполнены: GAP-CR-026 и GAP-CR-027 закрыты, полный прогон на Windows зелёный (97 passed, 2 skipped).
+**BL-1103 закрыт:** тестовая джоба переведена на `strategy.matrix.os: [ubuntu-latest, windows-latest]` с `fail-fast: false`, ruff вынесен в отдельную джобу `lint`. Первый прогон матрицы (`33342899092`) — success: `test (ubuntu-latest)` 96 passed / 3 skipped за 31.4 с, `test (windows-latest)` 97 passed / 2 skipped за 35.9 с, `lint` passed. Общее время прогона выросло с ~47 с до ~57 с (джобы идут параллельно).
+
+Расхождение в счётчиках ожидаемое: `test_wait_for_resume_windows_exits_when_listener_stopped` помечен `skipif(sys.platform != "win32")`. Обе платформы собирают одинаковые 99 тестов, Windows-результат в CI совпал с локальным прогоном — класс дефектов «работает на Linux, ломается на Windows» теперь ловится автоматически.
 
 ---
 
