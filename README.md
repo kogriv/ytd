@@ -52,6 +52,7 @@
   - Работает для YouTube, VK и других площадок, которые поддерживает yt-dlp
 - **Загрузка списка ссылок из файла** (одна строка — один URL, `#` — комментарии):
   - `ytd download --urls-file urls.local.txt`
+  - Шаблон — `urls.example.txt`; скопируйте его в `urls.local.txt` и подставьте свои ссылки. Файлы `urls.local.txt` и `urls.*.local.txt` игнорируются git и не попадают в репозиторий.
 - **Интерактивный выбор качества** (по умолчанию выключен; см. `interactive_by_default` в конфиге):
   - `ytd download URL --interactive` — принудительно включить
   - `ytd download URL --no-interactive` — принудительно выключить

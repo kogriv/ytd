@@ -65,7 +65,8 @@ downloads_test/
 *.opus
 
 # Local URLs files (do not commit real links)
-# urls.local.txt
+urls.local.txt
+urls.*.local.txt
 
 # Local tools (portable binaries)
 tools/

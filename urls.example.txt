@@ -1,0 +1,22 @@
+# Пример файла со списком ссылок для пакетной загрузки.
+#
+# Скопируйте его в urls.local.txt (этот файл игнорируется git) и подставьте свои ссылки:
+#   Linux/macOS: cp urls.example.txt urls.local.txt
+#   PowerShell:  Copy-Item urls.example.txt urls.local.txt
+#
+# Запуск:
+#   ytd download --urls-file urls.local.txt
+#
+# Правила формата:
+#   - одна ссылка в строке;
+#   - пустые строки пропускаются;
+#   - строки, начинающиеся с #, считаются комментариями.
+
+# Одиночное видео:
+# https://www.youtube.com/watch?v=VIDEO_ID
+
+# Плейлист (распознаётся автоматически, флаг --playlist не обязателен):
+# https://www.youtube.com/playlist?list=PLAYLIST_ID
+
+# Другие площадки, поддерживаемые yt-dlp:
+# https://vk.com/video-00000000_000000000
