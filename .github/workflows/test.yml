@@ -7,7 +7,14 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # Windows — основная платформа разработки, поэтому проверяется наравне с Linux (BL-1103).
+    # fail-fast: false — падение на одной ОС не должно скрывать результат другой.
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +28,20 @@ jobs:
 
       - name: Run tests
         run: uv run pytest -q
+
+  lint:
+    # Ruff платформенно-независим — достаточно одного прогона.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
 
       - name: Ruff lint
         run: uv run ruff check .
