@@ -134,19 +134,21 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 
 | ID | Задача | Gap | Priority | Status | Est |
 |----|--------|-----|----------|--------|-----|
-| BL-1101 | TTY-fallback в `wait_if_paused` до платформенной развилки | GAP-CR-026 | P0 | todo | S |
-| BL-1102 | Платформенно-независимые ассерты путей в тестах истории | GAP-CR-027 | P1 | todo | S |
+| BL-1101 | TTY-fallback в `wait_if_paused` до платформенной развилки | GAP-CR-026 | P0 | **done** | S |
+| BL-1102 | Платформенно-независимые ассерты путей в тестах истории | GAP-CR-027 | P1 | **done** | S |
 | BL-1103 | Матрица CI `ubuntu-latest` + `windows-latest` | GAP-CR-028 | P1 | todo | S |
-| BL-1104 | `pytest-timeout` и глобальный лимит на тест | GAP-CR-028 | P1 | todo | S |
+| BL-1104 | `pytest-timeout` и глобальный лимит на тест | GAP-CR-028 | P1 | **done** | S |
 | BL-1105 | Декомпозиция `execute_download` на сценарии + `DownloadContext` | GAP-CR-029 | P2 | todo | L |
 | BL-1106 | Удалить мёртвую ветку повторного опроса истории | GAP-CR-030 | P2 | todo | S |
-| BL-1107 | Снять `urls.local.txt` с отслеживания, добавить `urls.example.txt` | GAP-CR-031 | P1 | todo | S |
+| BL-1107 | Снять `urls.local.txt` с отслеживания, добавить `urls.example.txt` | GAP-CR-031 | P1 | **done** | S |
 | BL-1108 | Привести раздел «Структура проекта» в README к факту | GAP-CR-032 | P3 | todo | S |
 | BL-1109 | Актуализировать `devplan.md` / `devplan_ru.md` | GAP-CR-033 | P3 | todo | M |
 
 Подробные задачи — в [Группе 11](#группа-11--maintenance-12-ревью-2026-08-31). Рекомендованный порядок и зависимости — в разделе «Порядок внедрения» дизайн-дока.
 
 Состояние на момент открытия спринта (Windows 11, Python 3.14): `ruff check .` — чисто; полный `pytest` **не завершается** (зависает на `tests/test_pause.py::test_wait_if_paused_clears_flag_with_prompt_fallback`); с `--deselect` этого теста — **93 passed, 1 failed, 2 skipped**.
+
+Состояние после блока 1 (BL-1104 → BL-1101 → BL-1102, 2026-08-31): полный `pytest` на Windows завершается без `--deselect` — **97 passed, 2 skipped** за 32.7 с; `ruff check .` чисто. Осталось в спринте: BL-1103, BL-1105, BL-1106, BL-1108, BL-1109.
 
 ---
 
@@ -640,7 +642,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 ### BL-1101 — TTY-fallback в `wait_if_paused` до платформенной развилки
 
 - **Gap:** [GAP-CR-026](./gaps/code_review_2026-08-31.md#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | **Design:** D-1
-- **Priority:** P0 | **Status:** todo | **Estimate:** S
+- **Priority:** P0 | **Status:** done (2026-08-31) | **Estimate:** S
 
 **Описание.** На Windows `wait_if_paused` уходит в бесконечный `msvcrt.kbhit()` при не-интерактивном stdin: проверка интерактивности есть только в Unix-ветке. Процесс зависает навсегда; полный `pytest` на Windows не завершается.
 
@@ -655,12 +657,14 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 - `tests/test_pause.py` полностью зелёный на Windows и Linux.
 - Полный `pytest` на Windows завершается без `--deselect`.
 
+**Реализовано (2026-08-31).** Проверка `_stdin_is_interactive()` поднята в `wait_if_paused` (`ytd/pause.py:156`) с общим fallback на `_wait_for_resume_prompt`; дублирующая проверка удалена из `_wait_for_resume_unix`; оба цикла ожидания идут по `while not self._stop_listener.is_set()` с ожиданием на событии вместо `threading.Event().wait`. Тесты: `test_wait_if_paused_uses_key_backend_on_tty`, `test_wait_for_resume_windows_exits_when_listener_stopped` (skipif не-win32). `tests/test_pause.py` — 7 passed на Windows.
+
 ---
 
 ### BL-1102 — Платформенно-независимые ассерты путей в тестах истории
 
 - **Gap:** [GAP-CR-027](./gaps/code_review_2026-08-31.md#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | **Design:** D-2
-- **Priority:** P1 | **Status:** todo | **Estimate:** S
+- **Priority:** P1 | **Status:** done (2026-08-31) | **Estimate:** S
 
 **Описание.** `tests/test_history_import.py:46,52` сравнивают `file_path` со строкой с `/`, а `HistoryStore` сохраняет нативный путь ОС. На Windows тест падает. Продукт менять не нужно: нативное представление пути — намеренное.
 
@@ -670,6 +674,8 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 3. Проверить остальные тесты на строковые сравнения путей (поиск `endswith("`, `in str(`) и починить аналогично.
 
 **Критерии приёмки.** `tests/test_history_import.py` зелёный на Windows и Linux; в `tests/` нет ассертов, завязанных на разделитель пути.
+
+**Реализовано (2026-08-31).** Ассерты переведены на `Path(...) == Path(...)`, добавлен комментарий о намеренной нативной нормализации `file_path`. Аудит остальных тестов: `test_downloader_history.py:121,124` и `test_utils.py:28` сравнивают только имя файла/расширение без разделителя — правки не требуют.
 
 ---
 
@@ -693,7 +699,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 ### BL-1104 — `pytest-timeout` и глобальный лимит на тест
 
 - **Gap:** [GAP-CR-028](./gaps/code_review_2026-08-31.md#gap-cr-028--ci-не-покрывает-windows) | **Design:** D-3
-- **Priority:** P1 | **Status:** todo | **Estimate:** S
+- **Priority:** P1 | **Status:** done (2026-08-31) | **Estimate:** S
 
 **Описание.** Зависший тест блокирует весь прогон и локально, и в CI. Нужен лимит, превращающий зависание в падение с трассировкой.
 
@@ -703,6 +709,8 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 3. Обновить `uv.lock` (`uv sync`).
 
 **Критерии приёмки.** Искусственно зависший тест падает по таймауту за ≤ 60 с; штатный полный прогон (~40 с) не деградирует.
+
+**Реализовано (2026-08-31).** `pytest-timeout==2.4.0` установлен через `uv sync`, `uv.lock` обновлён; `[tool.pytest.ini_options]` — `timeout = 60`, `timeout_method = "thread"`. Проверено на реальном зависании (до BL-1101): прогон упал по таймауту с трассировкой, указывающей точно на `ytd/pause.py:179`.
 
 ---
 
@@ -749,18 +757,22 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 ### BL-1107 — `urls.local.txt` вне репозитория
 
 - **Gap:** [GAP-CR-031](./gaps/code_review_2026-08-31.md#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | **Design:** D-6
-- **Priority:** P1 | **Status:** todo | **Estimate:** S
+- **Priority:** P1 | **Status:** done (2026-08-31) | **Estimate:** S
 
 **Описание.** Файл заявлен как локальный («не попадает в Git»), но отслеживается; правило в `.gitignore:68` закомментировано. В файле реальные ссылки пользователя.
 
 **Шаги.**
-1. `git rm --cached urls.local.txt` (файл остаётся на диске).
-2. Раскомментировать правило и расширить: `urls.local.txt`, `urls.*.local.txt`.
-3. Добавить `urls.example.txt` с синтетическими примерами.
-4. Упомянуть в README рядом с примером `--urls-file`, что рабочий файл локальный.
-5. [ ] Отдельное решение владельца: очищать ли историю коммитов (`git filter-repo` + force-push) — **по умолчанию не выполняется**.
+1. [x] `git rm --cached urls.local.txt` (файл остаётся на диске).
+2. [x] Раскомментировать правило и расширить: `urls.local.txt`, `urls.*.local.txt` (`.gitignore:68-69`).
+3. [x] Добавить `urls.example.txt` с синтетическими примерами.
+4. [x] Упомянуть в README рядом с примером `--urls-file`, что рабочий файл локальный.
+5. [x] Отдельное решение владельца: очищать ли историю коммитов (`git filter-repo` + force-push).
+   **Решение (2026-08-31): историю не переписываем.** Ссылки остаются в прошлых ревизиях;
+   репозиторий приватный, риск ограничен участниками с доступом. Переписывание истории
+   ломает клоны, форки и PR, что перевешивает выгоду. К вопросу не возвращаемся без
+   изменения статуса репозитория (например, перед публикацией).
 
-**Критерии приёмки.** `git ls-files urls.local.txt` пусто; локальный файл не отображается как untracked-шум; в репозитории есть `urls.example.txt`.
+**Критерии приёмки.** `git ls-files urls.local.txt` пусто; локальный файл не отображается как untracked-шум; в репозитории есть `urls.example.txt`. — Выполнено.
 
 ---
 
@@ -848,10 +860,10 @@ GAP-CR-001 … GAP-CR-025 — ревью [2026-05-25](./gaps/code_review_2026-05
 
 ## Чеклист закрытия (Definition of Done для релиза «Maintenance 1.2»)
 
-- [ ] P0: BL-1101 — status `done`
-- [ ] P1: BL-1102, BL-1103, BL-1104, BL-1107 — status `done`
-- [ ] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect`
-- [ ] `ruff check .` чист
+- [x] P0: BL-1101 — status `done`
+- [ ] P1: BL-1102 ✅, BL-1104 ✅, BL-1107 ✅, BL-1103 — осталось
+- [ ] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect` — Windows проверен локально (97 passed, 2 skipped); Linux подтверждается прогоном CI
+- [x] `ruff check .` чист
 - [ ] CI: джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные
 - [ ] P2/P3: BL-1105, BL-1106, BL-1108, BL-1109 — `done` либо явно перенесены с обоснованием
 - [ ] `docs/gaps/code_review_2026-08-31.md`: статусы GAP-CR-026 … GAP-CR-033 обновлены

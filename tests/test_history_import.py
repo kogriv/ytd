@@ -40,16 +40,19 @@ def test_import_from_jsonl_populates_history(tmp_path: Path, meta_file: Path) ->
     entries = list_downloads()
     assert len(entries) == 2
 
+    # file_path хранится в нативном для ОС виде (на Windows — с обратными слэшами):
+    # значение показывается пользователю в `ytd history show` и должно быть пригодно
+    # для копирования в его оболочку. Поэтому сравниваем через Path, а не по строке.
     first = {item["video_id"]: item for item in entries}["yt:aaa11111111"]
     assert first["title"] == "Первое"
     assert first["url"] == "https://youtu.be/aaa11111111"
-    assert first["file_path"].endswith("downloads/first.mp4")
+    assert Path(first["file_path"]) == Path("downloads/first.mp4")
     assert first["finished_at"] == datetime.strptime("20240511", "%Y%m%d").isoformat()
 
     second = {item["video_id"]: item for item in entries}["yt:bbb22222222"]
     expected_ts = datetime.fromtimestamp(0).isoformat(timespec="seconds")
     assert second["finished_at"] == expected_ts
-    assert second["file_path"].endswith("downloads/second.mp4")
+    assert Path(second["file_path"]) == Path("downloads/second.mp4")
 
 
 def test_import_from_jsonl_skips_when_table_not_empty(tmp_path: Path, meta_file: Path) -> None:

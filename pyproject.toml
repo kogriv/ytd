@@ -33,8 +33,15 @@ dependencies = [
 [dependency-groups]
 dev = [
   "pytest>=9",
+  "pytest-timeout>=2.3",
   "ruff>=0.9",
 ]
+
+[tool.pytest.ini_options]
+# Зависший тест должен падать с трассировкой, а не блокировать весь прогон (BL-1104).
+# Полный прогон занимает ~40 с, поэтому 60 с на тест — с запасом.
+timeout = 60
+timeout_method = "thread"
 
 [tool.ruff]
 line-length = 120

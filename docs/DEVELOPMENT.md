@@ -18,7 +18,8 @@
 - Реализовано: одиночные видео, плейлисты, интерактив, история SQLite, cookies, anti-bot hints
 - Архитектура CLI: `ytd/workflows/` (`download_command`, `playlist_entries`, `network`, `history_prompts`)
 - Maintenance 1.2 (открыт 2026-08-31): 8 гэпов `GAP-CR-026` … `GAP-CR-033`, задачи BL-1101 … BL-1109
-- Известно на 2026-08-31: полный `pytest` на Windows зависает на `tests/test_pause.py::test_wait_if_paused_clears_flag_with_prompt_fallback` (BL-1101), падает `tests/test_history_import.py::test_import_from_jsonl_populates_history` (BL-1102); на Linux/CI прогон зелёный
+- Блок 1 закрыт (2026-08-31): BL-1104 (`pytest-timeout`, `timeout = 60`), BL-1101 (TTY-fallback в `wait_if_paused`), BL-1102 (`Path`-ассерты), BL-1107 (`urls.local.txt` вне git). Полный `pytest` на Windows: **97 passed, 2 skipped** за ~33 с
+- В работе: BL-1103 (матрица CI ubuntu + windows), далее BL-1105/BL-1106 (декомпозиция `execute_download`), BL-1108/BL-1109 (документация)
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---

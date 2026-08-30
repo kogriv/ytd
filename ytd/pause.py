@@ -150,6 +150,17 @@ class PauseController:
         safe_echo("-" * 60)
         if self.intra_video:
             safe_echo("Загрузка приостановлена. Частичный файл сохранён — продолжение с места остановки.")
+
+        # Проверка интерактивности выполняется до платформенной развилки: без TTY клавиши
+        # недоступны ни на одной платформе, и обе ветки уходят в общий fallback.
+        if not self._stdin_is_interactive():
+            safe_secho(
+                "Клавиши недоступны: stdin не интерактивный терминал.",
+                fg=typer.colors.YELLOW,
+            )
+            self._wait_for_resume_prompt()
+            return
+
         safe_secho(
             f"Нажмите '{self.resume_key}' для возобновления или Ctrl+C для выхода...",
             fg=typer.colors.CYAN,
@@ -167,7 +178,8 @@ class PauseController:
             self._wait_for_resume_prompt()
             return
 
-        while True:
+        # Цикл прерывается по _stop_listener, чтобы disable() не оставлял процесс висеть.
+        while not self._stop_listener.is_set():
             if msvcrt.kbhit():
                 try:
                     char = msvcrt.getch().decode("utf-8", errors="ignore").lower()
@@ -176,13 +188,9 @@ class PauseController:
                         return
                 except Exception:
                     pass
-            threading.Event().wait(timeout=0.1)
+            self._stop_listener.wait(timeout=0.1)
 
     def _wait_for_resume_unix(self) -> None:
-        if not self._stdin_is_interactive():
-            self._wait_for_resume_prompt()
-            return
-
         import select
         import termios
         import tty
@@ -191,7 +199,7 @@ class PauseController:
         old_settings = termios.tcgetattr(fd)
         try:
             tty.setcbreak(fd)
-            while True:
+            while not self._stop_listener.is_set():
                 ready, _, _ = select.select([sys.stdin], [], [], 0.1)
                 if not ready:
                     continue

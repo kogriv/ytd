@@ -21,12 +21,12 @@ Owner: @Ivan
 
 | ID | Severity | Status | Краткое название | Задача |
 |----|----------|--------|------------------|--------|
-| [GAP-CR-026](#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | высокая | open | `wait_if_paused` вешает процесс на Windows без TTY | BL-1101 |
-| [GAP-CR-027](#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | средняя | open | Тест импорта истории завязан на POSIX-разделитель | BL-1102 |
-| [GAP-CR-028](#gap-cr-028--ci-не-покрывает-windows) | средняя | open | CI не покрывает Windows | BL-1103, BL-1104 |
+| [GAP-CR-026](#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | высокая | **fixed** | `wait_if_paused` вешает процесс на Windows без TTY | BL-1101 |
+| [GAP-CR-027](#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | средняя | **fixed** | Тест импорта истории завязан на POSIX-разделитель | BL-1102 |
+| [GAP-CR-028](#gap-cr-028--ci-не-покрывает-windows) | средняя | in_progress | CI не покрывает Windows | BL-1103, BL-1104 ✅ |
 | [GAP-CR-029](#gap-cr-029--execute_download--новый-монолит) | средняя | open | `execute_download` — новый монолит (999 строк) | BL-1105 |
 | [GAP-CR-030](#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | низкая | open | Мёртвая ветка повторного опроса истории | BL-1106 |
-| [GAP-CR-031](#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | средняя | open | `urls.local.txt` с личными ссылками в репозитории | BL-1107 |
+| [GAP-CR-031](#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | средняя | **fixed** | `urls.local.txt` с личными ссылками в репозитории | BL-1107 |
 | [GAP-CR-032](#gap-cr-032--readme-описывает-несуществующие-каталоги) | низкая | open | README описывает несуществующие каталоги | BL-1108 |
 | [GAP-CR-033](#gap-cr-033--devplanmd-устарели-относительно-реализации) | низкая | open | `devplan*.md` устарели относительно реализации | BL-1109 |
 
@@ -37,8 +37,8 @@ Owner: @Ivan
 ## GAP-CR-026 — `wait_if_paused` вешает процесс на Windows без TTY
 
 **Severity:** высокая
-**Status:** open
-**Location:** `ytd/pause.py:143` (`wait_if_paused`), `ytd/pause.py:163` (`_wait_for_resume_windows`)
+**Status:** fixed (2026-08-31, BL-1101)
+**Location:** `ytd/pause.py:143` (`wait_if_paused`), `ytd/pause.py:163` (`_wait_for_resume_windows`) — на момент обнаружения
 **Проявление:** `tests/test_pause.py:29` зависает бесконечно; полный `pytest` на Windows не завершается
 
 ### Описание
@@ -88,13 +88,19 @@ Windows-ветка такой проверки **не содержит**: еди
 - `tests/test_pause.py` полностью проходит на Windows и Linux.
 - Полный `pytest` на Windows завершается без `--deselect`.
 
+### Что сделано (2026-08-31)
+
+Проверка `_stdin_is_interactive()` поднята в `wait_if_paused` до платформенной развилки (`ytd/pause.py:156`): без TTY обе платформы уходят в `_wait_for_resume_prompt()`. Дублирующая проверка удалена из `_wait_for_resume_unix`. Оба цикла ожидания клавиши переведены на `while not self._stop_listener.is_set()` с ожиданием на самом событии — `disable()` теперь разрывает ожидание вместо того, чтобы оставлять процесс висеть.
+
+Тесты: `test_wait_if_paused_uses_key_backend_on_tty` (на TTY используется платформенный бэкенд, prompt не вызывается), `test_wait_for_resume_windows_exits_when_listener_stopped` (skipif не-win32). `tests/test_pause.py` — 7 passed на Windows; полный прогон завершается без `--deselect`.
+
 ---
 
 ## GAP-CR-027 — Тест импорта истории завязан на POSIX-разделитель путей
 
 **Severity:** средняя
-**Status:** open
-**Location:** `tests/test_history_import.py:46`, `tests/test_history_import.py:52`
+**Status:** fixed (2026-08-31, BL-1102)
+**Location:** `tests/test_history_import.py:46`, `tests/test_history_import.py:52` — на момент обнаружения
 
 ### Описание
 
@@ -122,12 +128,16 @@ E   +  where False = 'downloads\\first.mp4'.endswith('downloads/first.mp4')
 - Ассерты сравнивают пути платформенно-независимо (через `Path` или `as_posix()`).
 - `tests/test_history_import.py` зелёный на Windows и Linux.
 
+### Что сделано (2026-08-31)
+
+Ассерты переведены на сравнение `Path(...) == Path(...)`; рядом оставлен комментарий, что нативная нормализация `file_path` в продукте намеренная и менять её не нужно. Аудит остальных тестов на строковые сравнения путей: `tests/test_downloader_history.py:121,124` и `tests/test_utils.py:28` сравнивают только имя файла и расширение — разделитель в них не участвует, правки не требуются.
+
 ---
 
 ## GAP-CR-028 — CI не покрывает Windows
 
 **Severity:** средняя
-**Status:** open
+**Status:** in_progress (BL-1104 done 2026-08-31; BL-1103 — матрица платформ — осталась)
 **Location:** `.github/workflows/test.yml:10`
 
 ### Описание
@@ -149,6 +159,12 @@ E   +  where False = 'downloads\\first.mp4'.endswith('downloads/first.mp4')
 - Матрица `os: [ubuntu-latest, windows-latest]` в тестовой джобе; линт достаточно оставить на одной ОС.
 - Подключён `pytest-timeout` (или эквивалент), зависший тест падает по таймауту, а не блокирует прогон.
 - Обе джобы зелёные после закрытия GAP-CR-026 и GAP-CR-027.
+
+### Что сделано (2026-08-31)
+
+**BL-1104 закрыт:** `pytest-timeout==2.4.0` в dev-группе, `timeout = 60` и `timeout_method = "thread"` в `[tool.pytest.ini_options]`. Механизм проверен на реальном зависании до исправления GAP-CR-026: прогон упал по таймауту с трассировкой, указывающей на конкретную строку цикла ожидания.
+
+**BL-1103 (матрица платформ) остаётся открытым.** Предусловия для его включения выполнены: GAP-CR-026 и GAP-CR-027 закрыты, полный прогон на Windows зелёный (97 passed, 2 skipped).
 
 ---
 
@@ -223,8 +239,8 @@ if decision is None:
 ## GAP-CR-031 — `urls.local.txt` с личными ссылками в репозитории
 
 **Severity:** средняя
-**Status:** open
-**Location:** `urls.local.txt` (отслеживается git), `.gitignore:67-68`
+**Status:** fixed (2026-08-31, BL-1107)
+**Location:** `urls.local.txt` (отслеживался git), `.gitignore:67-69`
 
 ### Описание
 
@@ -248,6 +264,12 @@ if decision is None:
 - Рабочий файл со ссылками не отслеживается git; правило в `.gitignore` активно.
 - В репозитории есть безопасный пример (`urls.example.txt`) и упоминание его в README.
 - Решение по очистке истории коммитов принято владельцем репозитория и зафиксировано (переписывание истории — потенциально ломающая операция, выполняется только по явному указанию).
+
+### Что сделано (2026-08-31)
+
+`git rm --cached urls.local.txt` (файл сохранён на диске); правило в `.gitignore:68-69` активировано и расширено на `urls.*.local.txt`; добавлен `urls.example.txt`; в README указано, что рабочий файл локальный.
+
+**Решение владельца: историю git не переписываем.** Ссылки остаются в прошлых ревизиях. Обоснование: репозиторий приватный, риск ограничен участниками с доступом; `git filter-repo` + force-push ломает клоны, форки и PR. Вопрос пересматривается только при изменении статуса репозитория (например, перед публикацией).
 
 ---
 
