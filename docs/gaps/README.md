@@ -16,18 +16,36 @@
 
 | Документ | Тип | Status | Описание |
 |----------|-----|--------|----------|
+| [tech_debt_2026-08-31.md](./tech_debt_2026-08-31.md) | Ревью долга | open | 6 гэпов `GAP-CR-035` … `GAP-CR-040` + перенесённый `GAP-CR-009`; спринт L (Maintenance 1.3) |
 | [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | closed | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2) закрыт полностью |
 | [code_review_2026-05-25.md](./code_review_2026-05-25.md) | Ревью | closed | 25 гэпов `GAP-CR-001` … `GAP-CR-025`; бэклог A–J закрыт |
 | [doublesave_antibot_issue.md](./doublesave_antibot_issue.md) | Bug + ops | closed | Doublesave, cookies, Windows flush — исправлено |
 | [intravideo_pause_todo.md](./intravideo_pause_todo.md) | Feature | done | Intra-video pause (BL-1001) |
 
-Сопутствующие документы вне каталога: [анализ проекта 2026-08-31](../analysis_2026-08-31.md), [дизайн исправлений 2026-08-31](../design_2026-08-31.md).
+Сопутствующие документы вне каталога: [анализ проекта 2026-08-31](../analysis_2026-08-31.md), [дизайн исправлений 2026-08-31](../design_2026-08-31.md), [дизайн исправлений техдолга](../design_tech_debt_2026-08-31.md).
 
 ---
 
 ## Бэклог
 
-Сгруппированные задачи: **[../backlog.md](../backlog.md)** — все BL-* **done**: BL-1xx … BL-10xx (Maintenance 1.1) и BL-11xx (Maintenance 1.2, спринт K).
+Сгруппированные задачи: **[../backlog.md](../backlog.md)** — BL-1xx … BL-11xx **done** (Maintenance 1.1 и 1.2); BL-12xx **todo** (Maintenance 1.3, спринт L).
+
+---
+
+## Индекс гэпов ревью техдолга 2026-08-31
+
+Полные описания — в [tech_debt_2026-08-31.md](./tech_debt_2026-08-31.md).
+
+| ID | Severity | Status | Краткое название |
+|----|----------|--------|------------------|
+| GAP-CR-035 | средняя | open | Висящая запись `in_progress` для плейлиста |
+| GAP-CR-036 | средняя | open | Гонка за клавиатурным вводом при возобновлении |
+| GAP-CR-037 | низкая | open | Нет проверки типов в CI |
+| GAP-CR-038 | низкая | open | Нет метрики покрытия тестами |
+| GAP-CR-039 | средняя | open | `main` не защищён обязательными проверками |
+| GAP-CR-040 | низкая | open | Интеграционные тесты не выполняются нигде |
+
+`GAP-CR-009` (JSONL + SQLite) перенесён из ревью 2026-05-25 и остаётся `documented` до решения в BL-1207.
 
 ---
 
