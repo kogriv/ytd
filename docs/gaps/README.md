@@ -16,7 +16,7 @@
 
 | Документ | Тип | Status | Описание |
 |----------|-----|--------|----------|
-| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | open | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2); закрыты 026–031 |
+| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | open | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2); открыты только 032 и 033 (документация) |
 | [code_review_2026-05-25.md](./code_review_2026-05-25.md) | Ревью | closed | 25 гэпов `GAP-CR-001` … `GAP-CR-025`; бэклог A–J закрыт |
 | [doublesave_antibot_issue.md](./doublesave_antibot_issue.md) | Bug + ops | closed | Doublesave, cookies, Windows flush — исправлено |
 | [intravideo_pause_todo.md](./intravideo_pause_todo.md) | Feature | done | Intra-video pause (BL-1001) |
@@ -45,7 +45,7 @@
 | GAP-CR-031 | средняя | fixed | `urls.local.txt` с личными ссылками в репозитории |
 | GAP-CR-032 | низкая | open | README описывает несуществующие каталоги |
 | GAP-CR-033 | низкая | open | `devplan*.md` устарели относительно реализации |
-| GAP-CR-034 | средняя | open | `typer.Exit` гасится широким `except` (найден при BL-1105) |
+| GAP-CR-034 | средняя | fixed | `typer.Exit` гасится широким `except` (найден при BL-1105) |
 
 ---
 

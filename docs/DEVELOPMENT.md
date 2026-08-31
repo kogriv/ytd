@@ -21,7 +21,8 @@
 - Блок 1 закрыт (2026-08-31): BL-1104 (`pytest-timeout`, `timeout = 60`), BL-1101 (TTY-fallback в `wait_if_paused`), BL-1102 (`Path`-ассерты), BL-1107 (`urls.local.txt` вне git). Полный `pytest` на Windows: **97 passed, 2 skipped** за ~33 с
 - Блок 2 закрыт (2026-08-31): BL-1103 — матрица CI; прогон зелёный на обеих платформах (ubuntu 96 passed / 3 skipped, windows 97 passed / 2 skipped, lint passed)
 - Блок 3 закрыт (2026-08-31): BL-1105 + BL-1106 — декомпозиция `execute_download` (112 строк вместо ~950), сценарии в отдельных модулях, `skip_post_processing` удалён. Тесты: **110 passed, 2 skipped**
-- В работе: BL-1110 (`typer.Exit` гасится широким `except`, GAP-CR-034), затем BL-1108/BL-1109 (документация)
+- BL-1110 закрыт (2026-08-31): остановка пользователем (`typer.Exit` / `typer.Abort`) больше не гасится сценариями. Тесты: **119 passed, 2 skipped**
+- В работе: BL-1108/BL-1109 (документация)
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---

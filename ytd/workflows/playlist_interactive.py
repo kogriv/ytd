@@ -57,9 +57,11 @@ def run(ctx: DownloadContext, url: str, decision: HistoryDecision) -> DownloadTo
             fg=typer.colors.CYAN,
         )
         setup = setup_from_info(ctx, info, decision)
+    except (typer.Exit, typer.Abort):
+        # Явная остановка пользователем — не подменяем её загрузкой всего плейлиста
+        # с настройками по умолчанию (GAP-CR-034).
+        raise
     except Exception as exc:  # noqa: BLE001
-        # TODO(GAP-CR-034): typer.Exit тоже наследуется от Exception и гасится здесь —
-        # поведение сохранено как до BL-1105, исправление отдельной задачей.
         ctx.logger.warning(
             "Не удалось обработать плейлист: %s — продолжим с настройками по умолчанию", exc
         )

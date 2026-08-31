@@ -286,6 +286,10 @@ def execute_download(
     except KeyboardInterrupt:
         safe_secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
         raise typer.Exit(code=1) from None
+    except typer.Abort:
+        # click поднимает Abort при Ctrl+C или EOF в диалоге — это тоже отмена, а не ошибка.
+        safe_secho("\n✗ Прервано пользователем", fg=typer.colors.RED)
+        raise typer.Exit(code=1) from None
     except typer.Exit:
         raise
     except Exception as e:

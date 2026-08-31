@@ -59,10 +59,11 @@ def run(ctx: DownloadContext, url: str, decision: HistoryDecision) -> DownloadTo
         if info is None:
             return DownloadTotals(failed=1)
         setup = setup_from_info(ctx, info, decision)
+    except (typer.Exit, typer.Abort):
+        # Явная остановка пользователем: и Exit, и Abort наследуются от RuntimeError,
+        # поэтому без этой ветки их проглотил бы широкий except ниже (GAP-CR-034).
+        raise
     except Exception as exc:  # noqa: BLE001
-        # TODO(GAP-CR-034): typer.Exit наследуется от RuntimeError и тоже гасится здесь,
-        # поэтому выбор «завершить программу» в диалоге сети не останавливает загрузку.
-        # Поведение сохранено как было до BL-1105; исправление — отдельной задачей.
         ctx.logger.warning(
             "Не удалось получить форматы: %s — продолжим с настройками по умолчанию", exc
         )

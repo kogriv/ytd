@@ -75,9 +75,10 @@ def run(ctx: DownloadContext, url: str, decision: HistoryDecision) -> DownloadTo
                 progress_style="numbered",
             )
             return DownloadTotals(total_files=result.total_files, failed=result.failed)
+    except (typer.Exit, typer.Abort):
+        # Явная остановка пользователем — не откатываемся на обычный путь (GAP-CR-034).
+        raise
     except Exception as exc:  # noqa: BLE001
-        # TODO(GAP-CR-034): typer.Exit тоже гасится этим блоком — поведение сохранено
-        # как до BL-1105, исправление отдельной задачей.
         ctx.logger.warning(
             "Не удалось разобрать плейлист для поштучной загрузки: %s — пробуем обычный путь", exc
         )
