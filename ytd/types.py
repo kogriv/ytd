@@ -50,7 +50,9 @@ class DownloadOptions:
     cookies_from_browser: BrowserCookieSource | None = None
     retry: int = 3
     retry_delay: float = 5.0
-    save_metadata: Path | None = Path("data/meta.jsonl")
+    # None — не писать JSONL: журнал ведётся в SQLite, а построчный архив
+    # получается через `ytd history export --format jsonl` (BL-1207).
+    save_metadata: Path | None = None
     dry_run: bool = False
     playlist: bool = False
     playlist_items: str | None = None  # '1-3' или '1,3,5' для выбора конкретных видео
@@ -80,7 +82,10 @@ class AppConfig:
     cookies_from_browser: BrowserCookieSource | None = None
     retry: int = 3
     retry_delay: float = 5.0
-    save_metadata: Path | None = Path("data/meta.jsonl")
+    # JSONL-архив метаданных отключён по умолчанию: задайте путь, если нужен
+    # построчный дамп yt-dlp для grep/jq. Импорт из существующего файла
+    # при первом создании базы продолжает работать (BL-1207).
+    save_metadata: Path | None = None
     history_enabled: bool = True
     history_db: Path = Path("data/history.db")
     # Поддержка пауз между видео в плейлистах

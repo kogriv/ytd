@@ -20,7 +20,7 @@ def test_load_config_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     assert isinstance(cfg, AppConfig)
     assert cfg.output == tmp_path / "downloads"
     assert cfg.quality == "best"
-    assert cfg.save_metadata == tmp_path / "data" / "meta.jsonl"
+    assert cfg.save_metadata is None  # BL-1207: по умолчанию JSONL выключен
     assert cfg.history_enabled is True
     assert cfg.history_db == tmp_path / "data" / "history.db"
     assert cfg.interactive_by_default is False

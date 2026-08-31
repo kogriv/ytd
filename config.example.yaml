@@ -41,12 +41,17 @@ retry: 3
 retry_delay: 5.0
 
 # Журнал загрузок
-# Включить сохранение истории в SQLite и использовать JSONL для импорта
+# Включить сохранение истории в SQLite
 history_enabled: true
 # Путь к файлу базы истории (SQLite)
 history_db: data/history.db
-# Путь для сохранения метаданных (JSONL)
-save_metadata: data/meta.jsonl
+
+# Построчный архив метаданных yt-dlp (JSONL). По умолчанию отключён:
+# журнал ведётся в SQLite, а такой же дамп можно получить командой
+#   ytd history export --format jsonl > meta.jsonl
+# Задайте путь, если нужен автоматический файл для grep/jq. Если файл уже есть,
+# он будет один раз импортирован в SQLite при первом создании базы.
+# save_metadata: data/meta.jsonl
 
 # === Управление паузами ===
 

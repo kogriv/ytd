@@ -27,7 +27,7 @@
 - **Maintenance 1.3 открыт (2026-08-31):** [ревью техдолга](gaps/tech_debt_2026-08-31.md) — `GAP-CR-035` … `GAP-CR-040` + перенесённый `GAP-CR-009`; задачи BL-1201 … BL-1207, [дизайн](design_tech_debt_2026-08-31.md)
 - Дефекты спринта L закрыты (2026-08-31): висящая запись `in_progress` (BL-1201) и гонка за клавиатурным вводом при возобновлении паузы (BL-1202). Тесты: **125 passed, 2 skipped**
 - Ворота качества закрыты (2026-08-31): BL-1203 (mypy в CI, три платформенные модели) и BL-1204 (покрытие 68%, порог 66%). Тесты: **127 passed, 2 skipped**
-- В работе: BL-1205 (защита `main`); решения владельца — BL-1206, BL-1207
+- **Maintenance 1.3 закрыт (2026-08-31):** все 7 задач спринта L и все 7 гэпов ревью техдолга. Приняты решения: `main` защищён обязательными проверками (BL-1205), интеграционные тесты — ручной инструмент (BL-1206), JSONL опционален и выключен по умолчанию (BL-1207)
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---
@@ -55,6 +55,38 @@ uv run mypy --platform win32
 uv run mypy --platform linux
 uv run mypy --platform darwin
 ```
+
+### Рабочий поток и защита ветки
+
+Ветка `main` защищена: обязательны зелёные проверки `test (ubuntu-latest)`, `test (windows-latest)` и `lint`, прямой push и force-push запрещены (решение BL-1205). CI перестал быть отчётом и стал барьером.
+
+```bash
+git checkout -b fix/короткое-описание
+# ... правки, uv run pytest -q, uv run ruff check ., uv run mypy
+git commit -m "..."
+git push -u origin fix/короткое-описание
+gh pr create --fill
+gh pr merge --squash --delete-branch   # смержится после зелёного CI
+```
+
+Владелец репозитория (администратор) правило не обходит по умолчанию, но может временно снять его в настройках, если потребуется срочная правка.
+
+### Интеграционные тесты
+
+Два теста в `tests/test_integration.py` работают с живой площадкой и включаются переменной `YTD_IT_URL`. Без неё они пропускаются — именно они дают `2 skipped` в каждом обычном прогоне.
+
+```bash
+# PowerShell
+$env:YTD_IT_URL = "https://www.youtube.com/watch?v=VIDEO_ID"
+uv run pytest tests/test_integration.py -q
+
+# bash
+YTD_IT_URL="https://www.youtube.com/watch?v=VIDEO_ID" uv run pytest tests/test_integration.py -q
+```
+
+Проверяют `ytd info --json` и `ytd download --dry-run` — то есть получение метаданных без скачивания файлов.
+
+**В CI они намеренно не запускаются** (решение BL-1206): результат зависит от доступности площадки и её anti-bot защиты, поэтому регулярные прогоны давали бы красные сборки из-за YouTube, а не из-за кода. Это ручной инструмент — запускайте перед релизом или когда есть подозрение, что сломался экстрактор yt-dlp.
 
 Конфиг для локальных прогонов: скопировать `config.example.yaml` → `./ytd.config.yaml`.
 

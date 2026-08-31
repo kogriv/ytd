@@ -150,11 +150,11 @@ YTD_HISTORY_ENABLED=true
   - `ytd history` — список последних загрузок с фильтрами по статусу, дате и плейлисту
   - `ytd history show <ID>` — карточка отдельной записи
   - `ytd history export --format jsonl|csv` — экспорт истории в stdout
-- При первом создании базы, если файл метаданных (`save_metadata`, JSONL) уже существует, ytd импортирует прежние записи автоматически.
+- При первом создании базы, если задан `save_metadata` и файл уже существует, ytd импортирует прежние записи автоматически.
 - Управление включением журнала и путями — в `ytd.config.yaml` (см. [docs/usage.md](docs/usage.md)):
   - `history_enabled`: включить/отключить журнал полностью
   - `history_db`: путь к SQLite-файлу
-  - `save_metadata`: путь к JSONL для хранения метаданных (используется и для начального импорта)
+  - `save_metadata`: **по умолчанию выключено** — путь к JSONL-архиву метаданных, если он нужен помимо SQLite (используется и для начального импорта). Такой же дамп даёт `ytd history export --format jsonl`
 - Те же настройки можно задать через переменные окружения: `YTD_HISTORY_ENABLED`, `YTD_HISTORY_DB`, `YTD_SAVE_METADATA`.
 - Подробнее — в [docs/usage.md](docs/usage.md).
 

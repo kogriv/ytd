@@ -16,7 +16,7 @@
 
 | Документ | Тип | Status | Описание |
 |----------|-----|--------|----------|
-| [tech_debt_2026-08-31.md](./tech_debt_2026-08-31.md) | Ревью долга | open | 6 гэпов `GAP-CR-035` … `GAP-CR-040` + перенесённый `GAP-CR-009`; спринт L (Maintenance 1.3) |
+| [tech_debt_2026-08-31.md](./tech_debt_2026-08-31.md) | Ревью долга | closed | 6 гэпов `GAP-CR-035` … `GAP-CR-040` + перенесённый `GAP-CR-009`; спринт L закрыт полностью |
 | [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | closed | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2) закрыт полностью |
 | [code_review_2026-05-25.md](./code_review_2026-05-25.md) | Ревью | closed | 25 гэпов `GAP-CR-001` … `GAP-CR-025`; бэклог A–J закрыт |
 | [doublesave_antibot_issue.md](./doublesave_antibot_issue.md) | Bug + ops | closed | Doublesave, cookies, Windows flush — исправлено |
@@ -28,7 +28,7 @@
 
 ## Бэклог
 
-Сгруппированные задачи: **[../backlog.md](../backlog.md)** — BL-1xx … BL-11xx **done** (Maintenance 1.1 и 1.2); BL-12xx **todo** (Maintenance 1.3, спринт L).
+Сгруппированные задачи: **[../backlog.md](../backlog.md)** — все BL-* **done**: Maintenance 1.1, 1.2 и 1.3.
 
 ---
 
@@ -42,10 +42,10 @@
 | GAP-CR-036 | средняя | fixed | Гонка за клавиатурным вводом при возобновлении |
 | GAP-CR-037 | низкая | fixed | Нет проверки типов в CI |
 | GAP-CR-038 | низкая | fixed | Нет метрики покрытия тестами |
-| GAP-CR-039 | средняя | open | `main` не защищён обязательными проверками |
-| GAP-CR-040 | низкая | open | Интеграционные тесты не выполняются нигде |
+| GAP-CR-039 | средняя | fixed | `main` не защищён обязательными проверками |
+| GAP-CR-040 | низкая | fixed | Интеграционные тесты не выполняются нигде |
 
-`GAP-CR-009` (JSONL + SQLite) перенесён из ревью 2026-05-25 и остаётся `documented` до решения в BL-1207.
+`GAP-CR-009` (JSONL + SQLite) перенесён из ревью 2026-05-25 и закрыт в BL-1207: JSONL стал опциональным и выключен по умолчанию.
 
 ---
 

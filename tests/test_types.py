@@ -23,7 +23,8 @@ def test_download_options_defaults():
     assert opts.retry == 3
     assert pytest.approx(opts.retry_delay) == 5.0
     assert isinstance(opts.save_metadata, (type(None), Path))
-    assert opts.save_metadata == Path("data/meta.jsonl")
+    # BL-1207: JSONL-архив по умолчанию не пишется
+    assert opts.save_metadata is None
     assert opts.dry_run is False
     assert opts.playlist is False
 
@@ -76,7 +77,8 @@ def test_app_config_defaults():
     assert cfg.retry == 3
     assert pytest.approx(cfg.retry_delay) == 5.0
     assert isinstance(cfg.save_metadata, (type(None), Path))
-    assert cfg.save_metadata == Path("data/meta.jsonl")
+    # BL-1207: JSONL-архив по умолчанию не пишется
+    assert cfg.save_metadata is None
     assert cfg.history_enabled is True
     assert cfg.history_db == Path("data/history.db")
 
