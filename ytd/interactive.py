@@ -10,6 +10,7 @@ from typing import Any
 import typer
 
 from .console import safe_echo, safe_secho
+from .downloader import _video_format_selector
 from .utils import (
     extract_quality_suffix,
     find_existing_files,
@@ -51,17 +52,18 @@ def build_quality_options(
     """
     options: list[tuple[str, str, int | None]] = []
     
-    # Лучшее доступное
-    options.append(("Лучшее доступное качество", "bestvideo+bestaudio/best", None))
+    # Лучшее совместимое MP4/H.264: обычно воспроизводится шире, чем AV1 в MP4.
+    options.append((
+        "Лучшее совместимое MP4 качество",
+        _video_format_selector(ext="mp4", aud_ext="m4a"),
+        None,
+    ))
     
     # Популярные высоты
     for h in available_heights:
         ext = height_to_ext[h]
         aud_ext = "m4a" if ext == "mp4" else "webm"
-        fmt = (
-            f"bestvideo[height<={h}][ext={ext}]+bestaudio[ext={aud_ext}]/"
-            f"best[height<={h}][ext={ext}]/best[height<={h}]"
-        )
+        fmt = _video_format_selector(ext=ext, aud_ext=aud_ext, max_h=h)
         options.append((f"Видео {ext.upper()} {h}p", fmt, h))
         if len(options) >= max_options:
             break

@@ -226,8 +226,9 @@ def extract_quality_suffix(format_choice: str, format_label: str) -> str:
     if height_match:
         return f"_{height_match.group(1)}p"
     
-    # Проверка на аудио-только
-    if "audio" in format_label.lower() or "bestaudio" in format_choice:
+    # Проверка на аудио-только. Комбинация bestvideo+bestaudio остается видео.
+    normalized_choice = format_choice.strip().lower()
+    if "audio" in format_label.lower() or normalized_choice.startswith("bestaudio"):
         return "_audio"
     
     # Попытка извлечь из format_choice
