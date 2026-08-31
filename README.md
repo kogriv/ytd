@@ -25,23 +25,25 @@
 .
 ├─ README.md
 ├─ .gitignore
+├─ config.example.yaml       # шаблон конфигурации → ytd.config.yaml
+├─ urls.example.txt          # шаблон списка ссылок → urls.local.txt (не коммитится)
 ├─ ytd/
 │  ├─ cli.py                 # Typer-команды (тонкий слой)
-│  ├─ workflows/             # download_command, playlist, network, history prompts
+│  ├─ workflows/             # оркестрация: контекст, сценарии загрузки, история, сеть
 │  ├─ interactive.py
 │  ├─ downloader.py
 │  ├─ config.py
 │  ├─ history/
 │  └─ ...
 ├─ tests/
-├─ data/
-│  └─ .gitkeep
-├─ downloads/
-│  └─ .gitkeep
 ├─ logs/
 │  └─ .gitkeep
 └─ docs/
 ```
+
+Каталоги `downloads/` и `data/` в репозитории не хранятся — они создаются
+автоматически при первом запуске по путям из конфигурации (`output`,
+`history_db`, `save_metadata`), поэтому их расположение можно менять свободно.
 
 ---
 

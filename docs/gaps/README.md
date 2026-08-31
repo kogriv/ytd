@@ -16,7 +16,7 @@
 
 | Документ | Тип | Status | Описание |
 |----------|-----|--------|----------|
-| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | open | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2); открыты только 032 и 033 (документация) |
+| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | closed | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2) закрыт полностью |
 | [code_review_2026-05-25.md](./code_review_2026-05-25.md) | Ревью | closed | 25 гэпов `GAP-CR-001` … `GAP-CR-025`; бэклог A–J закрыт |
 | [doublesave_antibot_issue.md](./doublesave_antibot_issue.md) | Bug + ops | closed | Doublesave, cookies, Windows flush — исправлено |
 | [intravideo_pause_todo.md](./intravideo_pause_todo.md) | Feature | done | Intra-video pause (BL-1001) |
@@ -27,7 +27,7 @@
 
 ## Бэклог
 
-Сгруппированные задачи: **[../backlog.md](../backlog.md)** — BL-1xx … BL-10xx **done** (Maintenance 1.1); BL-11xx **todo** (Maintenance 1.2, спринт K).
+Сгруппированные задачи: **[../backlog.md](../backlog.md)** — все BL-* **done**: BL-1xx … BL-10xx (Maintenance 1.1) и BL-11xx (Maintenance 1.2, спринт K).
 
 ---
 
@@ -43,8 +43,8 @@
 | GAP-CR-029 | средняя | fixed | `execute_download` — новый монолит (999 строк) |
 | GAP-CR-030 | низкая | fixed | Мёртвая ветка повторного опроса истории |
 | GAP-CR-031 | средняя | fixed | `urls.local.txt` с личными ссылками в репозитории |
-| GAP-CR-032 | низкая | open | README описывает несуществующие каталоги |
-| GAP-CR-033 | низкая | open | `devplan*.md` устарели относительно реализации |
+| GAP-CR-032 | низкая | fixed | README описывает несуществующие каталоги |
+| GAP-CR-033 | низкая | fixed | `devplan*.md` устарели относительно реализации |
 | GAP-CR-034 | средняя | fixed | `typer.Exit` гасится широким `except` (найден при BL-1105) |
 
 ---

@@ -2,8 +2,8 @@
 
 > **Comprehensive development plan and feature roadmap for ytd YouTube downloader**
 > 
-> Current version: MVP 1.0 (October 27, 2025)  
-> Last updated: October 27, 2025
+> Current version: Maintenance 1.2 (August 31, 2026); MVP 1.0 — October 27, 2025  
+> Last updated: August 31, 2026 (BL-1109: state sections synced with `main`)
 
 ---
 
@@ -21,48 +21,50 @@
 
 ## Current State Analysis
 
-### ✅ Implemented Features (MVP 1.0)
+### ✅ Implemented Features (MVP 1.0 + Maintenance 1.1 and 1.2)
 
 **Core Functionality:**
 - Single video/audio downloads with quality presets
 - Playlist batch downloading (sequential processing)
 - Interactive mode for single videos with quality selection
-- Interactive mode for playlists with unified settings
+- Interactive mode for playlists: unified settings and per-video setup
 - File naming customization (prefix, suffix, full override)
 - Duplicate detection by video ID with overwrite control
 - Smart quality fallback strategies ("economy" and "rich" modes)
 - Progress indicators with colored terminal output
 - Configuration via YAML files and environment variables
-- Metadata saving in JSONL format
+- Metadata in JSONL plus a SQLite download journal (`ytd history`)
 - URL batch processing from files
+- Subtitle downloads, cookies support and anti-bot hints
+- Resume: continue a playlist, pause between videos and inside a file
 - Comprehensive Russian documentation
 
 **Technical Implementation:**
-- Python 3.11+ with type hints and dataclasses
+- Python 3.14, dependencies and environment managed by uv
 - yt-dlp backend for video extraction
-- Typer CLI framework with rich formatting
-- pytest test suite (29 tests passing)
-- Modular architecture with clear separation of concerns
-- Retry logic with exponential backoff
-- Cross-platform support (Windows, Linux, macOS)
+- Typer CLI framework with rich formatting; orchestration in `ytd/workflows/`
+- pytest test suite (121 tests, 2 of them integration on demand)
+- Download scenarios as separate modules sharing one signature
+- Retry logic with exponential backoff and a network recovery dialog
+- Cross-platform support (Windows, Linux, macOS); CI on ubuntu and windows + ruff
 
 ### 🔍 Current Limitations
 
 1. **Interactive Mode:**
-   - Per-video mode for playlists not yet implemented (marked as TODO)
    - No preview of first N filenames before batch download
    - No "apply to remaining" option in per-video mode
+   - Individual entries cannot be cancelled once a playlist starts
 
 2. **Performance:**
    - Sequential-only playlist processing (no parallelism)
-   - No download resume capability
+   - Resume restarts yt-dlp with `continuedl` rather than holding the connection
    - No bandwidth limiting
 
 3. **Content Features:**
-   - No subtitle download support
    - No thumbnail extraction
    - No chapter/segment metadata extraction
    - No comment/description archiving
+   - No post-processing beyond what yt-dlp performs
 
 4. **UX/UI:**
    - No download queue management
@@ -88,7 +90,7 @@
 │                         CLI Layer                            │
 │                    (ytd/cli.py - Typer)                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   download   │  │     info     │  │  interactive │      │
+│  │   download   │  │     info     │  │   history    │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -96,8 +98,8 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                     Business Logic Layer                     │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Downloader  │  │ Interactive  │  │    Config    │      │
-│  │   (wrapper)  │  │   (helpers)  │  │   (loader)   │      │
+│  │  workflows   │  │  Downloader  │  │    Config    │      │
+│  │ (scenarios)  │  │   (wrapper)  │  │  + history   │      │
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -185,7 +187,7 @@ Q4 2026: 9, 14, 15
 ### Phase 1: Interactive Mode Completion (Q1 2026)
 
 #### 1.1 Per-Video Interactive Mode for Playlists
-**Status:** TODO (marked in code)  
+**Status:** partially done (BL-202): base per-video mode shipped; "apply to remaining" and preview remain  
 **Priority:** HIGH  
 **Effort:** MEDIUM  
 **Impact:** HIGH
@@ -929,7 +931,7 @@ Official Docker image for easy deployment.
 
 **Dockerfile:**
 ```dockerfile
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
@@ -1156,18 +1158,25 @@ Support multiple languages beyond Russian/English.
 
 ### Current Technical Debt
 
-1. **TODO in cli.py (line 290):** Per-video interactive mode not implemented
-2. **TODO in utils.py (line 122):** Network retry wrapper not needed yet
-3. **Limited error handling:** Some edge cases not covered
-4. **No async/await:** All operations synchronous
-5. **State management:** No persistent state across runs
-6. **Configuration validation:** Limited validation of config values
+1. **Two sources of truth (GAP-CR-009):** JSONL and SQLite coexist; roles are
+   documented in `docs/usage.md`, but the data model stays dual
+2. **No async/await:** All operations synchronous
+3. **No type checking in CI** (mypy/pyright not wired) and no coverage metric
+4. **Integration tests need network** and are opt-in via `YTD_IT_URL`
+5. **`main` is not protected** by required checks — CI reports but does not block
+6. **Limited error handling:** Some edge cases still lack test coverage
+
+Closed in Maintenance 1.1 and 1.2: the `cli.py` monolith (BL-104) and
+`execute_download` (BL-1105), per-video playlist mode (BL-202), config validation
+(BL-106), network retries (BL-203), Windows coverage in CI (BL-1103).
 
 ### Refactoring Opportunities
 
-#### R1: Extract CLI into Thin Controller
+#### R1: Extract CLI into Thin Controller — ✅ done (BL-104, BL-1105)
 **Problem:** `cli.py` has business logic mixed with presentation  
-**Solution:** Move logic to service layer, CLI only handles I/O
+**Solution:** Move logic to service layer, CLI only handles I/O  
+**How it landed:** `ytd/workflows/` plays the service-layer role: `cli.py` is 394 lines
+of Typer commands, `execute_download` is 112 lines of context setup and dispatch.
 
 **Before:**
 ```python
@@ -1190,19 +1199,19 @@ class DownloadService:
 
 ---
 
-#### R2: Introduce Service Layer
+#### R2: Introduce Service Layer — ✅ closed differently (BL-1105)
 **Problem:** Direct coupling between CLI and Downloader  
 **Solution:** Add service layer for business logic
 
-**Structure:**
+**Actual structure (instead of `services/`):**
 ```
 ytd/
-  cli.py          — Presentation (CLI)
-  services/       — Business Logic (NEW)
-    download_service.py
-    info_service.py
-    archive_service.py
-  downloader.py   — Infrastructure (yt-dlp wrapper)
+  cli.py            — Presentation (Typer)
+  workflows/        — orchestration
+    download_command.py   — context + select_scenario
+    single_video.py, playlist_*.py, download_one.py — scenarios
+    context.py, url_sources.py, info_fetch.py       — shared pieces
+  downloader.py     — Infrastructure (yt-dlp wrapper)
 ```
 
 ---
