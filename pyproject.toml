@@ -24,7 +24,7 @@ classifiers = [
 
 # Основные зависимости рантайма
 dependencies = [
-  "yt-dlp>=2026.3.17",
+  "yt-dlp>=2026.8.19",
   "typer>=0.25.0",
   "rich>=15",
   "PyYAML>=6",
