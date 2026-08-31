@@ -69,7 +69,14 @@ gh pr create --fill
 gh pr merge --squash --delete-branch   # смержится после зелёного CI
 ```
 
-Владелец репозитория (администратор) правило не обходит по умолчанию, но может временно снять его в настройках, если потребуется срочная правка.
+Правило распространяется и на администратора (`enforce_admins: true`) — иначе для одиночной работы оно было бы декоративным: владелец продолжал бы пушить в `main` напрямую. Если понадобится срочная правка в обход, ограничение снимается на время:
+
+```bash
+gh api -X DELETE repos/kogriv/ytd/branches/main/protection/enforce_admins   # снять
+gh api -X POST   repos/kogriv/ytd/branches/main/protection/enforce_admins   # вернуть
+```
+
+Полностью убрать защиту: `gh api -X DELETE repos/kogriv/ytd/branches/main/protection`.
 
 ### Интеграционные тесты
 
