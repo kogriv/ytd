@@ -32,6 +32,9 @@ class PauseController:
         self.intra_video = intra_video
         self.between_entries = between_entries
         self._pause_requested = threading.Event()
+        # Клавиатуру читает только фоновый слушатель; ожидание возобновления
+        # синхронизируется через событие, а не вторым циклом чтения (BL-1202).
+        self._resume_requested = threading.Event()
         self._listener_thread: threading.Thread | None = None
         self._stop_listener = threading.Event()
         self._enabled = False
@@ -112,6 +115,11 @@ class PauseController:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
     def _handle_listener_key(self, char: str) -> None:
+        # Во время паузы слушатель распознаёт клавишу возобновления сам: второй
+        # читатель клавиатуры отбирал бы у него символы и терял нажатия (BL-1202).
+        if self._pause_requested.is_set() and char in {self.resume_key, "\r", "\n"}:
+            self._resume_requested.set()
+            return
         if char != self.pause_key:
             return
         self._pause_requested.set()
@@ -151,11 +159,11 @@ class PauseController:
         if self.intra_video:
             safe_echo("Загрузка приостановлена. Частичный файл сохранён — продолжение с места остановки.")
 
-        # Проверка интерактивности выполняется до платформенной развилки: без TTY клавиши
-        # недоступны ни на одной платформе, и обе ветки уходят в общий fallback.
-        if not self._stdin_is_interactive():
+        # Клавиши читает только слушатель. Если он не запущен (не TTY либо enable()
+        # не вызывали), ждать события бессмысленно — спрашиваем через prompt.
+        if not self._enabled or not self._stdin_is_interactive():
             safe_secho(
-                "Клавиши недоступны: stdin не интерактивный терминал.",
+                "Клавиши недоступны: слушатель клавиатуры не запущен.",
                 fg=typer.colors.YELLOW,
             )
             self._wait_for_resume_prompt()
@@ -166,52 +174,14 @@ class PauseController:
             fg=typer.colors.CYAN,
         )
 
-        if sys.platform == "win32":
-            self._wait_for_resume_windows()
-        else:
-            self._wait_for_resume_unix()
+        while not self._resume_requested.wait(timeout=0.1):
+            if self._stop_listener.is_set():
+                # Контроллер выключают (disable) — не держим процесс в ожидании.
+                self._pause_requested.clear()
+                return
 
-    def _wait_for_resume_windows(self) -> None:
-        try:
-            import msvcrt
-        except ImportError:
-            self._wait_for_resume_prompt()
-            return
-
-        # Цикл прерывается по _stop_listener, чтобы disable() не оставлял процесс висеть.
-        while not self._stop_listener.is_set():
-            if msvcrt.kbhit():
-                try:
-                    char = msvcrt.getch().decode("utf-8", errors="ignore").lower()
-                    if char == self.resume_key or char == "\r":
-                        self._clear_pause_and_resume()
-                        return
-                except Exception:
-                    pass
-            self._stop_listener.wait(timeout=0.1)
-
-    def _wait_for_resume_unix(self) -> None:
-        import select
-        import termios
-        import tty
-
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setcbreak(fd)
-            while not self._stop_listener.is_set():
-                ready, _, _ = select.select([sys.stdin], [], [], 0.1)
-                if not ready:
-                    continue
-                char = sys.stdin.read(1)
-                if not char:
-                    continue
-                lowered = char.lower()
-                if lowered == self.resume_key or lowered == "\r" or lowered == "\n":
-                    self._clear_pause_and_resume()
-                    return
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        self._resume_requested.clear()
+        self._clear_pause_and_resume()
 
     def _wait_for_resume_prompt(self) -> None:
         typer.prompt("Нажмите Enter для продолжения", default="", show_default=False)
@@ -224,6 +194,7 @@ class PauseController:
     def reset(self) -> None:
         """Сбросить состояние паузы."""
         self._pause_requested.clear()
+        self._resume_requested.clear()
 
     def __enter__(self) -> PauseController:
         self.enable()

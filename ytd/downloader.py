@@ -14,7 +14,7 @@ import yt_dlp as yt_dlp  # type: ignore
 from yt_dlp.networking.exceptions import TransportError
 
 from .exceptions import IntraVideoPauseRequested, NetworkUnavailableError
-from .history.storage import HistoryStore, get_default_store
+from .history.storage import HistoryStore, get_default_store, normalize_history_id
 from .pause import PauseController
 from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
@@ -213,6 +213,52 @@ class Downloader:
             except Exception as history_err:  # noqa: BLE001
                 self.logger.debug("не удалось записать историю: %s", history_err)
                 break
+
+    def _close_parent_record(
+        self,
+        info: Any,
+        opts: DownloadOptions,
+        *,
+        status: str,
+    ) -> None:
+        """Закрыть запись истории, созданную по `opts.url` в начале загрузки.
+
+        Финальные события строятся по данным yt-dlp и часто имеют другие ключи:
+        у плейлиста — по каждому элементу, у одиночного видео — по `id` площадки.
+        Ключи совпадают только там, где нормализация приводит URL и `id` к одному
+        значению (YouTube: и то и другое → ``yt:<id>``). В остальных случаях —
+        плейлисты, VK и прочие площадки — родительская строка иначе навсегда
+        остаётся в статусе ``in_progress``.
+        """
+
+        if not getattr(self.config, "history_enabled", True) or opts.dry_run:
+            return
+
+        parent_key = normalize_history_id(opts.url)
+        if parent_key is None:
+            return
+
+        for event in self._build_events(info, opts, status=status):
+            key = normalize_history_id(event.video_id) or normalize_history_id(event.url)
+            if key == parent_key:
+                return  # финальный статус уже записан по этому же ключу
+
+        is_playlist = isinstance(info, dict) and bool(info.get("entries"))
+        title = info.get("title") if isinstance(info, dict) else None
+        playlist_id = (info.get("id") or info.get("playlist_id")) if is_playlist else None
+
+        self._record_history(
+            {
+                "id": opts.url,
+                "webpage_url": opts.url,
+                "title": title,
+                "playlist_id": str(playlist_id) if playlist_id else None,
+                "playlist_title": title if is_playlist else None,
+            },
+            opts,
+            status=status,
+            finished_at=datetime.now(UTC),
+        )
 
     def _record_finished_hook_entry(self, entry: dict[str, Any], path: Path) -> None:
         if not getattr(self.config, "history_enabled", True):
@@ -597,6 +643,8 @@ class Downloader:
                             file_paths=dict(self._finished_files),
                         )
 
+                    self._close_parent_record(history_info, opts, status="success")
+
                     return self._finished_paths()
                 except Exception as e:  # noqa: BLE001
                     if self._find_intra_video_pause(e) and self._active_pause_controller is not None:
@@ -629,6 +677,7 @@ class Downloader:
                         finished_at=datetime.now(UTC),
                         error=str(e),
                     )
+                    self._close_parent_record(history_info, opts, status="failed")
                     if attempt >= max(1, int(opts.retry)):
                         self.logger.error("не удалось скачать после %d попыток: %s", attempt, e)
                         if is_network_issue:
