@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 import typer
 
 from ..console import safe_echo, safe_secho
+from ..downloader import _video_format_selector
 from ..utils import extract_quality_suffix, find_best_quality_match, sanitize_filename
 from .context import DownloadTotals
 from .download_one import EntrySetup, build_options
@@ -188,14 +189,11 @@ def _format_for_entry(
     height_to_ext, available_heights = ia.collect_available_heights(entry_formats)
     selected = find_best_quality_match(available_heights, target_height, strategy=strategy)
     if selected is None:
-        return "bestvideo+bestaudio/best"
+        return _video_format_selector(ext="mp4", aud_ext="m4a")
 
     ext = height_to_ext.get(selected) or "mp4"
     aud_ext = "m4a" if ext == "mp4" else "webm"
-    return (
-        f"bestvideo[height<={selected}][ext={ext}]+bestaudio[ext={aud_ext}]/"
-        f"best[height<={selected}][ext={ext}]/best[height<={selected}]"
-    )
+    return _video_format_selector(ext=ext, aud_ext=aud_ext, max_h=selected)
 
 
 def _prefix_for_entry(idx: int, use_numbering: bool, prefix_template: str) -> str | None:

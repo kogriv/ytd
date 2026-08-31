@@ -20,6 +20,33 @@ from .types import AppConfig, DownloadEvent, DownloadOptions
 from .utils import ensure_dir, find_ffmpeg, save_metadata_jsonl
 
 
+def _video_format_selector(
+    *,
+    ext: str,
+    aud_ext: str,
+    max_h: int | None = None,
+) -> str:
+    """Build a yt-dlp selector, preferring broadly compatible MP4/H.264."""
+
+    height_filter = f"[height<={max_h}]" if max_h is not None else ""
+
+    if ext == "mp4":
+        return (
+            f"bestvideo{height_filter}[vcodec^=avc1][ext=mp4]+bestaudio[ext={aud_ext}]"
+            f"/bestvideo{height_filter}[vcodec^=avc1]+bestaudio[ext={aud_ext}]"
+            f"/best{height_filter}[vcodec^=avc1][ext=mp4]"
+            f"/bestvideo{height_filter}[ext=mp4]+bestaudio[ext={aud_ext}]"
+            f"/best{height_filter}[ext=mp4]"
+            f"/best{height_filter}"
+        )
+
+    return (
+        f"bestvideo{height_filter}[ext={ext}]+bestaudio[ext={aud_ext}]"
+        f"/best{height_filter}[ext={ext}]"
+        f"/best{height_filter}"
+    )
+
+
 class Downloader:
     """Обёртка над yt-dlp с удобными дефолтами и логированием."""
 
@@ -459,19 +486,7 @@ class Downloader:
                 max_h = int(opts.quality.replace("p", ""))
             # Подбор сопоставимого аудио по контейнеру
             aud_ext = "m4a" if ext == "mp4" else "webm"
-            if max_h:
-                format_str = (
-                    f"bestvideo[height<={max_h}][ext={ext}]+bestaudio[ext={aud_ext}]"
-                    f"/best[height<={max_h}][ext={ext}]"
-                    f"/best[height<={max_h}]"
-                )
-            else:
-                format_str = (
-                    f"bestvideo[ext={ext}]+bestaudio[ext={aud_ext}]"
-                    f"/best[ext={ext}]"
-                    f"/best"
-                )
-            ydl_opts["format"] = format_str
+            ydl_opts["format"] = _video_format_selector(ext=ext, aud_ext=aud_ext, max_h=max_h)
 
         # Dry-run: не скачивать фактически
         if opts.dry_run:

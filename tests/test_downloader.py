@@ -121,6 +121,41 @@ def test_build_ydl_opts_video_quality_720p_mp4(tmp_path: Path):
     fmt = ydl_opts["format"]
     assert "height<=720" in fmt
     assert "ext=mp4" in fmt
+    assert "vcodec^=avc1" in fmt
+    assert fmt.index("vcodec^=avc1") < fmt.index("bestvideo[height<=720][ext=mp4]")
+
+
+def test_build_ydl_opts_video_best_mp4_prefers_h264(tmp_path: Path):
+    cfg = AppConfig()
+    dl = Downloader(cfg)
+    opts = DownloadOptions(
+        url="u",
+        output_dir=tmp_path,
+        audio_only=False,
+        video_format="mp4",
+        quality="best",
+    )
+
+    fmt = dl.build_ydl_opts(opts)["format"]
+
+    assert fmt.startswith("bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]")
+    assert "/bestvideo[ext=mp4]+bestaudio[ext=m4a]" in fmt
+
+
+def test_build_ydl_opts_video_webm_keeps_webm_selector(tmp_path: Path):
+    cfg = AppConfig()
+    dl = Downloader(cfg)
+    opts = DownloadOptions(
+        url="u",
+        output_dir=tmp_path,
+        audio_only=False,
+        video_format="webm",
+        quality="best",
+    )
+
+    fmt = dl.build_ydl_opts(opts)["format"]
+
+    assert fmt == "bestvideo[ext=webm]+bestaudio[ext=webm]/best[ext=webm]/best"
 
 
 def test_build_ydl_opts_cookies_file(tmp_path: Path):
