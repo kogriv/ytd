@@ -24,13 +24,14 @@ Owner: @Ivan
 | [GAP-CR-026](#gap-cr-026--wait_if_paused-вешает-процесс-на-windows-без-tty) | высокая | **fixed** | `wait_if_paused` вешает процесс на Windows без TTY | BL-1101 |
 | [GAP-CR-027](#gap-cr-027--тест-импорта-истории-завязан-на-posix-разделитель-путей) | средняя | **fixed** | Тест импорта истории завязан на POSIX-разделитель | BL-1102 |
 | [GAP-CR-028](#gap-cr-028--ci-не-покрывает-windows) | средняя | **fixed** | CI не покрывает Windows | BL-1103, BL-1104 |
-| [GAP-CR-029](#gap-cr-029--execute_download--новый-монолит) | средняя | open | `execute_download` — новый монолит (999 строк) | BL-1105 |
-| [GAP-CR-030](#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | низкая | open | Мёртвая ветка повторного опроса истории | BL-1106 |
+| [GAP-CR-029](#gap-cr-029--execute_download--новый-монолит) | средняя | **fixed** | `execute_download` — новый монолит (999 строк) | BL-1105 |
+| [GAP-CR-030](#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | низкая | **fixed** | Мёртвая ветка повторного опроса истории | BL-1106 |
 | [GAP-CR-031](#gap-cr-031--urlslocaltxt-с-личными-ссылками-в-репозитории) | средняя | **fixed** | `urls.local.txt` с личными ссылками в репозитории | BL-1107 |
 | [GAP-CR-032](#gap-cr-032--readme-описывает-несуществующие-каталоги) | низкая | open | README описывает несуществующие каталоги | BL-1108 |
 | [GAP-CR-033](#gap-cr-033--devplanmd-устарели-относительно-реализации) | низкая | open | `devplan*.md` устарели относительно реализации | BL-1109 |
+| [GAP-CR-034](#gap-cr-034--typerexit-гасится-широким-except-в-интерактивных-сценариях) | средняя | open | `typer.Exit` гасится широким `except` (найден при BL-1105) | BL-1110 |
 
-Сводка по severity: высокая — 1, средняя — 4, низкая — 3.
+Сводка по severity: высокая — 1, средняя — 5, низкая — 3. GAP-CR-034 добавлен 2026-08-31 как побочная находка при выполнении BL-1105.
 
 ---
 
@@ -173,8 +174,8 @@ E   +  where False = 'downloads\\first.mp4'.endswith('downloads/first.mp4')
 ## GAP-CR-029 — `execute_download` — новый монолит
 
 **Severity:** средняя
-**Status:** open
-**Location:** `ytd/workflows/download_command.py:49` (функция `execute_download`, файл 999 строк)
+**Status:** fixed (2026-08-31, BL-1105)
+**Location:** `ytd/workflows/download_command.py:49` (функция `execute_download`, файл 999 строк) — на момент обнаружения
 
 ### Описание
 
@@ -204,13 +205,27 @@ BL-104 из предыдущего ревью сократил `cli.py` с ~1680
 - Сценарии плейлиста и одиночного видео живут в отдельных модулях и принимают явный контекст вместо замыканий.
 - Существующие regression-тесты (`tests/test_playlist_regression.py`, `tests/test_interactive_config.py`) проходят без изменений.
 
+### Что сделано (2026-08-31)
+
+`execute_download` — **112 строк** (21 из них — сигнатура): подготовка контекста и цикл диспетчеризации. `download_command.py` — 294 строки вместо 999; самый крупный модуль `workflows/` теперь 207 строк.
+
+Новые модули: `context.py` (`DownloadContext`, `DownloadTotals`), `url_sources.py`, `info_fetch.py`, `download_one.py` (`EntrySetup`, `build_options`, `download_single_url`), `single_video.py`, `playlist_interactive.py`, `playlist_unified.py`, `playlist_per_video.py`, `playlist_resume.py`.
+
+Все сценарии имеют единую сигнатуру `run(ctx, url, decision) -> DownloadTotals` и выбираются один раз через `select_scenario`. Флаг `skip_post_processing` удалён: сценарий владеет своим путём целиком, поэтому «провалиться» в общий путь после поштучной загрузки структурно невозможно — регрессия doublesave закрыта архитектурно, а не флагом.
+
+`download_entry_with_retry` расширен опциональными `loading_message=None`, `skip_message`, `show_error_hints`, `error_message` — это позволило переиспользовать его на прямом пути вместо второй копии цикла сетевых повторов.
+
+Тесты: **110 passed, 2 skipped**; добавлен `tests/test_workflow_scenarios.py` (13 тестов на `select_scenario`, `collect_urls`, `choose_interactive_playlist`, `is_effective_playlist`, `DownloadTotals`, `DownloadContext.output_dir`). Regression-тесты плейлиста и интерактива не менялись. Смоук-прогон CLI подтвердил прежние сообщения и коды возврата.
+
+Побочная находка при переносе кода — [GAP-CR-034](#gap-cr-034--typerexit-гасится-широким-except-в-интерактивных-сценариях).
+
 ---
 
 ## GAP-CR-030 — Мёртвая ветка повторного опроса истории
 
 **Severity:** низкая
-**Status:** open
-**Location:** `ytd/workflows/download_command.py:902-908`
+**Status:** fixed (2026-08-31, BL-1106 в рамках BL-1105)
+**Location:** `ytd/workflows/download_command.py:902-908` — на момент обнаружения
 
 ### Описание
 
@@ -235,6 +250,10 @@ if decision is None:
 
 - Недостижимых веток в `execute_download` нет.
 - Принятое решение (удалить / реализовать) зафиксировано в дизайн-доке и отражено в коде.
+
+### Что сделано (2026-08-31)
+
+Ветка удалена вместе с переменной `history_video_id`, которая существовала только ради неё. Решение «удалить, а не реализовывать» обосновано в дизайн-доке (D-5): preflight уже спрашивает пользователя по каждой ссылке до начала загрузок, а для элементов плейлиста уточнённый опрос по реальному `video_id` выполняется в `process_playlist_entries`. Повторный вопрос про ту же ссылку был бы регрессом UX.
 
 ---
 
@@ -333,6 +352,48 @@ if decision is None:
 
 ---
 
+## GAP-CR-034 — `typer.Exit` гасится широким `except` в интерактивных сценариях
+
+**Severity:** средняя
+**Status:** open (найден 2026-08-31 при выполнении BL-1105)
+**Location:** `ytd/workflows/single_video.py:63`, `ytd/workflows/playlist_interactive.py:60`, `ytd/workflows/playlist_batch.py:79` (исторически — `download_command.py:760`, `:793`, `:886`)
+
+### Описание
+
+`typer.Exit` наследуется от `RuntimeError`, то есть является обычным `Exception`:
+
+```
+>>> [c.__name__ for c in typer.Exit.__mro__]
+['Exit', 'RuntimeError', 'Exception', 'BaseException', 'object']
+```
+
+Интерактивные сценарии оборачивают получение метаданных в широкий `except Exception`, чтобы при неудачном разборе плейлиста продолжить с настройками по умолчанию. Но в этот же блок попадает `typer.Exit(1)`, который поднимает `fetch_info`, когда пользователь в диалоге сетевой ошибки выбрал **«3) Завершить программу»**.
+
+### Влияние
+
+Явная команда пользователя остановить работу не выполняется: вместо завершения печатается warning «продолжим с настройками по умолчанию», и загрузка идёт дальше — по общему пути, где для плейлиста будет скачан весь плейлист целиком. Пользователь, отменивший операцию из-за проблем с сетью или VPN, получает ровно то, что пытался предотвратить.
+
+Дефект существовал до BL-1105; при декомпозиции поведение сохранено намеренно, чтобы рефакторинг не смешивал перенос кода с изменением семантики. В коде проставлены `TODO(GAP-CR-034)`.
+
+### Ожидаемое поведение
+
+`typer.Exit` (и `click.exceptions.Abort`) пробрасываются наружу; широкий `except Exception` ловит только реальные ошибки разбора.
+
+```python
+except typer.Exit:
+    raise
+except Exception as exc:  # noqa: BLE001
+    ctx.logger.warning(...)
+```
+
+### Критерии приёмки
+
+- Выбор «завершить программу» в диалоге сетевой ошибки завершает команду с кодом 1 из любого сценария.
+- Тест на каждый из трёх сценариев: `fetch_info` поднимает `typer.Exit`, сценарий его не гасит.
+- `TODO(GAP-CR-034)` из кода удалены.
+
+---
+
 ## Трассировка Gap → Backlog
 
 | Gap ID | Backlog | Priority |
@@ -345,6 +406,7 @@ if decision is None:
 | GAP-CR-031 | BL-1107 | P1 |
 | GAP-CR-032 | BL-1108 | P3 |
 | GAP-CR-033 | BL-1109 | P3 |
+| GAP-CR-034 | BL-1110 | P1 |
 
 ---
 

@@ -138,11 +138,12 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 | BL-1102 | Платформенно-независимые ассерты путей в тестах истории | GAP-CR-027 | P1 | **done** | S |
 | BL-1103 | Матрица CI `ubuntu-latest` + `windows-latest` | GAP-CR-028 | P1 | **done** | S |
 | BL-1104 | `pytest-timeout` и глобальный лимит на тест | GAP-CR-028 | P1 | **done** | S |
-| BL-1105 | Декомпозиция `execute_download` на сценарии + `DownloadContext` | GAP-CR-029 | P2 | todo | L |
-| BL-1106 | Удалить мёртвую ветку повторного опроса истории | GAP-CR-030 | P2 | todo | S |
+| BL-1105 | Декомпозиция `execute_download` на сценарии + `DownloadContext` | GAP-CR-029 | P2 | **done** | L |
+| BL-1106 | Удалить мёртвую ветку повторного опроса истории | GAP-CR-030 | P2 | **done** | S |
 | BL-1107 | Снять `urls.local.txt` с отслеживания, добавить `urls.example.txt` | GAP-CR-031 | P1 | **done** | S |
 | BL-1108 | Привести раздел «Структура проекта» в README к факту | GAP-CR-032 | P3 | todo | S |
 | BL-1109 | Актуализировать `devplan.md` / `devplan_ru.md` | GAP-CR-033 | P3 | todo | M |
+| BL-1110 | Не гасить `typer.Exit` широким `except` в сценариях | GAP-CR-034 | P1 | todo | S |
 
 Подробные задачи — в [Группе 11](#группа-11--maintenance-12-ревью-2026-08-31). Рекомендованный порядок и зависимости — в разделе «Порядок внедрения» дизайн-дока.
 
@@ -150,7 +151,9 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 
 Состояние после блока 1 (BL-1104 → BL-1101 → BL-1102, 2026-08-31): полный `pytest` на Windows завершается без `--deselect` — **97 passed, 2 skipped** за 32.7 с; `ruff check .` чисто.
 
-Состояние после блока 2 (BL-1103, 2026-08-31): CI зелёный на обеих платформах — `test (ubuntu-latest)` 96 passed / 3 skipped, `test (windows-latest)` 97 passed / 2 skipped, `lint` passed. Осталось в спринте: BL-1105, BL-1106, BL-1108, BL-1109.
+Состояние после блока 2 (BL-1103, 2026-08-31): CI зелёный на обеих платформах — `test (ubuntu-latest)` 96 passed / 3 skipped, `test (windows-latest)` 97 passed / 2 skipped, `lint` passed.
+
+Состояние после блока 3 (BL-1105 + BL-1106, 2026-08-31): `execute_download` — 112 строк, `download_command.py` — 294 строки вместо 999, сценарии вынесены в отдельные модули. Тесты: **110 passed, 2 skipped**; `ruff check .` чисто. Осталось в спринте: BL-1108, BL-1109 (документация) и новая BL-1110 (побочная находка GAP-CR-034).
 
 ---
 
@@ -197,7 +200,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 | 8 | Документация | 2 | 0 | 1 | 1 | 0 |
 | 9 | Tooling и качество кода | 3 | 0 | 0 | 3 | 0 |
 | 10 | Отложенные фичи (legacy gaps) | 2 | 0 | 0 | 1 | 1 |
-| 11 | Maintenance 1.2 (ревью 2026-08-31) | 9 | 1 | 4 | 2 | 2 |
+| 11 | Maintenance 1.2 (ревью 2026-08-31) | 10 | 1 | 5 | 2 | 2 |
 
 ---
 
@@ -729,7 +732,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 ### BL-1105 — Декомпозиция `execute_download`
 
 - **Gap:** [GAP-CR-029](./gaps/code_review_2026-08-31.md#gap-cr-029--execute_download--новый-монолит) | **Design:** D-4
-- **Priority:** P2 | **Status:** todo | **Estimate:** L
+- **Priority:** P2 | **Status:** done (2026-08-31) | **Estimate:** L
 - **Зависимости:** BL-1103 (рефакторинг под защитой двухплатформенного CI)
 
 **Описание.** После BL-104 оркестрация переехала целиком в одну функцию на ~950 строк с семью вложенными замыканиями, захватывающими ~15 переменных. Ветки нельзя тестировать по отдельности; управляющий поток держится на флаге `skip_post_processing`.
@@ -748,12 +751,16 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 - Флага `skip_post_processing` в коде нет; выбор сценария однозначен по построению.
 - `tests/test_playlist_regression.py`, `tests/test_cli.py`, `tests/test_interactive_config.py` проходят без изменений логики; exit-коды и итоговые сообщения не изменились.
 
+**Реализовано (2026-08-31).** `execute_download` — 112 строк, `download_command.py` — 294 (было 999), крупнейший модуль `workflows/` — 207 строк. Добавлены `context.py`, `url_sources.py`, `info_fetch.py`, `download_one.py`, `single_video.py`, `playlist_interactive.py`, `playlist_unified.py`, `playlist_per_video.py`, `playlist_resume.py`. `skip_post_processing` удалён — сценарий выбирается один раз в `select_scenario` и владеет своим путём целиком. `download_entry_with_retry` расширен опциональными сообщениями и текстом ошибки, что убрало вторую копию цикла сетевых повторов. Тесты: 110 passed, 2 skipped (+13 новых в `tests/test_workflow_scenarios.py`); regression-тесты не менялись.
+
+**Отступление от плана.** Вместо шести коммитов по этапам сделано три (подготовительные модули → сценарии и диспетчер → документация): этапы 3–5 связаны через удаление `skip_post_processing` и по отдельности оставили бы код в гибридном состоянии. Тесты и линт зелёные на каждом коммите.
+
 ---
 
 ### BL-1106 — Удалить мёртвую ветку повторного опроса истории
 
 - **Gap:** [GAP-CR-030](./gaps/code_review_2026-08-31.md#gap-cr-030--мёртвая-ветка-повторного-опроса-истории) | **Design:** D-5
-- **Priority:** P2 | **Status:** todo | **Estimate:** S
+- **Priority:** P2 | **Status:** done (2026-08-31) | **Estimate:** S
 - **Зависимости:** выполняется внутри BL-1105 (этапы 3–5), чтобы не править участок дважды
 
 **Описание.** `download_command.py:902-908`: `if decision is None` недостижимо — `preflight_decision` всегда заполнен. Решение зафиксировано: удалить ветку (повторный опрос был бы регрессом UX, а для элементов плейлиста уточнённый опрос уже выполняется в `process_playlist_entries`).
@@ -763,6 +770,8 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 2. Удалить `history_video_id` и его уточнения, если после этого переменная не используется на данном пути (проверка ruff `F841`).
 
 **Критерии приёмки.** Недостижимых веток в `execute_download` нет; `ruff check .` чист; тесты истории зелёные.
+
+**Реализовано (2026-08-31).** Ветка удалена вместе с `history_video_id`, существовавшей только ради неё. Preflight по-прежнему опрашивает историю по каждой ссылке до начала загрузок, уточнённый опрос по реальному `video_id` элементов плейлиста — в `process_playlist_entries`.
 
 ---
 
@@ -818,6 +827,22 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 
 ---
 
+### BL-1110 — Не гасить `typer.Exit` широким `except` в сценариях
+
+- **Gap:** [GAP-CR-034](./gaps/code_review_2026-08-31.md#gap-cr-034--typerexit-гасится-широким-except-в-интерактивных-сценариях)
+- **Priority:** P1 | **Status:** todo | **Estimate:** S
+
+**Описание.** `typer.Exit` наследуется от `RuntimeError`, поэтому попадает в широкий `except Exception` интерактивных сценариев. Выбор «3) Завершить программу» в диалоге сетевой ошибки не останавливает работу: печатается warning «продолжим с настройками по умолчанию», и для плейлиста скачивается весь плейлист целиком. Дефект существовал до BL-1105; при декомпозиции поведение сохранено намеренно и помечено `TODO(GAP-CR-034)`.
+
+**Шаги.**
+1. Добавить `except typer.Exit: raise` перед широким обработчиком в `single_video.run`, `playlist_interactive.run`, `playlist_batch.run`.
+2. Тест на каждый сценарий: `fetch_info` поднимает `typer.Exit(1)` — сценарий его не гасит.
+3. Удалить комментарии `TODO(GAP-CR-034)`.
+
+**Критерии приёмки.** Выбор «завершить программу» завершает команду с кодом 1 из любого сценария; `TODO(GAP-CR-034)` в коде нет.
+
+---
+
 ## Матрица трассировки Gap → Backlog
 
 | Gap ID | Backlog задачи |
@@ -855,6 +880,7 @@ Last updated: 2026-08-31 (Maintenance 1.2 — добавлен спринт K п
 | GAP-CR-031 | BL-1107 |
 | GAP-CR-032 | BL-1108 |
 | GAP-CR-033 | BL-1109 |
+| GAP-CR-034 | BL-1110 |
 
 GAP-CR-001 … GAP-CR-025 — ревью [2026-05-25](./gaps/code_review_2026-05-25.md); GAP-CR-026 … GAP-CR-033 — ревью [2026-08-31](./gaps/code_review_2026-08-31.md).
 
@@ -874,10 +900,12 @@ GAP-CR-001 … GAP-CR-025 — ревью [2026-05-25](./gaps/code_review_2026-05
 
 - [x] P0: BL-1101 — status `done`
 - [x] P1: BL-1102, BL-1103, BL-1104, BL-1107 — status `done`
+- [ ] P1 (добавлена по ходу спринта): BL-1110 — status `done`
+- [x] P2: BL-1105, BL-1106 — status `done`
 - [x] Полный `pytest` завершается и зелёный на Windows **и** Linux без `--deselect`
 - [x] `ruff check .` чист
 - [x] CI: джобы `test (ubuntu-latest)`, `test (windows-latest)`, `lint` зелёные
-- [ ] P2/P3: BL-1105, BL-1106, BL-1108, BL-1109 — `done` либо явно перенесены с обоснованием
+- [ ] P3: BL-1108, BL-1109 — `done` либо явно перенесены с обоснованием
 - [ ] `docs/gaps/code_review_2026-08-31.md`: статусы GAP-CR-026 … GAP-CR-033 обновлены
 - [ ] `docs/gaps/README.md`: индекс синхронизирован
 

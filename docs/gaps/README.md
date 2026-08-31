@@ -16,7 +16,7 @@
 
 | Документ | Тип | Status | Описание |
 |----------|-----|--------|----------|
-| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | open | 8 гэпов `GAP-CR-026` … `GAP-CR-033`; спринт K (Maintenance 1.2); закрыты 026, 027, 028, 031 |
+| [code_review_2026-08-31.md](./code_review_2026-08-31.md) | Ревью | open | 9 гэпов `GAP-CR-026` … `GAP-CR-034`; спринт K (Maintenance 1.2); закрыты 026–031 |
 | [code_review_2026-05-25.md](./code_review_2026-05-25.md) | Ревью | closed | 25 гэпов `GAP-CR-001` … `GAP-CR-025`; бэклог A–J закрыт |
 | [doublesave_antibot_issue.md](./doublesave_antibot_issue.md) | Bug + ops | closed | Doublesave, cookies, Windows flush — исправлено |
 | [intravideo_pause_todo.md](./intravideo_pause_todo.md) | Feature | done | Intra-video pause (BL-1001) |
@@ -40,11 +40,12 @@
 | GAP-CR-026 | высокая | fixed | `wait_if_paused` вешает процесс на Windows без TTY |
 | GAP-CR-027 | средняя | fixed | Тест импорта истории завязан на POSIX-разделитель |
 | GAP-CR-028 | средняя | fixed | CI не покрывает Windows |
-| GAP-CR-029 | средняя | open | `execute_download` — новый монолит (999 строк) |
-| GAP-CR-030 | низкая | open | Мёртвая ветка повторного опроса истории |
+| GAP-CR-029 | средняя | fixed | `execute_download` — новый монолит (999 строк) |
+| GAP-CR-030 | низкая | fixed | Мёртвая ветка повторного опроса истории |
 | GAP-CR-031 | средняя | fixed | `urls.local.txt` с личными ссылками в репозитории |
 | GAP-CR-032 | низкая | open | README описывает несуществующие каталоги |
 | GAP-CR-033 | низкая | open | `devplan*.md` устарели относительно реализации |
+| GAP-CR-034 | средняя | open | `typer.Exit` гасится широким `except` (найден при BL-1105) |
 
 ---
 
