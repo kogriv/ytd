@@ -26,7 +26,15 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
+      # Покрытие считается только на одной ОС: платформенные ветки (msvcrt /
+      # termios / winreg) дают разный результат на Windows и Linux, и общий
+      # порог на обеих платформах был бы хрупким (BL-1204).
+      - name: Run tests with coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: uv run pytest -q --cov --cov-report=term-missing --cov-fail-under=66
+
       - name: Run tests
+        if: matrix.os != 'ubuntu-latest'
         run: uv run pytest -q
 
   lint:
@@ -45,3 +53,12 @@ jobs:
 
       - name: Ruff lint
         run: uv run ruff check .
+
+      # Платформенные ветки (msvcrt / termios / winreg) проверяются под всеми
+      # моделями платформ из одной джобы — иначе половина кода осталась бы вне
+      # анализа, а результат зависел бы от ОС раннера (BL-1203).
+      - name: Type check
+        run: |
+          uv run mypy --platform win32
+          uv run mypy --platform linux
+          uv run mypy --platform darwin

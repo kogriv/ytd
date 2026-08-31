@@ -80,10 +80,10 @@ class PauseController:
             self._keyboard_listener_unix()
 
     def _keyboard_listener_windows(self) -> None:
-        try:
-            import msvcrt
-        except ImportError:
+        if sys.platform != "win32":  # pragma: no cover — ветка не выполняется на Unix
             return
+
+        import msvcrt
 
         while not self._stop_listener.is_set():
             if msvcrt.kbhit():
@@ -95,6 +95,9 @@ class PauseController:
             self._stop_listener.wait(timeout=0.1)
 
     def _keyboard_listener_unix(self) -> None:
+        if sys.platform == "win32":  # pragma: no cover — ветка не выполняется на Windows
+            return
+
         import select
         import termios
         import tty

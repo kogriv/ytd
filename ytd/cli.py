@@ -46,7 +46,7 @@ def _parse_since_option(value: str | None) -> str | None:
     except ValueError as exc:  # noqa: PERF203
         raise typer.BadParameter(
             "Неверный формат даты. Используйте ISO 8601, например 2024-01-01T00:00:00",
-            param_name="since",
+            param_hint="--since",
         ) from exc
     if parsed.tzinfo is not None:
         parsed = parsed.astimezone(UTC).replace(tzinfo=None)
@@ -243,7 +243,7 @@ def history_export(
     elif fmt == "csv":
         _export_history_csv(entries)
     else:
-        raise typer.BadParameter("Поддерживаемые форматы: jsonl, csv", param_name="format")
+        raise typer.BadParameter("Поддерживаемые форматы: jsonl, csv", param_hint="--format")
 
 
 app = typer.Typer(

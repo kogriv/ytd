@@ -14,7 +14,8 @@
 - MVP: завершён (2025-10-26)
 - Python **3.14**, менеджер зависимостей **uv**, виртуальное окружение `.venv`
 - Тесты: **95+** unit ( `uv run pytest` ); интеграционные — при `YTD_IT_URL`
-- Lint: **ruff** (`uv run ruff check .`), CI на GitHub Actions: матрица `ubuntu-latest` + `windows-latest` (тесты) и отдельная джоба `lint`
+- Lint: **ruff** (`uv run ruff check .`), типы: **mypy** (три платформенные модели), покрытие: **pytest-cov** (порог 66%)
+- CI на GitHub Actions: матрица `ubuntu-latest` + `windows-latest` (тесты, покрытие считается на ubuntu) и отдельная джоба `lint` (ruff + mypy)
 - Реализовано: одиночные видео, плейлисты, интерактив, история SQLite, cookies, anti-bot hints
 - Архитектура CLI: `cli.py` → `workflows/download_command.execute_download` (подготовка `DownloadContext` + `select_scenario`) → сценарий: `single_video`, `playlist_interactive` (→ `playlist_unified` / `playlist_per_video`), `playlist_batch` или `download_one`. Общие части: `context`, `url_sources`, `info_fetch`, `playlist_resume`, `playlist_entries`, `entry_download`, `network`, `history_prompts`
 - Maintenance 1.2 (открыт 2026-08-31): 8 гэпов `GAP-CR-026` … `GAP-CR-033`, задачи BL-1101 … BL-1109
@@ -25,7 +26,8 @@
 - **Maintenance 1.2 закрыт (2026-08-31):** все 10 задач спринта K и все 9 гэпов ревью 2026-08-31; README и `devplan*.md` синхронизированы с кодом (BL-1108, BL-1109)
 - **Maintenance 1.3 открыт (2026-08-31):** [ревью техдолга](gaps/tech_debt_2026-08-31.md) — `GAP-CR-035` … `GAP-CR-040` + перенесённый `GAP-CR-009`; задачи BL-1201 … BL-1207, [дизайн](design_tech_debt_2026-08-31.md)
 - Дефекты спринта L закрыты (2026-08-31): висящая запись `in_progress` (BL-1201) и гонка за клавиатурным вводом при возобновлении паузы (BL-1202). Тесты: **125 passed, 2 skipped**
-- В работе: BL-1203 (mypy), BL-1204 (покрытие), BL-1205 (защита `main`); решения владельца — BL-1206, BL-1207
+- Ворота качества закрыты (2026-08-31): BL-1203 (mypy в CI, три платформенные модели) и BL-1204 (покрытие 68%, порог 66%). Тесты: **127 passed, 2 skipped**
+- В работе: BL-1205 (защита `main`); решения владельца — BL-1206, BL-1207
 - Дальнейшие задачи: опционально GAP-CR-009 (deprecate JSONL), GAP-CR-014 (полная унификация playlist paths) — вне scope Maintenance 1.1
 
 ---
@@ -37,7 +39,21 @@
 uv sync
 uv run pytest -q
 uv run ruff check .
+uv run mypy                    # проверка типов для текущей ОС
 uv run ytd --help
+```
+
+Дополнительные проверки:
+
+```bash
+# покрытие с указанием незакрытых строк (порог в CI — 66%)
+uv run pytest -q --cov --cov-report=term-missing
+
+# типы под всеми платформенными моделями, как в CI:
+# ветки msvcrt / termios / winreg видны только под своей платформой
+uv run mypy --platform win32
+uv run mypy --platform linux
+uv run mypy --platform darwin
 ```
 
 Конфиг для локальных прогонов: скопировать `config.example.yaml` → `./ytd.config.yaml`.

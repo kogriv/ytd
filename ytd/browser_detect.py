@@ -25,10 +25,10 @@ def _map_prog_id_to_browser(prog_id: str) -> str | None:
 
 
 def _detect_windows_browser() -> str | None:
-    try:
-        import winreg
-    except ImportError:
+    if sys.platform != "win32":  # pragma: no cover — ветка не выполняется на Unix
         return None
+
+    import winreg
 
     prog_id: str | None = None
     for subkey in (
@@ -57,7 +57,8 @@ def _detect_windows_browser() -> str | None:
     return None
 
 
-def _detect_mac_browser() -> str | None:
+def _detect_mac_browser() -> str:
+    # Всегда возвращает браузер: Safari есть в macOS по умолчанию.
     app_support = Path.home() / "Library" / "Application Support"
     if (app_support / "Google" / "Chrome").exists():
         return "chrome"

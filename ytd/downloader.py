@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import yt_dlp as yt_dlp  # type: ignore
+import yt_dlp as yt_dlp
 from yt_dlp.networking.exceptions import TransportError
 
 from .exceptions import IntraVideoPauseRequested, NetworkUnavailableError
@@ -510,9 +510,9 @@ class Downloader:
         while attempt < max_attempts:
             attempt += 1
             try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
-                return info  # type: ignore[no-any-return]
+                return info
             except Exception as exc:  # noqa: BLE001
                 last_err = exc
                 is_network = self._looks_like_network_issue(exc)
@@ -581,7 +581,7 @@ class Downloader:
                 ydl_opts = self.build_ydl_opts(opts, no_progress=suppress_progress)
                 history_info: dict[str, Any] | None = None
                 try:
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:  # type: ignore[attr-defined]
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         if opts.dry_run:
                             ydl.extract_info(opts.url, download=False)
                             return []

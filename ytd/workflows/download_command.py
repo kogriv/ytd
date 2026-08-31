@@ -47,7 +47,7 @@ def _configure_streams() -> None:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
             try:
-                stream.reconfigure(errors="replace")  # type: ignore[call-arg]
+                stream.reconfigure(errors="replace")
             except (AttributeError, TypeError, ValueError, OSError):
                 pass
 

@@ -142,3 +142,27 @@ def test_history_lists_normalized_identifiers(runner: CliRunner, populated_histo
     assert result.exit_code == 0
     assert "yt:aaa11111111" in result.stdout
     assert "https://vk.com/video-12345_67890" in result.stdout
+
+
+def test_history_invalid_since_reports_bad_parameter(
+    runner: CliRunner,
+    populated_history: None,
+) -> None:
+    """BL-1203: неверная дата даёт понятную ошибку, а не TypeError из click."""
+    result = runner.invoke(app, ["history", "--since", "не-дата"])
+
+    assert result.exit_code == 2
+    assert not isinstance(result.exception, TypeError)
+    assert "Неверный формат даты" in result.output
+
+
+def test_history_export_invalid_format_reports_bad_parameter(
+    runner: CliRunner,
+    populated_history: None,
+) -> None:
+    """BL-1203: неизвестный формат экспорта тоже сообщается по-человечески."""
+    result = runner.invoke(app, ["history", "export", "--format", "xml"])
+
+    assert result.exit_code == 2
+    assert not isinstance(result.exception, TypeError)
+    assert "Поддерживаемые форматы" in result.output

@@ -114,8 +114,7 @@ class HistoryStore:
             )
 
             existing_columns = {
-                row["name"]
-                for row in conn.execute("PRAGMA table_info(downloads)")  # type: ignore[misc]
+                row["name"] for row in conn.execute("PRAGMA table_info(downloads)")
             }
 
             if "retry_count" not in existing_columns:
@@ -402,7 +401,12 @@ class HistoryStore:
 
         with closing(self.get_connection()) as conn:
             rows = conn.execute(query, params).fetchall()
-            return [_row_to_dict(row) for row in rows if row is not None]
+            result: list[dict[str, Any]] = []
+            for row in rows:
+                data = _row_to_dict(row)
+                if data is not None:
+                    result.append(data)
+            return result
 
 
 def get_default_store() -> HistoryStore:
